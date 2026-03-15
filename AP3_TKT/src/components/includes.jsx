@@ -1,0 +1,6 @@
+function Nav(){
+    
+}
+
+function Footer(){
+}
