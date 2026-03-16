@@ -1,0 +1,40 @@
+.container_connexion{
+    height: 100%;
+    width: 100%;
+    background-image: url('assets/images/disney.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+
+.container_connexion img{
+    color:white;
+    background: transparent;
+    margin: 2em auto;
+}
+
+.login_form{
+    backdrop-filter: blur(3px);
+    width: 100px;
+    height: 50px;
+    border-radius: 3em;
+    margin: auto;
+    background: linear-gradient(#0033CC 29%,#005BFF 65%);
+}
+
+.login_form label{
+    color:white;
+}
+
+.login_form a{
+    color:white;
+    text-decoration: none;
+}
+
+.nav{
+    margin:auto;
+    top: 0;
+    background-color: white;
+    color: black !important;
+}

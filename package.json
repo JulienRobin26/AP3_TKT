@@ -2,8 +2,9 @@
   "name": "ap3_tkt",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "nodemon API/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/JulienRobin26/AP3_TKT/issues"
   },
-  "homepage": "https://github.com/JulienRobin26/AP3_TKT#readme"
+  "homepage": "https://github.com/JulienRobin26/AP3_TKT#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "dotnet": "^1.1.4",
+    "nodemon": "^3.1.14"
+  }
 }
