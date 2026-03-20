@@ -51,6 +51,12 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
+router.post('/logout', (req, res) => {
+  /*if (!req.cookies.token) {
+    return res.status(400).json({ message: 'Aucun token trouvé' });
+  }*/
+  res.clearCookie('token');
+  res.json({ message: 'Déconnecté' });
+});
 module.exports = router;
 

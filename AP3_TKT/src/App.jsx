@@ -11,6 +11,7 @@ import GestionMissions from './pages/GestionMissions'
 import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
+import Home from './pages/Home'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/profil" element={<Profil />} />
         <Route path="/gestion_users" element={<GestionUsers />} />
         <Route path="/gestion_missions" element={<GestionMissions />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mentions_legales" element={<MentionsLegales />} />
         <Route path="/contact" element={<Contact />} />
