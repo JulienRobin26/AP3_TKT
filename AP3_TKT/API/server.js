@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 app.use(cors())
+const authRoutes = require("../API/routes/auth")
 app.use(express.json())
 
 
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
   res.send('Ceci est une page API de tests')
 })
 
+app.use('/api/auth', authRoutes);
 app.get('/api/message', (req, res) => {
     infos = {
         nom: 'Alexis Déjean',
