@@ -1,32 +1,38 @@
-﻿import React from 'react';
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+import logoDisney from '../assets/images/logo_Disney.png'
 
 function Nav({ user }) {
   return (
     <>
       <div className='nav'>
-        <img src="" alt="Logo_Disney" className='logo' />
+        <NavLink to="/" aria-label="Accueil">
+          <img src={logoDisney} alt="Logo_Disney" className='logo' />
+        </NavLink>
         <ul className='liens'>
           {user.auth === 'admin' ? (
             <>
-              <li><a href="/gestion_users">Gestions Users</a></li>
-              <li><a href="/gestion_missions">Gestion Missions</a></li>
-              <li><a href="/avertissement">Avertissements</a></li>
-              <li><a href="/deconnexion">Déconnexion</a></li>
-              <li><a href="/profil">Profil</a></li>
+              <li><NavLink to="/gestion_users">Gestions Users</NavLink></li>
+              <li><NavLink to="/gestion_missions">Gestion Missions</NavLink></li>
+              <li><NavLink to="/avertissement">Avertissements</NavLink></li>
+              <li><NavLink to="/deconnexion">DÃ©connexion</NavLink></li>
+              <li><NavLink to="/profil">Profil</NavLink></li>
+              <li><NavLink to="/login">Login</NavLink></li>
             </>
           ) : user.auth === 'user' ? (
             <>
-              <li><a href="/attractions">Les attractions</a></li>
-              <li><a href="/mes_missions">Mes Missions</a></li>
-              <li><a href="/avertissement">Avertissement</a></li>
-              <li><a href="/deconnexion">Déconnexion</a></li>
-              <li><a href="/profil">Profil</a></li>
+              <li><NavLink to="/attractions">Les attractions</NavLink></li>
+              <li><NavLink to="/mes_missions">Mes Missions</NavLink></li>
+              <li><NavLink to="/avertissement">Avertissement</NavLink></li>
+              <li><NavLink to="/deconnexion">DÃ©connexion</NavLink></li>
+              <li><NavLink to="/profil">Profil</NavLink></li>
+              <li><NavLink to="/login">Login</NavLink></li>
             </>
           ) : null}
         </ul>
       </div>
     </>
-  );
+  )
 }
 
 const Footer = () => {
@@ -34,16 +40,16 @@ const Footer = () => {
     <>
       <div className='footer'>
         <ul>
-          <li><a href="/mentions_legales">Mentions légales</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/politique_de_confidentialite">Politique de confidentialité</a></li>
+          <li><NavLink to="/mentions_legales">Mentions lÃ©gales</NavLink></li>
+          <li><NavLink to="/contact">Contact</NavLink></li>
+          <li><NavLink to="/politique_de_confidentialite">Politique de confidentialitÃ©</NavLink></li>
         </ul>
-        <p>Toutes les images sont la propriété de Disney.</p>
-        <img src="" alt="logo_disney" className='logo' />
+        <p>Toutes les images sont la propriÃ©tÃ© de Disney.</p>
+        <img src={logoDisney} alt="logo_disney" className='logo' />
       </div>
     </>
-  );
-};
+  )
+}
 
 function Message({ page }) {
   return (
@@ -52,7 +58,7 @@ function Message({ page }) {
         <h2>{page.nom}</h2>
       </div>
     </>
-  );
+  )
 }
 
-export { Nav, Footer, Message };
+export { Nav, Footer, Message }
