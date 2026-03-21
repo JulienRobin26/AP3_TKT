@@ -5,6 +5,7 @@ const cors = require('cors')
 const app = express()
 const attraRoutes  = require('./routes/attractions');
 app.use(cors())
+const authRoutes = require("../API/routes/auth")
 app.use(express.json())
 
 app.use('/attraction', attraRoutes);
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
   res.send('API AP3_TKT en ligne');
 })
 
+app.use('/api/auth', authRoutes);
 app.get('/api/message', (req, res) => {
     infos = {
         nom: 'Alexis Déjean',

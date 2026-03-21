@@ -9,9 +9,9 @@ function Login() {
       <img src={logoDisney} alt="logo_Disney" />
       <div className="login_form">
         <form>
-          <label htmlFor="username">Login :</label>
+          <label htmlFor="username">Identifiant :</label>
           <input type="text" id="username" name="username" placeholder="ADupont" required />
-          <label htmlFor="password">Password : </label>
+          <label htmlFor="password">Mot de passe : </label>
           <input type="password" name="password" placeholder="UnMotDePasse" required/>
           <div>
             

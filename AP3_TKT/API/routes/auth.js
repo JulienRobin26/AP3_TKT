@@ -1,23 +1,56 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const dbt = require('../config/db');
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-router.get('/', async (req, res) => {
+router.post('/login', async (req, res) => {
+  const {identifiant, password} = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM nourriture');
-    res.json(rows);
+    const [rows] = await dbt.query('SELECT id_usr, login_usr, mdp_usr FROM users WHERE login_usr = ?', [req.body.identifiant]);
+    let user = rows.length > 0 ? rows[0] : null;
+    
+    if (!user){
+      return res.status(401).json({erreur: "Utilisateur introuvable"});
+    }
+    const pass_db = user.mdp_usr;
+    const valider = await bcrypt.compare(password, pass_db);
+
+    if (valider){
+      const token = jwt.sign(
+      {id:user.id_usr, identifiant: user.login_usr},
+      process.env.JWT_SECRET,
+      {expiresIn: "10s"})
+
+      res.cookie('token', token, {httpOnly: true,
+        secure:true,
+        sameSite: 'strict',
+        maxAge: 3600000      }
+
+      );
+      return res.json({message: "Connexion réussie"});
+    
+    }
+    return res.status(401).json({erreur: "Mot de passe incorrect"});
+    
   } catch (error) {
-    console.error('Error fetching jeux:', error);
+    console.error('Error fetching auth:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/:libelle', async (req, res) => {
+router.post('/signup', async (req, res) => {
+  const {identifiant, password} = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM nourriture WHERE libelle_food like "$?$"', [req.params.libelle]);
-    res.json(rows);
+    const password_hash = await bcrypt.hash(password, saltRounds);
+    const [rows] = await dbt.query('INSERT INTO users (login_usr, mdp_usr) VALUES (?, ?)', [identifiant, password_hash]);
+    res.json(password_hash)
+    //res.json({message: "Utilisateur créé avec succès", userId: rows.insertId});
   } catch (error) {
-    console.error('Error fetching jeux:', error);
+    console.error('Error fetching auth:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 module.exports = router;
+
