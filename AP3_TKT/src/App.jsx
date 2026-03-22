@@ -23,7 +23,7 @@ function App() {
     <>
       {!isLoginPage && <Nav user={user} />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Attractions />/*<Login />*/} />
         <Route path="/attractions" element={<Attractions />} />
         <Route path="/mes_missions" element={<MesMissions />} />
         <Route path="/avertissement" element={<Avertissement />} />

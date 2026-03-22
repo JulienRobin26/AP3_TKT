@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const jwt = require('jsonwebtoken')
+const attraRoutes  = require('./routes/attractions');
 app.use(cors())
 const authRoutes = require("../API/routes/auth")
 app.use(express.json())
@@ -12,10 +13,11 @@ app.use(cors({
   credentials: true
 }));
 
+app.use('/attraction', attraRoutes);
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {
-  res.send('Ceci est une page API de tests')
+  res.send('API AP3_TKT en ligne');
 })
 
 
