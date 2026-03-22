@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../db');
+const authToken = require('../auth_token');
 const db = require('../config/db');
 
 router.get('/', async (req, res) => {
