@@ -1,18 +1,23 @@
 require('dotenv').config()
-
+const authToken = require('./auth_token');
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const jwt = require('jsonwebtoken')
 app.use(cors())
 const authRoutes = require("../API/routes/auth")
 app.use(express.json())
-
+app.use(cors({
+  origin: "http://127.0.0.1:5173", // ou ton port front
+  credentials: true
+}));
 
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {
   res.send('Ceci est une page API de tests')
 })
+
 
 app.use('/api/auth', authRoutes);
 app.get('/api/message', (req, res) => {
@@ -30,7 +35,7 @@ app.listen(PORT, () => {
   console.log('Server is running on http://localhost:' + PORT)
 })
 
-app.get('/api/infos', (req, res) => {
+app.get('/api/infos', authToken, (req, res) => {
     informations = {
         nom: 'Alexis Déjean',
         projet: "API AP3_TKT",

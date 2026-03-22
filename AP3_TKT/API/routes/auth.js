@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const authToken = require('../auth_token');
 const dbt = require('../config/db');
-const jwt = require('jsonwebtoken')
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 
 router.post('/login', async (req, res) => {
   const {identifiant, password} = req.body;
@@ -39,7 +41,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/signup', async (req, res) => {
+router.post('/signup', authToken, async (req, res) => {
   const {identifiant, password} = req.body;
   try {
     const password_hash = await bcrypt.hash(password, saltRounds);
@@ -51,10 +53,10 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/logout', (req, res) => {
-  /*if (!req.cookies.token) {
+router.post('/logout', authToken, (req, res) => {
+  if (!req.cookies.token) {
     return res.status(400).json({ message: 'Aucun token trouvé' });
-  }*/
+  }
   res.clearCookie('token');
   res.json({ message: 'Déconnecté' });
 });
