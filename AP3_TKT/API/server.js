@@ -8,7 +8,7 @@ app.use(cors())
 const authRoutes = require("../API/routes/auth")
 app.use(express.json())
 app.use(cors({
-  origin: "http://127.0.0.1:5173", // ou ton port front
+  origin: "http://127.0.0.1:5173",
   credentials: true
 }));
 
