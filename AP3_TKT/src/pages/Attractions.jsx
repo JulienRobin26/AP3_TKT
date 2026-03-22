@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Attractions.css";
 
 function Attractions() {
@@ -6,6 +7,8 @@ function Attractions() {
   const [idParc, setIdParc] = useState(1);
   const [recherche, setRecherche] = useState("");
   const [openInfos, setOpenInfos] = useState({});
+  const location = useLocation();
+  const avertissementSelectionne = location.state?.avertissement;
 
   useEffect(() => {
     fetchAttractions(idParc)
@@ -22,6 +25,11 @@ function Attractions() {
   return (
     <section className="page attractions-page">
       <h1 className="attractions-title">Attraction</h1>
+      {avertissementSelectionne && (
+        <p>
+          Alerte recue: niveau {avertissementSelectionne.id_nv} - {avertissementSelectionne.nom_nv}
+        </p>
+      )}
       <div className="attractions-toolbar">
         {rechercheAttraction(recherche, setRecherche)}
         {boutonParc(setIdParc)}

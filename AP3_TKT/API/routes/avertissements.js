@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const db = require('../config/db');
 
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM nourriture');
+    const [rows] = await db.query('SELECT * FROM niveaualerte');
     res.json(rows);
   } catch (error) {
     console.error('Error fetching jeux:', error);

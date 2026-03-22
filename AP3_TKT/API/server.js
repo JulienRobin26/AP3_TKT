@@ -4,10 +4,12 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const attraRoutes  = require('./routes/attractions');
+const avertRoutes  = require('./routes/avertissements');
 app.use(cors())
 app.use(express.json())
 
 app.use('/attraction', attraRoutes);
+app.use('/avertissements', avertRoutes);
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {
