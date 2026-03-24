@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import logoDisney from '../assets/images/logo_Disney.png'
+import '../assets/style.css'
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false)

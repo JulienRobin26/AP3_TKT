@@ -4,6 +4,7 @@ import './App.css'
 import Attractions from './pages/Attractions'
 import MesMissions from './pages/MesMissions'
 import Avertissement from './pages/Avertissement'
+import Alerts from './pages/Alerts'
 import Deconnexion from './pages/Deconnexion'
 import Profil from './pages/Profil'
 import GestionUsers from './pages/GestionUsers'
@@ -23,8 +24,9 @@ function App() {
     <>
       {!isLoginPage && <Nav user={user} />}
       <Routes>
-        <Route path="/" element={<Attractions />/*<Login />*/} />
+        <Route path="/" element={<Avertissement />/*<Login />*/} />
         <Route path="/attractions" element={<Attractions />} />
+        <Route path="/alerts" element={<Alerts />} />
         <Route path="/mes_missions" element={<MesMissions />} />
         <Route path="/avertissement" element={<Avertissement />} />
         <Route path="/deconnexion" element={<Deconnexion />} />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import "./Attractions.css";
 
 function Attractions() {
@@ -6,6 +7,13 @@ function Attractions() {
   const [idParc, setIdParc] = useState(1);
   const [recherche, setRecherche] = useState("");
   const [openInfos, setOpenInfos] = useState({});
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const avertissementSelectionne = location.state?.avertissement;
+  const codeAlerte =
+    location.state?.codeAlerte ??
+    avertissementSelectionne?.id_nv ??
+    searchParams.get("codeAlerte");
 
   useEffect(() => {
     fetchAttractions(idParc)
@@ -22,6 +30,12 @@ function Attractions() {
   return (
     <section className="page attractions-page">
       <h1 className="attractions-title">Attraction</h1>
+      {codeAlerte && (
+        <p>
+          Code alerte recu: {codeAlerte}
+          {avertissementSelectionne?.nom_nv ? ` - ${avertissementSelectionne.nom_nv}` : ""}
+        </p>
+      )}
       <div className="attractions-toolbar">
         {rechercheAttraction(recherche, setRecherche)}
         {boutonParc(setIdParc)}
@@ -54,7 +68,7 @@ function bloc(id, image, titre, infos, ouvert, idParc,temps, openInfos, setOpenI
       <h2>{titre}</h2>
       <ul>
         <li>{ ouvert ? ("Ouvert") : ("Fermé") }</li>
-        <li><p id="info" onClick={() => setOpenInfos((prev) => ({ prev, [id]: !prev[id] }))}>+ Infos</p></li>
+        <li><p id="info" onClick={() => setOpenInfos((prev) => ({ ...prev, [id]: !prev[id] }))}>+ Infos</p></li>
         </ul>
       <ul>
         <li><p>Parc {idParc}</p></li>
