@@ -77,7 +77,7 @@ function rechercheAttraction(recherche, setRecherche){
     <div className="recherche">
       <input
         type="text"
-        placeholder="Search"
+        placeholder="Rechercher une attraction..."
         id="recherche"
         value={recherche}
         onChange={(e) => setRecherche(e.target.value)}

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authToken = require('../auth_token');
 const dbt = require('../config/db');
+const jwt = require('jsonwebtoken')
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -10,7 +11,7 @@ const saltRounds = 10;
 router.post('/login', async (req, res) => {
   const {identifiant, password} = req.body;
   try {
-    const [rows] = await dbt.query('SELECT id_usr, login_usr, mdp_usr FROM users WHERE login_usr = ?', [req.body.identifiant]);
+    const [rows] = await dbt.query('SELECT id_usr, login_usr, mdp_usr,role_usr FROM users WHERE login_usr = ?', [req.body.identifiant]);
     let user = rows.length > 0 ? rows[0] : null;
     
     if (!user){
@@ -21,12 +22,12 @@ router.post('/login', async (req, res) => {
 
     if (valider){
       const token = jwt.sign(
-      {id:user.id_usr, identifiant: user.login_usr},
+      {id:user.id_usr, identifiant: user.login_usr, role:user.role_usr},
       process.env.JWT_SECRET,
       {expiresIn: "10s"})
 
       res.cookie('token', token, {httpOnly: true,
-        secure:true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000      }
 
@@ -41,6 +42,13 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+
+
+
 router.post('/signup', authToken, async (req, res) => {
   const {identifiant, password} = req.body;
   try {
@@ -59,6 +67,11 @@ router.post('/logout', authToken, (req, res) => {
   }
   res.clearCookie('token');
   res.json({ message: 'Déconnecté' });
+});
+
+router.get('/recup_infos', authToken, async (req, res) => {
+
+  return res.json({user:req.user});
 });
 module.exports = router;
 

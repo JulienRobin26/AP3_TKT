@@ -2,14 +2,15 @@ require('dotenv').config()
 const authToken = require('./auth_token');
 const express = require('express')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const app = express()
 const jwt = require('jsonwebtoken')
 const attraRoutes  = require('./routes/attractions');
-app.use(cors())
 const authRoutes = require("../API/routes/auth")
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors({
-  origin: "http://127.0.0.1:5173",
+  origin: "http://localhost:5173",
   credentials: true
 }));
 
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/api/auth', authRoutes);
-app.get('/api/message', (req, res) => {
+app.get('/api/message',authToken,  (req, res) => {
     infos = {
         nom: 'Alexis Déjean',
         age: "19 ans",
@@ -37,7 +38,7 @@ app.listen(PORT, () => {
   console.log('Server is running on http://localhost:' + PORT)
 })
 
-app.get('/api/infos', authToken, (req, res) => {
+app.get('/api/infos',authToken, (req, res) => {
     informations = {
         nom: 'Alexis Déjean',
         projet: "API AP3_TKT",

@@ -1,27 +1,56 @@
-import { useState } from 'react'
+import { useState } from 'react' // etats locaux du formulaire
+import { useNavigate } from 'react-router-dom' // navigation apres login
 import logoDisney from '../assets/images/logo_Disney.png'
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate() // pour rediriger vers /home
+  const [showPassword, setShowPassword] = useState(false) // affiche/masque le mot de passe
+  const [identifiant, setIdentifiant] = useState('') // valeur du champ identifiant
+  const [password, setPassword] = useState('') // valeur du champ mot de passe
+  const [error, setError] = useState('') // message d'erreur login
+
+  const handleSubmit = async (e) => {
+    e.preventDefault() // bloque le reload du form
+    setError('') // reset de l'erreur
+    try {
+      await auth_User(identifiant, password) // appelle l'API login
+      navigate('/home') // redirection apres succes
+    } catch (err) {
+      setError(err.message || 'Erreur de connexion') // affiche l'erreur
+      console.log(err);
+    }
+  }
 
   return (
     <section className="container_connexion">
       <img src={logoDisney} alt="logo_Disney" />
       <div className="login_form">
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="username">Identifiant :</label>
-          <input type="text" id="username" name="username" placeholder="ADupont" required />
+          <input type="text" id="username" name="username" placeholder="ADupont" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} required/>
           <label htmlFor="password">Mot de passe : </label>
-          <input type="password" name="password" placeholder="UnMotDePasse" required/>
+          <input type={showPassword ? 'text' : 'password'} name="password" placeholder="UnM0tDeP@sse" value={password} onChange={(e) => setPassword(e.target.value)} required/>
           <div>
             
           </div>
           <button className='button_submit' type="submit">Connexion</button>
-          <a href="" >Mot de passe oublié ?</a>
+          {error && <p className="error_message">{error}</p>}
+          <a href="" >Mot de passe oublie ?</a>
         </form>
       </div>
     </section>
   )
 }
+async function auth_User(identifiant, pass) { // fonction appel API login
+  const res = await fetch(`http://localhost:3006/api/auth/login`, { // endpoint login
+    method: "POST", // envoi des identifiants
+    headers: { "Content-Type": "application/json" }, // payload JSON
+    credentials: 'include', // envoie/recupere le cookie
+    body: JSON.stringify({ identifiant: identifiant, password: pass }) // donnees du form
+  });
 
+  if (!res.ok) throw new Error("Erreur de connexion"); // login refuse
+  console.log("Connexion reussie");
+  return res.json(); // reponse serveur
+}
 export default Login

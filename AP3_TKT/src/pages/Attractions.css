@@ -1,8 +1,8 @@
 .attractions-page {
-  max-width: 560px;
+  width: 97%;
+  height: 60%;
   margin: 0 auto;
   padding: 8px 10px 28px;
-  border: 3px solid #14b6ff;
   border-radius: 18px;
   background-image: linear-gradient(rgba(5, 13, 85, 0.78), rgba(7, 13, 109, 0.78)),
     url("../assets/images/login.webp");
@@ -15,19 +15,20 @@
   margin: 4px 0 10px;
   text-align: center;
   font-size: 2rem;
-  color: #111;
+  color: #ffffff;
 }
 
 .attractions-toolbar {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  gap: 2em;
+  display: flex;
+  width: max-content;
+  margin: auto;
   margin-bottom: 16px;
 }
 
 .recherche input {
-  width: 100%;
   height: 38px;
+  width: 240px;
   border: 0;
   border-radius: 18px;
   padding: 0 14px;
@@ -37,14 +38,14 @@
 }
 
 .recherche input:focus {
-  box-shadow: 0 0 0 2px #89e3ff;
+  box-shadow: 0 0 0 2px #0f2cc4;
 }
 
 .parc {
   display: flex;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(180, 214, 255, 0.85);
+  
 }
 
 .parc button {
@@ -58,7 +59,7 @@
 }
 
 .parc button + button {
-  border-left: 1px solid rgba(191, 224, 255, 0.45);
+  border-left: 2px solid rgba(191, 224, 255, 0.45);
 }
 
 .parc button:hover {
