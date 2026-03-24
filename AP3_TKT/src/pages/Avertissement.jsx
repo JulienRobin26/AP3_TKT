@@ -28,17 +28,25 @@ function blocAvertissement(avertissement, navigate) {
   const id = avertissement.id_nv;
   const nom = avertissement.nom_nv;
   const niveauClass = `alert-niveau-${((Number(id) - 1) % 4) + 1}`;
+  const handleNavigate = () => {
+    navigate("/alerts", {
+      state: {
+        avertissement,
+        codeAlerte: id,
+      },
+    });
+  };
 
   return (
     <div
       key={id}
       className={`avertissement-item ${niveauClass}`}
-      onClick={() => navigate("/attractions", { state: { avertissement } })}
+      onClick={handleNavigate}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          navigate("/attractions", { state: { avertissement } });
+          handleNavigate();
         }
       }}
     >
@@ -57,4 +65,4 @@ async function fetchAlertes() {
   if (!res.ok) throw new Error("Erreur getUsers");
   return res.json();
 }
-export default Avertissement
+export default Avertissement;

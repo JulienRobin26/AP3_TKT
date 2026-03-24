@@ -1,55 +1,75 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Avertissement.css";
+import { useLocation } from "react-router-dom";
+import "./Alerts.css";
 
-function Avertissement() {
-  const [nvAvertissement, setNvAvertissement] = useState([]);
-  const navigate = useNavigate();
+function Alert() {
+  const [alert, setAlert] = useState([]);
+  const [openInfos, setOpenInfos] = useState({});
+  const location = useLocation();
+  const avertissementSelectionne = location.state?.avertissement;
+  const codeAlerte = location.state?.codeAlerte ?? avertissementSelectionne?.id_nv;
+  const selectedLevel = getLevelClass(codeAlerte);
+
   useEffect(() => {
-      fetchAlertes()
-        .then(setNvAvertissement)
+      if (!codeAlerte) {
+        setAlert([]);
+        return;
+      }
+
+      fetchAlertes(codeAlerte)
+        .then(setAlert)
         .catch((err) => {
           console.error("Erreur chargement des niveaux d'avertissement:", err);
         });
-    }, []);
+    }, [codeAlerte]);
+
   return (
-    <section className="page avertissement-page">
-      <div className="alert-board">
-        <div className="alert-grid">
-          {nvAvertissement.map((avertissement) => (
-            blocAvertissement(avertissement, navigate)
+    <section className="page alerts-page">
+      <div className="alerts-board">
+       
+        <div className={`alerts-list ${selectedLevel}`}>
+          {alert.length === 0 && <p className="alerts-empty">Aucune alerte a afficher.</p>}
+
+          {alert.map((avertissement) => (
+            blocAlert(
+              avertissement.id_alr,
+              `${avertissement.nom_usr} ${avertissement.prenom_usr}`,
+              avertissement.dateCréation,
+              avertissement.contenu_alr,
+              openInfos,
+              setOpenInfos
+            )
           ))}
         </div>
       </div>
     </section>
   )
 }
-function blocAvertissement(avertissement, navigate) {
-  const id = avertissement.id_nv;
-  const nom = avertissement.nom_nv;
-  const niveauClass = `alert-niveau-${((Number(id) - 1) % 4) + 1}`;
+function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
+  const isOpen = Boolean(openInfos[id]);
 
   return (
-    <div
-      key={id}
-      className={`avertissement-item ${niveauClass}`}
-      onClick={() => navigate("/attractions", { state: { avertissement } })}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          navigate("/attractions", { state: { avertissement } });
-        }
-      }}
-    >
-      <h2>Risque Niveau {id} :</h2>
-      <p>{nom}</p>
-    </div>
+    <article key={id} className="alerts-row">
+      <div className="alerts-row-main">
+        <p className="alerts-chip">{user}</p>
+        <p className="alerts-chip">{date}</p>
+        <button
+          type="button"
+          className="alerts-view-btn"
+          onClick={() => setOpenInfos((prev) => ({ ...prev, [id]: !prev[id] }))}
+          aria-expanded={isOpen}
+        >
+          Voir
+        </button>
+      </div>
+
+      {isOpen && <p className="alerts-description">{description}</p>}
+    </article>
   )
 }
-async function fetchAlertes() {
+async function fetchAlertes(id) {
   
-  const res = await fetch(`http://localhost:3006/avertissements/`, {
+  const res = await fetch(`http://localhost:3006/avertissements/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -57,4 +77,10 @@ async function fetchAlertes() {
   if (!res.ok) throw new Error("Erreur getUsers");
   return res.json();
 }
-export default Avertissement
+
+function getLevelClass(level) {
+  const normalizedLevel = Math.min(4, Math.max(1, Number(level) || 1));
+  return `alert-niveau-${normalizedLevel}`;
+}
+
+export default Alert;
