@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react' // hook pour etat + effets
+import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
@@ -6,6 +6,7 @@ import Guard from "./components/guard";
 import Attractions from './pages/Attractions'
 import MesMissions from './pages/MesMissions'
 import Avertissement from './pages/Avertissement'
+import Alerts from './pages/Alerts'
 import Deconnexion from './pages/Deconnexion'
 import Profil from './pages/Profil'
 import GestionUsers from './pages/GestionUsers'

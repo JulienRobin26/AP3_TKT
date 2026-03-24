@@ -15,6 +15,7 @@ app.use(cors({
 }));
 
 app.use('/attraction', attraRoutes);
+app.use('/avertissements', avertRoutes);
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {

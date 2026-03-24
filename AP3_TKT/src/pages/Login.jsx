@@ -1,6 +1,7 @@
 import { useState } from 'react' // etats locaux du formulaire
 import { useNavigate } from 'react-router-dom' // navigation apres login
 import logoDisney from '../assets/images/logo_Disney.png'
+import '../assets/style.css'
 
 function Login() {
   const navigate = useNavigate() // pour rediriger vers /home
