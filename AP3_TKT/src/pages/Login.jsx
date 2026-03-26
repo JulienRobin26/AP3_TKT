@@ -50,7 +50,7 @@ async function auth_User(identifiant, pass) { // fonction appel API login
     body: JSON.stringify({ identifiant: identifiant, password: pass }) // donnees du form
   });
 
-  if (!res.ok) throw new Error("Erreur de connexion"); // login refuse
+  if (!res.ok) throw new Error(res.message); // login refuse
   console.log("Connexion reussie");
   return res.json(); // reponse serveur
 }
