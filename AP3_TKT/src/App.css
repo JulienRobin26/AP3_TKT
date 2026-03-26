@@ -12,7 +12,11 @@ body{
 .page {
   padding: 2rem;
 }
+#icone_liens:hover .liens_invisibles {display:block;} 
 
+.liens_invisibles{
+  display: none;
+}
 /* Navigation */
 .nav {
   display: flex;
