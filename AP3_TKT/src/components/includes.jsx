@@ -26,9 +26,10 @@ function Nav({ user }) {
               <li><NavLink to="/mes_missions">Mes Missions</NavLink></li>
               <li><NavLink to="/avertissement">Avertissement</NavLink></li>
               <li><NavLink to="/profil" id="icone_liens"><span class="material-symbols-outlined">account_circle</span></NavLink>
-              <ul className="liens_invisibles"><li><NavLink to="/deconnexion">Déconnexion</NavLink></li>
+              <ul className="liens_invisibles">
 <li><NavLink to="/profil">Profil</NavLink></li>
 </ul></li>
+<li><NavLink to="/deconnexion">Déconnexion</NavLink></li>
             </>
           ) : null}
         </ul>

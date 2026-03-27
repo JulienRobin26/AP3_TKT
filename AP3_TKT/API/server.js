@@ -7,6 +7,7 @@ const app = express()
 const jwt = require('jsonwebtoken')
 const attraRoutes  = require('./routes/attractions');
 const authRoutes = require("../API/routes/auth")
+const avertRoutes = require("../API/routes/avertissements")
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
