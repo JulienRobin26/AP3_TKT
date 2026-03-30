@@ -1,5 +1,5 @@
 .avertissement-page {
-  min-height: calc(100vh - 180px);
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,7 +7,8 @@
 }
 
 .alert-board {
-  width: min(1100px, 95vw);
+  width: 98%;
+  height: 100% !important;
   border-radius: 28px;
   padding: clamp(1rem, 2vw, 2rem);
   background-image: linear-gradient(
@@ -15,7 +16,7 @@
       rgba(8, 10, 40, 0.35) 0%,
       rgba(14, 17, 41, 0.2) 100%
     ),
-    url("../assets/images/login.webp");
+    url("../assets/images/alert.webp");
   background-size: cover;
   background-position: center;
   box-shadow: 0 20px 48px rgba(8, 16, 40, 0.25);
@@ -25,7 +26,8 @@
 .alert-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
-  gap: 1.25rem;
+  gap: 2em 4em;
+  margin-top: 5em;
 }
 
 .avertissement-item {

@@ -1,8 +1,12 @@
+import {useState} from "react"
+
 function Home() {
   return (
     <section className="page">
-      <h1>Accueil</h1>
-      <p>Bienvenue sur le portail des missions Disney.</p>
+      <div className="accueil_banniere">
+      <div className="titre_accueil"><h1>Accueil User</h1></div>
+      <div className="description_accueil"><p>Bienvenue à DisneyLand Paris pour une nouvelle journée !</p></div>
+      </div>
     </section>
   )
 }
