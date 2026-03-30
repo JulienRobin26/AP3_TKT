@@ -48,6 +48,7 @@ function App() {
     <>
       {!isLoginPage && showNav && <Nav user={user} /> /* Nav selon role */ }
       <Routes>
+<<<<<<< Updated upstream
         <Route path="/" element={<Login />/*<Login />*/} />
         <Route element={<Guard roles={[1]} />}>
           <Route path="/attractions" element={<Attractions />} />
@@ -68,6 +69,23 @@ function App() {
           <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
+=======
+        <Route path="/" element={<Attractions />/*<Login />*/} />
+        <Route path="/attractions" element={<Attractions />} />
+        <Route path="/alerts" element={<Alerts />} />
+        <Route path="/mes_missions" element={<MesMissions />} />
+        <Route path="/avertissement" element={<Avertissement />} />
+        <Route path="/deconnexion" element={<Deconnexion />} />
+        <Route path="/profil" element={<Profil />} />
+        <Route path="/gestion_users" element={<GestionUsers />} />
+        <Route path="/gestion_missions" element={<GestionMissions />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mentions_legales" element={<MentionsLegales />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+>>>>>>> Stashed changes
       </Routes>
       {!isLoginPage && showNav && <Footer /> /* Footer selon role */ }
     </>
