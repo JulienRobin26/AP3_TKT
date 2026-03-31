@@ -5,6 +5,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
 const jwt = require('jsonwebtoken')
+const utilisateurs = require ('./routes/users');
 const attraRoutes  = require('./routes/attractions');
 const authRoutes = require("../API/routes/auth")
 const avertRoutes = require("../API/routes/avertissements")
@@ -16,6 +17,8 @@ app.use(cors({
   credentials: true
 }));
 
+
+app.use('/users', utilisateurs);
 app.use('/attraction', attraRoutes);
 app.use('/avertissements', avertRoutes);
 // ROUTE DE TEST
