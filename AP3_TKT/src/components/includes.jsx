@@ -18,13 +18,9 @@ function Nav({ user }) {
               <li><NavLink to="/gestion_users">Gestions Users</NavLink></li>
               <li><NavLink to="/gestion_missions">Gestion Missions</NavLink></li>
               <li><NavLink to="/avertissement">Avertissements</NavLink></li>
-<<<<<<< HEAD
               <li><NavLink to="/profil" id="icone_liens"><span className="material-symbols-outlined">account_circle</span></NavLink><ul className="liens_invisibles"><li><NavLink to="/deconnexion">Déconnexion</NavLink></li>
 <li><NavLink to="/profil">Profil</NavLink></li>
 </ul></li>
-=======
-              <li><NavLink to="/profil" id="icone_liens"><span class="material-symbols-outlined">account_circle</span></NavLink></li>
->>>>>>> origin/dev
             </>
           ) : user.auth === 'user' ? (
             <>
