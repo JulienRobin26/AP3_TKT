@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react' // hook pour etat + effets
+﻿import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
@@ -15,6 +15,7 @@ import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
+import GestionAttractions from './pages/GestionAttractions' 
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
 
 function App() {
@@ -48,18 +49,19 @@ function App() {
     <>
       {!isLoginPage && showNav && <Nav user={user} /> /* Nav selon role */ }
       <Routes>
-<<<<<<< Updated upstream
         <Route path="/" element={<Login />/*<Login />*/} />
         <Route element={<Guard roles={[1]} />}>
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/mes_missions" element={<MesMissions />} />
           <Route path="/avertissement" element={<Avertissement />} />
-          
-        </Route>
+          <Route path="/alerts" element={<Alerts />} /></Route>
         <Route element={<Guard roles={[0]} />}>
+        <Route path="/attractions" element={<Attractions />} />
           <Route path="/gestion_users" element={<GestionUsers />} />
           <Route path="/gestion_missions" element={<GestionMissions />} />
+          <Route path="/gestion_attractions" element={<GestionAttractions />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>  
         <Route element={<Guard roles={[1, 0]} />}>
           <Route path="/deconnexion" element={<Deconnexion />} />
@@ -69,23 +71,6 @@ function App() {
           <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
-=======
-        <Route path="/" element={<Attractions />/*<Login />*/} />
-        <Route path="/attractions" element={<Attractions />} />
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/mes_missions" element={<MesMissions />} />
-        <Route path="/avertissement" element={<Avertissement />} />
-        <Route path="/deconnexion" element={<Deconnexion />} />
-        <Route path="/profil" element={<Profil />} />
-        <Route path="/gestion_users" element={<GestionUsers />} />
-        <Route path="/gestion_missions" element={<GestionMissions />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mentions_legales" element={<MentionsLegales />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
->>>>>>> Stashed changes
       </Routes>
       {!isLoginPage && showNav && <Footer /> /* Footer selon role */ }
     </>

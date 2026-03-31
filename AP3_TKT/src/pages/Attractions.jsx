@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "./Attractions.css";
  
 function Attractions() {
@@ -7,14 +7,36 @@ function Attractions() {
   const [idParc, setIdParc] = useState(1);
   const [recherche, setRecherche] = useState("");
   const [openInfos, setOpenInfos] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const avertissementSelectionne = location.state?.avertissement;
   const codeAlerte =
     location.state?.codeAlerte ??
     avertissementSelectionne?.id_nv ??
     searchParams.get("codeAlerte");
- 
+
+  useEffect(() => {
+    if (location.state?.isAdmin !== undefined) {
+      setIsAdmin(Boolean(location.state.isAdmin));
+      return;
+    }
+
+    fetch("http://localhost:3006/api/auth/recup_infos", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          setIsAdmin(false);
+          return;
+        }
+        const data = await res.json();
+        setIsAdmin(data?.user?.role === 1);
+      })
+      .catch(() => setIsAdmin(false));
+  }, [location.pathname, location.state?.isAdmin]);
   useEffect(() => {
     fetchAttractions(idParc)
       .then(setAttractions)
@@ -39,6 +61,7 @@ function Attractions() {
       <div className="attractions-toolbar">
         {rechercheAttraction(recherche, setRecherche)}
         {boutonParc(idParc, setIdParc)}
+        {isAdmin && boutonAjout(navigate)}
       </div>
       <ul className="attractions-list">
         {attractionsFiltrees.map((attraction) => (
@@ -51,8 +74,13 @@ function Attractions() {
               attraction.ouvert,
               attraction.id_prc_ift,
               attraction.tempsAttente,
+              attraction.tailleLimite === null ? 0 : attraction.tailleLimite,
+              attraction.pourEnceinte,
+              attraction.pourLesPetits,
               openInfos,
-              setOpenInfos
+              setOpenInfos,
+              navigate,
+              isAdmin
             )}
           </li>
         ))}
@@ -61,10 +89,15 @@ function Attractions() {
   );
 }
  
-function bloc(id, image, titre, infos, ouvert, idParc, temps, openInfos, setOpenInfos) {
+function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pourEnceinte, pourLesPetits, openInfos, setOpenInfos, navigate, isAdmin) {
   const isOpen = !!openInfos[id];
   const toggle = () => setOpenInfos((prev) => ({ ...prev, [id]: !prev[id] }));
   const close = () => setOpenInfos((prev) => ({ ...prev, [id]: false }));
+  const goToModification = (event) => {
+    event.stopPropagation();
+    navigate("/gestion_attractions", { state: { idAttraction: id } });
+  };
+
   return (
     <>
       <div
@@ -78,12 +111,23 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, openInfos, setOpen
         <h2>{titre}</h2>
         <ul>
           <li>{ ouvert ? ("Ouvert") : ("Ferme") }</li>
+          <li>{tailleLimite === 0 ?<p>Taille limite : Pas de restriction</p> : <p>Taille limite : {tailleLimite} m</p>} </li>
+          <li>{pourEnceinte ? <p>Accessible aux personnes enceintes</p> : null}</li>
           
         </ul>
         <ul>
-          <li><p>Parc {idParc}</p></li>
           <li><p>Temps d'attente : {temps}</p></li>
+          <li>{pourLesPetits ? <p>Accessible aux jeunes enfants</p> : null}</li>
         </ul>
+        
+        {isAdmin && (
+          <div>
+            <button type="button" onClick={goToModification} >Modifier</button>
+            <form method="post" action={"http://localhost:3006/attraction/supprimer/" + id}>
+              <button type="submit">Supprimer</button>
+            </form>
+          </div>
+        )}
         {isOpen && <p>{infos}</p>}
       </div>
       {isOpen && (
@@ -126,6 +170,13 @@ function boutonParc(idParc, setIdParc) {
     </div>
   );
 }
+
+function boutonAjout(navigate) {
+  return (
+    <button type="button" onClick={() => navigate("/gestion_attractions")}>Ajouter</button>
+  );
+}
+
 function rechercheAttraction(recherche, setRecherche){
   return (
     <div className="recherche">

@@ -24,9 +24,11 @@ function Alert() {
     }, [codeAlerte]);
 
   return (
+    
     <section className="page alerts-page">
+      
       <div className="alerts-board">
-       
+       <h1>Alertes</h1>
         <div className={`alerts-list ${selectedLevel}`}>
           {alert.length === 0 && <p className="alerts-empty">Aucune alerte a afficher.</p>}
 
@@ -61,6 +63,14 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
         >
           Voir
         </button>
+        <button
+          type="button"
+          className="alerts-view-btn"
+          >Modifier</button>
+          <button
+          type="button"
+          className="alerts-view-btn"
+          >Supprimer</button>
       </div>
 
       {isOpen && <p className="alerts-description">{description}</p>}
