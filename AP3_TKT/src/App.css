@@ -1,22 +1,36 @@
 /* App-wide layout */
-#root {
-  min-height: 100vh;
-}
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Knewave&display=swap');
+#root {
+  height: 100vh;
+
+}
+body{
+  margin: 0;
+  height: 100vh;
+}
 .page {
   padding: 2rem;
 }
+#icone_liens:hover .liens_invisibles {display:block;} 
 
+.liens_invisibles{
+  display: none;
+}
 /* Navigation */
 .nav {
   display: flex;
   align-items: center;
+  flex-direction: row;
+  justify-content: center;
   gap: 1.5rem;
   padding: 1rem 2rem;
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;
 }
-
+.logo {
+margin-top: 1em;
+}
 .nav .logo {
   height: 48px;
   width: auto;
@@ -26,11 +40,22 @@
 .liens {
   list-style: none;
   display: flex;
+  font-family: "Inter", sans-serif;
   gap: 1.25rem;
   margin: 0;
+  
   padding: 0;
 }
-
+ .footer{
+    display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0;
+  gap: 2px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+ }
 .liens a {
   text-decoration: none;
   color: #1a1a1a;
@@ -43,7 +68,7 @@
 
 /* Footer */
 .footer {
-  padding: 2rem;
+
   border-top: 1px solid #e6e6e6;
   background: #ffffff;
 }
@@ -59,4 +84,39 @@
 .footer a {
   text-decoration: none;
   color: #1a1a1a;
+}
+.accueil_banniere{
+  background-image: url('./assets/images/home.webp');
+  background-position: center;
+  background-size: cover;
+  box-shadow: #0000006a 3px 0px 15px;
+  border-radius: 20px;
+  margin: auto;
+  padding: 1em;
+  height: 25em;
+  
+  
+}
+
+.titre_accueil {
+  margin-left: 5em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #000000;
+  background-color: rgba(255, 0, 0, 0.8);
+  width: max-content;
+  padding: 0em 1em;
+  border-radius: 20px;
+}
+
+.description_accueil {
+  margin-left: 5em;
+  color: #000000;
+backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  background-color: rgba(255, 255, 255, 0.8);
+  width: max-content;
+  padding: 0.5em 1em;
+  border-radius: 20px;
 }
