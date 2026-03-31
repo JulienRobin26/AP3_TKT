@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente FROM `infrastructure`');
     res.json(rows);
   } catch (error) {
-    console.error('Error fetching infrastructure:', error);
+    console.error('Error fetching infrastructure:', error); 
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

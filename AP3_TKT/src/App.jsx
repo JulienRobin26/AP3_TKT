@@ -71,6 +71,7 @@ function App() {
       </Routes>
       {!isLoginPage && showNav && <Footer /> /* Footer selon role */ }
     </>
+
   )
 }
 

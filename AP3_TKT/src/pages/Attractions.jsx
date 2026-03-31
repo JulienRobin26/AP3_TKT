@@ -89,9 +89,6 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, openInfos, setOpen
       {isOpen && (
         <div className="attraction-overlay" role="dialog" aria-modal="true" onClick={close}>
           <div className="attraction-modal" onClick={(e) => e.stopPropagation()}>
-            <button type="button" className="attraction-close" onClick={close} aria-label="Fermer">
-              Fermer
-            </button>
             <img src={image} alt={`Photo de ${titre}`} />
             <h3>{titre}</h3>
             <p className="attraction-modal-info">{infos}</p>
