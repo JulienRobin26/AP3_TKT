@@ -23,15 +23,24 @@ function AjoutAttraction() {
     </section>
   )
 }
-function ModifAttraction(idAttraction) {
-  const [attraction, setAttraction] = useState([]);
+function ModifAttraction({ idAttraction }) {
+  const [attraction, setAttraction] = useState(null);
   useEffect(() => {
     fetchAttractionsById(idAttraction)
-      .then(setAttraction)
+      .then((data) => setAttraction(Array.isArray(data) ? (data[0] ?? null) : data))
       .catch((err) => {
         console.error("Erreur chargement attraction:", err);
       });
   }, [idAttraction]);
+
+  if (!attraction) {
+    return (
+      <section className="page">
+        <h1>Modification d'une attraction</h1>
+        <p>Chargement...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="page">
@@ -47,7 +56,6 @@ function ModifAttraction(idAttraction) {
 
 function info(nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits) {
   const isChecked = (value) => value === true || value === 1 || value === "1" || value === "true";
-
   return (<>
   <label htmlFor="nom">Nom de l'attraction :</label>
     <input type="text" id="nom" name="nom" placeholder="Nom" defaultValue={nom || ""} required/>
@@ -101,10 +109,7 @@ async function fetchAttractions() {
   return res.json();
 }
 async function fetchAttractionsById(id) {
-  if(id === undefined) {
-    id=1;
-  }
-  const res = await fetch(`http://localhost:3006/attraction/${id}`, {
+  const res = await fetch(`http://localhost:3006/attraction/id/${encodeURIComponent(id)}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
