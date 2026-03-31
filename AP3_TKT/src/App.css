@@ -87,13 +87,13 @@ margin-top: 1em;
 }
 .accueil_banniere{
   background-image: url('./assets/images/home.webp');
-  background-position: center;
   background-size: cover;
   box-shadow: #0000006a 3px 0px 15px;
   border-radius: 20px;
   margin: auto;
   padding: 1em;
-  height: 25em;
+  height: 28em;
+  overflow: hidden;
   
   
 }

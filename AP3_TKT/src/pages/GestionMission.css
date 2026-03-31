@@ -1,0 +1,140 @@
+.btn_equipes ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.btn_equipes button {
+  border: 0;
+  padding: 8px 14px;
+  font-weight: 700;
+  color: #ecf6ff;
+  background: linear-gradient(180deg, #1c4dff, #0f2cc4);
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.tool{
+
+}
+
+.blur_pannel{
+  width: 90%;
+  height: 80%;
+  margin: auto;
+  margin-top: 3em !important;
+  backdrop-filter: blur(10px);
+
+  border-radius: 2em;
+  padding: 20px;
+}
+.pannele_user{
+  margin-top: 2em;
+  margin: 2em;
+  border-radius: 3em;
+  height: 100%;
+  padding: auto;
+  background-image: url(/src/assets/images/agenda.jpg);
+  background-size: cover;
+  background-position: right;
+}
+
+.brique_user{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.brique_user_item{
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+  color:white;
+  background-color: #3E74BA !important;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 16px rgba(18, 30, 68, 0.12);
+}
+
+.brique_user_item .user_cell{
+  display: flex;
+  align-items: center;
+}
+
+.brique_user_item .user_name{
+  font-size: 1.05rem;
+}
+
+.brique_user_item button{
+  border: 0;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: #0f2cc4;
+  background: #eef3ff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.brique_user_item button:hover{
+  filter: brightness(0.95);
+}
+.gestion_user{
+  color: white;
+  height: 70%;
+}
+
+.panne_user h1{
+  background-color: white;
+}
+
+.btn_equipes button:hover {
+  filter: brightness(1.08);
+}
+
+.equipes-menu {
+  position: relative;
+}
+
+.equipes-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: 0 12px 24px rgba(18, 30, 68, 0.18);
+  display: grid;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  z-index: 10;
+}
+
+.equipes-menu:hover .equipes-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.equipes-dropdown button {
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+  background: #eef3ff;
+  color: #0f2cc4;
+}
+
+.equipes-dropdown button.is-active {
+  background: #0f2cc4;
+  color: #ffffff;
+}
