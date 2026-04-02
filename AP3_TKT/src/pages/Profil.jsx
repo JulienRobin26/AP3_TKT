@@ -1,5 +1,6 @@
 import { useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
+import "./Profil.css";
 function Profil() {
   const navigate = useNavigate();
   const [id_user, setIdUser] = useState(1);

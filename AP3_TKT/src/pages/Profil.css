@@ -1,0 +1,37 @@
+.page{
+    height: 70%;
+}
+
+.user_fiche{
+    background:linear-gradient(darkblue, blue);
+    width: 40%;
+    height: 100%;
+    border-radius: 2em;
+    padding: 1.5em 2em 2em 2em;
+    height: max-content;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "title logout"
+        "info info";
+    align-items: center;
+    column-gap: 1rem;
+    row-gap: 1rem;
+    color: white;
+}
+
+.deconnexion{
+    grid-area: logout;
+    justify-self: end;
+}
+
+.user_fiche h1{
+    grid-area: title;
+    margin: 0;
+}
+
+.user_info{
+    grid-area: info;
+}
+
