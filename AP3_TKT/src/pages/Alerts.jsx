@@ -55,6 +55,7 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
       <div className="alerts-row-main">
         <p className="alerts-chip">{user}</p>
         <p className="alerts-chip">{date}</p>
+        <div className="boutons_actions">
         <button
           type="button"
           className="alerts-view-btn"
@@ -72,7 +73,7 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
           className="alerts-view-btn"
           >Supprimer</button>
       </div>
-
+</div>
       {isOpen && <p className="alerts-description">{description}</p>}
     </article>
   )

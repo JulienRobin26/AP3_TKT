@@ -20,6 +20,14 @@
 
 }
 
+.tools_outils{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .blur_pannel{
   width: 90%;
   margin: auto;
@@ -45,6 +53,14 @@
   padding: 0;
   display: grid;
   gap: 12px;
+}
+
+.searchbar{
+  width: min-content;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 44, 196, 0.25);
 }
 
 .brique_user_item{

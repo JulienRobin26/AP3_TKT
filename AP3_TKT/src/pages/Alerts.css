@@ -15,7 +15,6 @@
   width: 100%;
   height: 100%;
   border-radius: 24px;
-  border: 2px solid #1aa4ff;
   padding: clamp(1rem, 2vw, 1.6rem);
   background-image: linear-gradient(
       180deg,
@@ -77,12 +76,15 @@
 }
 
 .alerts-row-main {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1.25fr 0.75fr;
-  gap: 0.8rem;
-  align-items: center;
+  display: flex;
+  gap: 1rem;
 }
 
+.boutons_actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
 .alerts-chip {
   margin: 0;
   text-align: center;

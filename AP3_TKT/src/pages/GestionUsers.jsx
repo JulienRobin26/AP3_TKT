@@ -26,31 +26,35 @@ function GestionUsers() {
         <div className="tool">
           <h2>Gestion des utilisateurs</h2>
           <div className="blur_pannel">
-          <div className="gestion_user">
-            <input type="text" placeholder="Rechercher un utilisateur" />
-          </div>
-          <div className="btn_equipes">
-            <ul>
-              <li className="equipes-menu">
-                <button type="button">Equipes</button>
-                <ul className="equipes-dropdown">
-                  {equipes.map((equipe) => (
-                    <li key={equipe}>
-                      <button
-                        type="button"
-                        className={equipeFiltre === equipe ? "is-active" : ""}
-                        onClick={() => setEquipeFiltre(equipe)}
-                      >
-                        {equipe}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              <li>
-                <button>Ajouter un utilisateur</button>
-              </li>
-            </ul>
+          <div className="tools_outils">
+            <input
+              type="text"
+              placeholder="Rechercher un utilisateur"
+              className="searchbar"
+            />
+            <div className="btn_equipes">
+              <ul>
+                <li className="equipes-menu">
+                  <button type="button">Equipes</button>
+                  <ul className="equipes-dropdown">
+                    {equipes.map((equipe) => (
+                      <li key={equipe}>
+                        <button
+                          type="button"
+                          className={equipeFiltre === equipe ? "is-active" : ""}
+                          onClick={() => setEquipeFiltre(equipe)}
+                        >
+                          {equipe}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  <button>Ajouter un utilisateur</button>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="pannel_user_liste">
             <ul className="brique_user">
