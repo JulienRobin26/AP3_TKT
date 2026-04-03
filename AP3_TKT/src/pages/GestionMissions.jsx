@@ -10,7 +10,7 @@ function GestionUsers() {
     { id: 4, nom: "Leroux", prenom: "Mehdi", equipe: "Securite" },
     { id: 5, nom: "Moreau", prenom: "Nina", equipe: "Accueil" },
   ];
-
+  const [searchbar, setSearchBar] = useState("");
   const [equipeFiltre, setEquipeFiltre] = useState("Toutes");
   const equipes = ["Toutes", ...new Set(utilisateur.map((user) => user.equipe))];
   const utilisateursFiltres =

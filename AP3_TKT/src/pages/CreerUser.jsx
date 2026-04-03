@@ -21,3 +21,4 @@ function CreerUser() {
         </>
     );
 }
+export default CreerUser;

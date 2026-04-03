@@ -60,16 +60,15 @@ function GestionUsers() {
             <ul className="brique_user">
               {utilisateursFiltres.map((user) => (
                 <li className="brique_user_item" key={user.id}>
-                  <div className="user_cell user_name">
+                  <div className="user_cell">
                     <strong>
                       {user.prenom} {user.nom}
                     </strong>
-                  </div>
-                  <div className="user_cell">{user.equipe}</div>
-                  <div className="user_cell">
+                  {user.equipe}
+                  
                     <button>Modifier</button>
-                  </div>
-                  <div className="user_cell">
+                  
+                  
                     <button>Supprimer</button>
                   </div>
                 </li>
