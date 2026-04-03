@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.container_connexion {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0px;
+  background-image: url(../assets/images/login.webp);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+.container_connexion img {
+
+  height: 64px;
+  width: auto;
+}
+
+.login_form {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 51, 204, 0.45);
+  width: min(420px, 90vw);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login_form form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+  justify-items: center;
+  align-items: center;
+  gap:calc(0.75rem);
+}
+
+.login_form label {
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  width: max-content;
+}
+
+
+.login_form input[type="text"],
+.login_form input[type="password"] {
+  width: 70%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #a8a8a8;
+  color: #0033cc;
+  margin: 0;
+  margin-bottom: 0.3em !important;
+  margin-top: 1em;
+  border:none;
+}
+.login_form input[type="text"],
+.login_form input[type="password"]:active {
+border:none;
+}
+.login_form .check_mdp {
+  justify-self: start;
+}
+
+.login_form input[type="text"]::placeholder,
+.login_form input[type="password"]::placeholder {
+    color: rgb(255, 255, 255);
+}
+
+.login_form .button_submit {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: none;
+  margin: auto;
+  border-radius: 0.6rem;
+  background: #ffffff;
+  color: #0033cc;
+  width: 30%;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.6s;
+  border: 3px solid #0033cc;
+}
+
+.login_form .button_submit:hover {
+  background: #0033cc;
+  color: white;
+  border: 3px solid white;
+}
+
+.login_form a {
+  grid-column: 1 / -1;
+  color: white;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin: auto;
+  transition: 0.5s;
+}
+
+.login_form a:hover {
+  text-decoration: underline;
+}
