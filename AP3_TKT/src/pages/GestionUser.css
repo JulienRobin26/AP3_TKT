@@ -20,6 +20,14 @@
 
 }
 
+.tools_outils{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .blur_pannel{
   width: 90%;
   margin: auto;
@@ -47,9 +55,18 @@
   gap: 12px;
 }
 
+.searchbar{
+  width: min-content;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 44, 196, 0.25);
+}
+
 .brique_user_item{
-  display: grid;
-  grid-template-columns: 2fr 1fr auto auto;
+  display: flex;
+  flex-direction: row;
+
   align-items: center;
   gap: 12px;
   height: 50px;
@@ -63,6 +80,7 @@
 
 .brique_user_item .user_cell{
   display: flex;
+
   align-items: center;
 }
 

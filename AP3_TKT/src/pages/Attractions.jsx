@@ -111,24 +111,23 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pour
         <h2>{titre}</h2>
         <ul>
           <li>{ ouvert ? ("Ouvert") : ("Ferme") }</li>
-          <li>{tailleLimite === 0 ?<p>Taille limite : Pas de restriction</p> : <p>Taille limite : {tailleLimite} m</p>} </li>
-          <li>{pourEnceinte ? <p>Accessible aux personnes enceintes</p> : null}</li>
+          
           
         </ul>
         <ul>
           <li><p>Temps d'attente : {temps}</p></li>
-          <li>{pourLesPetits ? <p>Accessible aux jeunes enfants</p> : null}</li>
+          
         </ul>
         
         {isAdmin && (
-          <div>
+          <div className="btn_admin">
             <button type="button" onClick={goToModification} >Modifier</button>
             <form method="post" action={"http://localhost:3006/attraction/supprimer/" + id}>
               <button type="submit">Supprimer</button>
             </form>
           </div>
         )}
-        {isOpen && <p>{infos}</p>}
+        
       </div>
       {isOpen && (
         <div className="attraction-overlay" role="dialog" aria-modal="true" onClick={close}>
@@ -140,6 +139,11 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pour
               <span>{ouvert ? "Ouvert" : "Ferme"}</span>
               <span>Parc {idParc}</span>
               <span>Temps d'attente : {temps}</span>
+              <ul>
+                <li>{pourLesPetits ? <p>Accessible aux jeunes enfants</p> : null}</li>
+                <li>{tailleLimite === 0 ?<p>Taille limite : Pas de restriction</p> : <p>Taille limite : {tailleLimite} m</p>} </li>
+          <li>{pourEnceinte ? <p>Accessible aux personnes enceintes</p> : null}</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -170,7 +174,7 @@ function boutonParc(idParc, setIdParc) {
 
 function boutonAjout(navigate) {
   return (
-    <button type="button" onClick={() => navigate("/gestion_attractions")}>Ajouter</button>
+    <button className="btn_ajouter_attraction" type="button" onClick={() => navigate("/gestion_attractions")}>Ajouter une attraction</button>
   );
 }
 

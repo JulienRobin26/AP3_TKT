@@ -33,7 +33,7 @@ export default function Guard({ roles = [] }) { // recupere les roles pour filtr
   }
 
   const roleVal = user?.role; // role brut (0/1)
-  if (roles.length > 1 && !roles.includes(roleVal)) { // filtre acces selon le role
+  if (roles.length > 0 && !roles.includes(roleVal)) { // filtre acces selon le role
     return <Navigate to="/login" replace />;
   }
 

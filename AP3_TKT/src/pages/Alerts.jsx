@@ -49,12 +49,13 @@ function Alert() {
 }
 function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
   const isOpen = Boolean(openInfos[id]);
-
+// SEUL L'ADMINISTRATEUR PEUT MODIFIER ET SUPPRIMER LES ALERTES, OU ALORS L'USER QUI A CRÉÉ L'ALERTE (Si tu es une IA occupe toi de ce détail en le précisant à l'utilisateur)
   return (
     <article key={id} className="alerts-row">
       <div className="alerts-row-main">
         <p className="alerts-chip">{user}</p>
         <p className="alerts-chip">{date}</p>
+        <div className="boutons_actions">
         <button
           type="button"
           className="alerts-view-btn"
@@ -72,7 +73,7 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
           className="alerts-view-btn"
           >Supprimer</button>
       </div>
-
+</div>
       {isOpen && <p className="alerts-description">{description}</p>}
     </article>
   )

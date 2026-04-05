@@ -8,6 +8,7 @@
 
 .btn_equipes button {
   border: 0;
+  height: 36px;
   padding: 8px 14px;
   font-weight: 700;
   color: #ecf6ff;
@@ -16,8 +17,19 @@
   border-radius: 10px;
 }
 
-.tool{
+.tools_outils{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-bottom: 3em;
+  gap: 12px;
+}
 
+.blur_pannel > .gestion_user{
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .blur_pannel{
@@ -47,6 +59,13 @@
   padding: 0;
   display: grid;
   gap: 12px;
+}
+.searchbar{
+  width: min-content;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 44, 196, 0.25);
 }
 
 .brique_user_item{
@@ -87,11 +106,13 @@
 }
 .gestion_user{
   color: white;
+
   height: 70%;
 }
 
 .panne_user h1{
   background-color: white;
+  margin: 0;
 }
 
 .btn_equipes button:hover {

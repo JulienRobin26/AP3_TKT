@@ -10,7 +10,7 @@ function GestionUsers() {
     { id: 4, nom: "Leroux", prenom: "Mehdi", equipe: "Securite" },
     { id: 5, nom: "Moreau", prenom: "Nina", equipe: "Accueil" },
   ];
-
+  const [searchbar, setSearchBar] = useState("");
   const [equipeFiltre, setEquipeFiltre] = useState("Toutes");
   const equipes = ["Toutes", ...new Set(utilisateur.map((user) => user.equipe))];
   const utilisateursFiltres =
@@ -26,9 +26,10 @@ function GestionUsers() {
         <div className="tool">
           <h2>Gestion des missions</h2>
           <div className="blur_pannel">
-          <div className="gestion_user">
-            <input type="text" placeholder="Rechercher un utilisateur" />
-          </div>
+          
+            <div className="tools_outils">
+            <input type="text" placeholder="Rechercher un utilisateur" className="searchbar"/>
+          
           <div className="btn_equipes">
             <ul>
               <li className="equipes-menu">
@@ -51,6 +52,7 @@ function GestionUsers() {
                 <button>Ajouter un utilisateur</button>
               </li>
             </ul>
+          </div>
           </div>
           <div className="pannel_user_liste">
             <ul className="brique_user">
