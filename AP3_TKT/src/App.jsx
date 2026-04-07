@@ -12,12 +12,14 @@ import Profil from './pages/Profil'
 import GestionUsers from './pages/GestionUsers'
 import GestionMissions from './pages/GestionMissions'
 import CreerUser from './pages/CreerUser'
+import ModifierUser from './pages/ModifierUser'
 import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
 import GestionAttractions from './pages/GestionAttractions' 
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import CreationUsers from './pages/CreerUser';
 
 function App() {
   const [user, setUser] = useState({ auth: null }) // stocke le role pour le Nav
@@ -52,19 +54,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />/*<Login />*/} />
         <Route element={<Guard roles={[1]} />}>
-          <Route path="/gestion_users/*" element={<GestionUsers />} />
-          <Route path="/gestionuser" element={<Navigate to="/gestion_users" replace />} />
-          <Route path="/gestion_missions/*" element={<GestionMissions />} />
-          <Route path="/gestionmissions" element={<Navigate to="/gestion_missions" replace />} />
-          <Route path="/creer_user" element={<CreerUser />} />
-          <Route path="/creeruser" element={<Navigate to="/creer_user" replace />} />
+          <Route path="/gestion_users/" element={<GestionUsers />} />
+          <Route path="/gestion_missions/" element={<GestionMissions />} />
           <Route path="/gestion_attractions" element={<GestionAttractions />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/add_user" element={<CreationUsers />}/>
+          <Route path="/modifier_user/:id" element={<ModifierUser />} />
+          <Route path="/creer_user" element={<CreerUser />} />
+          
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
+          <Route path="/home" element={<Home />} />
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/avertissement" element={<Avertissement />} />
           <Route path="/alerts" element={<Alerts />} />

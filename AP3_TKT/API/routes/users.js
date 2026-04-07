@@ -5,7 +5,19 @@ const authToken = require('../auth_token');
 
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT id_usr, nom_usr, prenom_usr');
+    const [rows] = await db.query('SELECT id_usr, nom_usr, prenom_usr FROM users');
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/utilisateurs', async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT id_usr AS id, nom_usr AS nom, prenom_usr AS prenom, email_usr AS email, libelle_pst AS poste, libelle_eqp AS equipe FROM users INNER JOIN poste ON users.id_pst_usr = poste.id_pst INNER JOIN equipes ON poste.id_eqp_pst = equipes.id_eqp'
+    );
     res.json(rows);
   } catch (error) {
     console.error('Error fetching users:', error);

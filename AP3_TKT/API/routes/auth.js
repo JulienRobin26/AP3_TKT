@@ -61,12 +61,16 @@ router.post('/signup', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/logout', authToken, (req, res) => {
+router.post('/logout', (req, res) => {
   if (!req.cookies.token) {
-    return res.status(400).json({ message: 'Aucun token trouvé' });
+    return res.status(400).json({ message: 'Aucun token trouvÃ©' });
   }
-  res.clearCookie('token');
-  res.json({ message: 'Déconnecté' });
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.json({ message: 'DÃ©connectÃ©' });
 });
 
 router.get('/recup_infos', authToken, async (req, res) => {
@@ -74,4 +78,5 @@ router.get('/recup_infos', authToken, async (req, res) => {
   return res.json({user:req.user});
 });
 module.exports = router;
+
 

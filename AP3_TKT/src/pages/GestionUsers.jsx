@@ -1,22 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./GestionUser.css";
 
 function GestionUsers() {
-  // const [utilisateur, setUtilisateurs] = useState([]);
-  const utilisateur = [
-    { id: 1, nom: "Dupont", prenom: "Alice", equipe: "Billetterie" },
-    { id: 2, nom: "Benali", prenom: "Karim", equipe: "Entretien" },
-    { id: 3, nom: "Martin", prenom: "Sophie", equipe: "Accueil" },
-    { id: 4, nom: "Leroux", prenom: "Mehdi", equipe: "Securite" },
-    { id: 5, nom: "Moreau", prenom: "Nina", equipe: "Accueil" },
-  ];
+  const navigate = useNavigate();
+  const [utilisateur, setUtilisateurs] = useState([]);
+  const [recherche, setRecherche] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    console.log("[GestionUsers] Fetch utilisateurs...");
+    recup_users()
+      .then((data) => {
+        console.log("[GestionUsers] utilisateurs reçus:", data);
+        if (isMounted) setUtilisateurs(data);
+      })
+      .catch((err) => {
+        console.error("[GestionUsers] Erreur getUsers", err);
+      });
+    return () => {
+      console.log("[GestionUsers] unmount");
+      isMounted = false;
+    };
+  }, []);
 
   const [equipeFiltre, setEquipeFiltre] = useState("Toutes");
   const equipes = ["Toutes", ...new Set(utilisateur.map((user) => user.equipe))];
-  const utilisateursFiltres =
-    equipeFiltre === "Toutes"
-      ? utilisateur
-      : utilisateur.filter((user) => user.equipe === equipeFiltre);
+  const utilisateursFiltres = utilisateur
+    .filter((user) =>
+      equipeFiltre === "Toutes" ? true : user.equipe === equipeFiltre
+    )
+    .filter((user) => {
+      const terme = recherche.trim().toLowerCase();
+      if (!terme) return true;
+      const prenom = String(user.prenom || "").toLowerCase();
+      const nom = String(user.nom || "").toLowerCase();
+      return (
+        nom.includes(terme) ||
+        prenom.includes(terme) ||
+        `${prenom} ${nom}`.includes(terme) ||
+        `${nom} ${prenom}`.includes(terme)
+      );
+    });
 
   return (
     <>
@@ -31,6 +56,8 @@ function GestionUsers() {
               type="text"
               placeholder="Rechercher un utilisateur"
               className="searchbar"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
             />
             <div className="btn_equipes">
               <ul>
@@ -51,12 +78,15 @@ function GestionUsers() {
                   </ul>
                 </li>
                 <li>
-                  <button>Ajouter un utilisateur</button>
+                  <button type="button" onClick={() => navigate("/creer_user")}>
+                    Ajouter un utilisateur
+                  </button>
                 </li>
               </ul>
             </div>
           </div>
           <div className="pannel_user_liste">
+            
             <ul className="brique_user">
               {utilisateursFiltres.map((user) => (
                 <li className="brique_user_item" key={user.id}>
@@ -66,7 +96,12 @@ function GestionUsers() {
                     </strong>
                   {user.equipe}
                   
-                    <button>Modifier</button>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/modifier_user/${user.id}`)}
+                    >
+                      Modifier
+                    </button>
                   
                   
                     <button>Supprimer</button>
@@ -83,11 +118,38 @@ function GestionUsers() {
   );
 }
 
-async function recup_users(id) {
-  if (id == undefined) {
-    id = 1;
-  }
-
-  const res = await fetch("");
+async function recup_users() {
+    const res = await fetch("http://localhost:3006/api/users/utilisateurs", {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error("Erreur getUsers");
+    return res.json();
+    
 }
+
+async function recup_equipes() {
+  const res = await fetch("http://localhost:3006/api/groupe/equipe", {
+    method: 'GET',
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Erreur getEquipes");
+  return res.json();
+}
+
+function rechercheUtilisateur(recherche, setRecherche) {
+  return (
+    <div className="recherche">
+      <input
+        type="text"
+        placeholder="Rechercher un utilisateur"
+        className="searchbar"
+        value={recherche}
+        onChange={(e) => setRecherche(e.target.value)}
+      />
+    </div>
+  );
+}
+
+
 export default GestionUsers;
