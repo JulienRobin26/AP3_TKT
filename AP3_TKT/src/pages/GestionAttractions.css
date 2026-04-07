@@ -1,0 +1,185 @@
+.gestion-attractions-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+}
+
+.gestion-attractions-page > h1 {
+  margin: 0;
+  color: #000000;
+  text-shadow: none;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.gestion-attractions-wrapper {
+  width: min(980px, 96vw);
+  border-radius: 34px;
+  padding: clamp(1.2rem, 2.5vw, 2rem);
+  background-image: linear-gradient(145deg, rgba(2, 8, 95, 0.8), rgba(1, 14, 120, 0.74)),
+    url("../assets/images/firework.png");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 14px 36px rgba(4, 9, 59, 0.45);
+}
+
+.gestion-attractions-wrapper > h1 {
+  margin: 0 0 1rem;
+  color: #f4f9ff;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  text-align: center;
+}
+
+.ajout-attraction-form,
+.modif-attraction-form {
+  border-radius: 26px;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: rgba(5, 16, 114, 0.56);
+}
+
+.gestion-attraction-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "title image"
+    "description image"
+    "wait constraints"
+    "park constraints"
+    "size constraints";
+  gap: 1rem 1.4rem;
+  align-items: start;
+}
+
+.ga-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ga-field label,
+.ga-constraints label,
+.ga-constraints p {
+  color: #eef5ff;
+  font-size: clamp(1rem, 1.6vw, 1.9rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.ga-field input,
+.ga-field textarea {
+  border: 0;
+  border-radius: 8px;
+  background: #4f84c8;
+  color: #eef5ff;
+  padding: 0.8rem 0.9rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+}
+
+.ga-field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.ga-field input::placeholder,
+.ga-field textarea::placeholder {
+  color: rgba(230, 240, 255, 0.78);
+}
+
+.ga-field-title {
+  grid-area: title;
+}
+
+.ga-field-description {
+  grid-area: description;
+}
+
+.ga-field-image {
+  grid-area: image;
+}
+
+.ga-field-image input {
+  min-height: 210px;
+  text-align: center;
+  font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+}
+
+.ga-field-wait {
+  grid-area: wait;
+}
+
+.ga-field-park {
+  grid-area: park;
+}
+
+.ga-field-size {
+  grid-area: size;
+}
+
+.ga-constraints {
+  grid-area: constraints;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 16px;
+  background: rgba(5, 26, 116, 0.44);
+}
+
+.ga-constraints p {
+  grid-column: 1 / -1;
+}
+
+.ga-constraints input[type="checkbox"] {
+  width: 1.28rem;
+  height: 1.28rem;
+  accent-color: #7bd5ff;
+}
+
+.ga-submit {
+  display: block;
+  margin: 1.2rem auto 0;
+  width: min(280px, 84%);
+  border: 0;
+  border-radius: 10px;
+  background: #cbd1db;
+  color: #182231;
+  padding: 0.65rem 0.9rem;
+  font-size: clamp(1.1rem, 1.8vw, 1.9rem);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.16s ease, filter 0.16s ease;
+}
+
+.ga-submit:hover,
+.ga-submit:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .gestion-attraction-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "description"
+      "image"
+      "wait"
+      "park"
+      "size"
+      "constraints";
+  }
+
+  .ga-field-image input {
+    min-height: 64px;
+    text-align: left;
+    font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  }
+
+  .ga-constraints {
+    grid-template-columns: 1fr auto;
+  }
+}
