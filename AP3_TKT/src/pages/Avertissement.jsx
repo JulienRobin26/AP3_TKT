@@ -20,7 +20,7 @@ function Avertissement() {
             blocAvertissement(avertissement, navigate)
           ))}
         </div>
-        <button type="button" className="avertissement-create-btn">Ajouter</button>
+        
       </div>
       
     </section>
@@ -57,6 +57,8 @@ function blocAvertissement(avertissement, navigate) {
     </div>
   )
 }
+
+
 async function fetchAlertes() {
   
   const res = await fetch(`http://localhost:3006/avertissements/`, {

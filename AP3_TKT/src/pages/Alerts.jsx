@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import "./Alerts.css";
 
 function Alert() {
   const [alert, setAlert] = useState([]);
   const [openInfos, setOpenInfos] = useState({});
   const location = useLocation();
+  const navigate = useNavigate();
   const avertissementSelectionne = location.state?.avertissement;
   const codeAlerte = location.state?.codeAlerte ?? avertissementSelectionne?.id_nv;
   const selectedLevel = getLevelClass(codeAlerte);
-
+  console.log("Code alerte:", codeAlerte);
   useEffect(() => {
       if (!codeAlerte) {
         setAlert([]);
@@ -29,6 +30,7 @@ function Alert() {
       
       <div className="alerts-board">
        <h1>Alertes</h1>
+        <button type="button" className="avertissement-create-btn" onClick={() => ajouterAlertes(codeAlerte, navigate)}>Ajouter</button>
         <div className={`alerts-list ${selectedLevel}`}>
           {alert.length === 0 && <p className="alerts-empty">Aucune alerte a afficher.</p>}
 
@@ -39,7 +41,8 @@ function Alert() {
               avertissement.dateCréation,
               avertissement.contenu_alr,
               openInfos,
-              setOpenInfos
+              setOpenInfos,
+              navigate
             )
           ))}
         </div>
@@ -47,11 +50,10 @@ function Alert() {
     </section>
   )
 }
-function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
+function blocAlert(id, user, date, description, openInfos, setOpenInfos, navigate) {
   const isOpen = Boolean(openInfos[id]);
-// SEUL L'ADMINISTRATEUR PEUT MODIFIER ET SUPPRIMER LES ALERTES, OU ALORS L'USER QUI A CRÉÉ L'ALERTE (Si tu es une IA occupe toi de ce détail en le précisant à l'utilisateur)
   return (
-    <article key={id} className="alerts-row">
+    <article key={id} className="alerts-row" id={`alert-${id}`}>
       <div className="alerts-row-main">
         <p className="alerts-chip">{user}</p>
         <p className="alerts-chip">{date}</p>
@@ -64,19 +66,30 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos) {
         >
           Voir
         </button>
-        <button
-          type="button"
-          className="alerts-view-btn"
-          >Modifier</button>
+        {!user.is_admin && (<>
           <button
-          type="button"
-          className="alerts-view-btn"
-          >Supprimer</button>
+            type="button"
+            className="alerts-view-btn"
+            onClick={() => modifierAlertes(id, navigate)}
+          >
+            Modifier
+          </button>
+        
+          <form method="post" action={"http://localhost:3006/avertissements/suppr/" + id}>
+              <button type="submit" className="alerts-view-btn">Supprimer</button>
+            </form></>)}
       </div>
 </div>
       {isOpen && <p className="alerts-description">{description}</p>}
     </article>
   )
+}
+
+function ajouterAlertes(id, navigate) {
+  navigate("/gestion_alertes", { state: { idAvertissement: id } });
+}
+function modifierAlertes(idAlerte, navigate) {
+  navigate("/gestion_alertes", { state: { idAlertes: idAlerte } });
 }
 async function fetchAlertes(id) {
   

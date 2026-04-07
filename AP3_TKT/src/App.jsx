@@ -18,6 +18,7 @@ import Contact from './pages/Contact'
 import Home from './pages/Home'
 import GestionAttractions from './pages/GestionAttractions' 
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import GestionAlertes from './pages/GestionAlertes'
 
 function App() {
   const [user, setUser] = useState({ auth: null }) // stocke le role pour le Nav
@@ -60,9 +61,13 @@ function App() {
           <Route path="/creeruser" element={<Navigate to="/creer_user" replace />} />
           <Route path="/gestion_attractions" element={<GestionAttractions />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
+          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
           <Route path="/attractions" element={<Attractions />} />
