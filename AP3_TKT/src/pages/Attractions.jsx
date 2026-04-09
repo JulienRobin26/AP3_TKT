@@ -107,27 +107,25 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pour
         onClick={toggle}
         onKeyDown={(e) => e.key === "Enter" && toggle()}
       >
-        <img src={image} alt="Image de l'attraction" />
-        <h2>{titre}</h2>
-        <ul>
-          <li>{ ouvert ? ("Ouvert") : ("Ferme") }</li>
+        <img src={image}  />
+        <div className="atraction-content">
+          <h2>{titre}</h2>
+          <ul>
+            <li>{ ouvert ? ("Ouvert") : ("Ferme") }</li>
+          </ul>
+          <ul>
+            <li><p>Temps d'attente : {temps}</p></li>
+          </ul>
           
-          
-        </ul>
-        <ul>
-          <li><p>Temps d'attente : {temps}</p></li>
-          
-        </ul>
-        
-        {isAdmin && (
-          <div className="btn_admin">
-            <button type="button" onClick={goToModification} >Modifier</button>
-            <form method="post" action={"http://localhost:3006/attraction/supprimer/" + id}>
-              <button type="submit">Supprimer</button>
-            </form>
-          </div>
-        )}
-        
+          {isAdmin && (
+            <div className="btn_admin">
+              <button type="button" onClick={goToModification} >Modifier</button>
+              <form method="post" action={"http://localhost:3006/attraction/supprimer/" + id}>
+                <button type="submit">Supprimer</button>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
       {isOpen && (
         <div className="attraction-overlay" role="dialog" aria-modal="true" onClick={close}>

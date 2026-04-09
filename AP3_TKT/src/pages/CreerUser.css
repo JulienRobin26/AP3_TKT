@@ -1,3 +1,24 @@
 .pannel_user_creation{
-    background-image: url(/src/assets/images/hotel.webp);
+    background-image: url(../assets/images/gestion.webp);
+    background-size: cover;
+    padding: 20px;
+    border-radius: 2em;
+    color:white;
+    height: 100%;
+}
+
+.page{
+
+
+}
+
+.form{
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    color:black;
+    margin: auto;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1em;
 }

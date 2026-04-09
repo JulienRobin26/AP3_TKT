@@ -12,59 +12,62 @@ import Profil from './pages/Profil'
 import GestionUsers from './pages/GestionUsers'
 import GestionMissions from './pages/GestionMissions'
 import CreerUser from './pages/CreerUser'
+import ModifierUser from './pages/ModifierUser'
 import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
 import GestionAttractions from './pages/GestionAttractions' 
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import CreationUsers from './pages/CreerUser';
 
 function App() {
-  const [user, setUser] = useState({ auth: null }) // stocke le role pour le Nav
+  const [user, setUser] = useState({ auth: null })
   const location = useLocation()
-  const isLoginPage = location.pathname === '/login' || location.pathname === '/' // detecte les pages publiques
-  const showNav = user.auth === 'admin' || user.auth === 'user' // affiche le Nav si role valide
+  const isLoginPage = location.pathname === '/login' || location.pathname === '/' 
+  const hideFooter = location.pathname.startsWith('/gestion_users')
+  const showNav = user.auth === 'admin' || user.auth === 'user'
 
-  useEffect(() => { // revalide le role a chaque page
-    if (isLoginPage) { // pas de check sur login
-      setUser({ auth: null }) // reset du role
+  useEffect(() => {
+    if (isLoginPage) {
+      setUser({ auth: null })
       return
     }
-    fetch('http://localhost:3006/api/auth/recup_infos', { // recupere l'utilisateur
+    fetch('http://localhost:3006/api/auth/recup_infos', {
       method: 'GET',
       credentials: 'include',
     })
       .then(async (res) => {
-        if (!res.ok) { // cookie invalide
-          setUser({ auth: null }) // pas de role
+        if (!res.ok) { 
+          setUser({ auth: null }) 
           return
         }
-        const data = await res.json() // lit la reponse
-        const roleStr = data?.user?.role === 1 ? 'admin' : data?.user?.role === 0 ? 'user' : null // map 1/0 vers texte
-        setUser({ auth: roleStr }) // met a jour le role
+        const data = await res.json()
+        const roleStr = data?.user?.role === 1 ? 'admin' : data?.user?.role === 0 ? 'user' : null
+        setUser({ auth: roleStr })
       })
-      .catch(() => setUser({ auth: null })) // erreur = pas de role
-  }, [location.pathname, isLoginPage]) // relance a chaque navigation
+      .catch(() => setUser({ auth: null }))
+  }, [location.pathname, isLoginPage])
 
   return (
     <>
-      {!isLoginPage && showNav && <Nav user={user} /> /* Nav selon role */ }
+      {!isLoginPage && showNav && <Nav user={user} /> }
       <Routes>
-        <Route path="/" element={<Login />/*<Login />*/} />
+        <Route path="/" element={<Login />} />
         <Route element={<Guard roles={[1]} />}>
-          <Route path="/gestion_users/*" element={<GestionUsers />} />
-          <Route path="/gestionuser" element={<Navigate to="/gestion_users" replace />} />
-          <Route path="/gestion_missions/*" element={<GestionMissions />} />
-          <Route path="/gestionmissions" element={<Navigate to="/gestion_missions" replace />} />
-          <Route path="/creer_user" element={<CreerUser />} />
-          <Route path="/creeruser" element={<Navigate to="/creer_user" replace />} />
+          <Route path="/gestion_users/" element={<GestionUsers />} />
+          <Route path="/gestion_missions/" element={<GestionMissions />} />
           <Route path="/gestion_attractions" element={<GestionAttractions />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/add_user" element={<CreationUsers />}/>
+          <Route path="/modifier_user/:id" element={<ModifierUser />} />
+          <Route path="/creer_user" element={<CreerUser />} />
+          
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
+          <Route path="/home" element={<Home />} />
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/avertissement" element={<Avertissement />} />
           <Route path="/alerts" element={<Alerts />} />
@@ -76,7 +79,7 @@ function App() {
         </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!isLoginPage && showNav && <Footer /> /* Footer selon role */ }
+      {!isLoginPage && showNav && !hideFooter && <Footer /> }
     </>
 
   )
