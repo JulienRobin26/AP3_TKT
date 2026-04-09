@@ -17,7 +17,7 @@ function Login() {
       await auth_User(identifiant, password) // appelle l'API login
       navigate('/home') // redirection apres succes
     } catch (err) {
-      setError(err.message || 'Erreur de connexion') // affiche l'erreur
+      setError(err?.message || 'Erreur de connexion') // affiche l'erreur
       console.log(err);
     }
   }
@@ -43,15 +43,36 @@ function Login() {
   )
 }
 async function auth_User(identifiant, pass) { // fonction appel API login
-  const res = await fetch(`http://localhost:3006/api/auth/login`, { // endpoint login
-    method: "POST", // envoi des identifiants
-    headers: { "Content-Type": "application/json" }, // payload JSON
-    credentials: 'include', // envoie/recupere le cookie
-    body: JSON.stringify({ identifiant: identifiant, password: pass }) // donnees du form
-  });
+  let res;
+  try {
+    res = await fetch(`http://localhost:3006/api/auth/login`, { // endpoint login
+      method: "POST", // envoi des identifiants
+      headers: { "Content-Type": "application/json" }, // payload JSON
+      credentials: 'include', // envoie/recupere le cookie
+      body: JSON.stringify({ identifiant: identifiant, password: pass }) // donnees du form
+    });
+  } catch (err) {
+    throw new Error("Serveur inaccessible");
+  }
 
-  if (!res.ok) throw new Error(res.message); // login refuse
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (_) {
+    data = null;
+  }
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error(data?.erreur || data?.error || "Identifiants invalides");
+    }
+    if (res.status === 500) {
+      throw new Error("Erreur serveur");
+    }
+    throw new Error(data?.erreur || data?.error || data?.message || "Erreur de connexion");
+  }
+
   console.log("Connexion reussie");
-  return res.json(); // reponse serveur
+  return data; // reponse serveur
 }
 export default Login

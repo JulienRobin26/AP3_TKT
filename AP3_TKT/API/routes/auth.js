@@ -50,10 +50,10 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/signup', authToken, async (req, res) => {
-  const {identifiant, password} = req.body;
+  const {identifiant, password, nom, prenom, email,tel,num_poste,role} = req.body;
   try {
     const password_hash = await bcrypt.hash(password, saltRounds);
-    const [rows] = await dbt.query('INSERT INTO users (login_usr, mdp_usr) VALUES (?, ?)', [identifiant, password_hash]);
+    const [rows] = await dbt.query('INSERT INTO users (login_usr, mdp_usr, nom_usr, prenom_usr, email_usr, num_usr, id_pst_usr, role_usr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [identifiant, password_hash, nom, prenom, email, tel, num_poste, role]);
     res.json(password_hash)
     //res.json({message: "Utilisateur créé avec succès", userId: rows.insertId});
   } catch (error) {
@@ -61,12 +61,16 @@ router.post('/signup', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/logout', authToken, (req, res) => {
+router.post('/logout', (req, res) => {
   if (!req.cookies.token) {
-    return res.status(400).json({ message: 'Aucun token trouvé' });
+    return res.status(400).json({ message: 'Aucun token trouvÃ©' });
   }
-  res.clearCookie('token');
-  res.json({ message: 'Déconnecté' });
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.json({ message: 'DÃ©connectÃ©' });
 });
 
 router.get('/recup_infos', authToken, async (req, res) => {
@@ -74,4 +78,5 @@ router.get('/recup_infos', authToken, async (req, res) => {
   return res.json({user:req.user});
 });
 module.exports = router;
+
 

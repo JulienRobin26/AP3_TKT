@@ -9,6 +9,8 @@ const utilisateurs = require ('./routes/users');
 const attraRoutes  = require('./routes/attractions');
 const authRoutes = require("../API/routes/auth")
 const avertRoutes = require("../API/routes/avertissements")
+const groupeRoutes = require('./routes/groupe');
+const missionRoutes = require('./routes/missions');
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -19,8 +21,14 @@ app.use(cors({
 
 
 app.use('/users', utilisateurs);
+app.use('/api/users', utilisateurs);
 app.use('/attraction', attraRoutes);
+app.use('/groupe', groupeRoutes);
+app.use('/api/groupe', groupeRoutes);
 app.use('/avertissements', avertRoutes);
+app.use('/missions', missionRoutes);
+app.use('/api/missions', missionRoutes);
+app.use('/api', groupeRoutes);
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {
