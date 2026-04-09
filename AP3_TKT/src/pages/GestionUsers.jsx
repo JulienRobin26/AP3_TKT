@@ -50,7 +50,6 @@ function GestionUsers() {
         
         <div className="tool">
           <h2>Gestion des utilisateurs</h2>
-          <div className="blur_pannel">
           <div className="tools_outils">
             <input
               type="text"
@@ -85,32 +84,31 @@ function GestionUsers() {
               </ul>
             </div>
           </div>
-          <div className="pannel_user_liste">
-            
-            <ul className="brique_user">
-              {utilisateursFiltres.map((user) => (
-                <li className="brique_user_item" key={user.id}>
-                  <div className="user_cell">
-                    <strong>
-                      {user.prenom} {user.nom}
-                    </strong>
-                  {user.equipe}
-                  
-                    <button
-                      type="button"
-                      onClick={() => navigate(`/modifier_user/${user.id}`)}
-                    >
-                      Modifier
-                    </button>
-                  
-                  
-                    <button>Supprimer</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <div className="blur_pannel">
+            <div className="pannel_user_liste">
+              <ul className="brique_user">
+                {utilisateursFiltres.map((user) => (
+                  <li className="brique_user_item" key={user.id}>
+                    <div className="user_cell">
+                      <strong>
+                        {user.prenom} {user.nom}
+                      </strong>
+                      {user.equipe}
+
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/modifier_user/${user.id}`)}
+                      >
+                        Modifier
+                      </button>
+
+                      <button>Supprimer</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
         </div>
         </div>
       </section>

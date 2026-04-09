@@ -34,7 +34,10 @@
 
 .tools_outils{
   display: flex;
-  margin-bottom: 1em;
+  width: 90%;
+  margin: 0 auto 1em;
+  padding: 0 20px;
+  box-sizing: border-box;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
@@ -45,24 +48,27 @@
   width: 90%;
   margin: auto;
   margin-top: 3em !important;
+  margin-bottom: 2em;
   backdrop-filter: blur(9px);
   border-radius: 2em;
   padding: 20px;
-  max-height: 100%;
   display: flex;
-  flex-direction: column;
-  min-height: 0;
   overflow: hidden;
+  flex-direction: column;
+  height: auto;
 }
 .pannel_user{
   margin-top: 2em;
   margin: 2em;
   border-radius: 3em;
-  height: 100%;
+  height: auto;
   padding: auto;
   background-image: url(/src/assets/images/gestion.webp);
   background-size: cover;
   background-position: right;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 
 .brique_user{
@@ -96,9 +102,10 @@
   box-shadow: var(--shadow-soft);
 }
 .pannel_user_liste{
+  max-height: 60vh;
   overflow: auto;
-  flex: 1 1 auto;
-  min-height: 0;
+  padding-right: 6px;
+  height: auto;
 }
 .brique_user_item .user_cell{
   display: flex;
@@ -127,10 +134,11 @@
 }
 .gestion_user{
   color: white;
-  height: calc(100vh - 160px);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
+  min-height: 0;
 }
 
 .panne_user h1{

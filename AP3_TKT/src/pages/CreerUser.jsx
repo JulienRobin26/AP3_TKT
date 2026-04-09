@@ -1,14 +1,24 @@
 import { useEffect, useState } from 'react';
 import './CreerUser.css';
+import { useNavigate } from 'react-router-dom';
 
 function CreerUser() {
+    const navigate = useNavigate();
     const [equipes, setEquipes] = useState([]);
     const [equipesLoading, setEquipesLoading] = useState(true);
     const [equipesError, setEquipesError] = useState(null);
     const [postes, setPostes] = useState([]);
-    const [postesLoading, setPostesLoading] = useState(false);
-    const [postesError, setPostesError] = useState(null);
-    const [equipeSelectionnee, setEquipeSelectionnee] = useState("");
+    const [states, setStates] = useState({
+        nom: "",
+        prenom: "",
+        email: "",
+        telephone: "",
+        equipe: "",
+        poste: "",
+        identifiant: "",
+        role: "user",
+        mot_de_passe: ""
+    });
 
     useEffect(() => {
         let creer = true;
@@ -35,24 +45,42 @@ function CreerUser() {
             creer = false;
         };
     }, []);
-
-    const handleEquipeChange = async (e) => {
-        const idEquipe = e.target.value;
-        setEquipeSelectionnee(idEquipe);
-        if (!idEquipe) {
-            setPostes([]);
-            return;
-        }
-        setPostesLoading(true);
-        setPostesError(null);
-        try {
-            const data = await fetchPostes(idEquipe);
-            setPostes(Array.isArray(data) ? data : []);
-        } catch (err) {
-            setPostesError(err?.message || "Erreur de chargement des postes");
-            setPostes([]);
-        } finally {
-            setPostesLoading(false);
+    useEffect(() => {
+        let creer = true;
+        const loadPostes = async () => {
+            if (!states.equipe) {
+                setPostes([]);
+                return;
+            }
+            try {
+                const data = await fetchPostes(states.equipe);
+                if (creer) {
+                    setPostes(Array.isArray(data) ? data : []);
+                }
+            } catch {
+                if (creer) {
+                    setPostes([]);
+                }
+            }
+        };
+        loadPostes();
+        return () => {
+            creer = false;
+        };
+    }, [states.equipe]);
+    const change = (e) => {
+        const { id, value } = e.target;
+        setStates((prev) => ({
+            ...prev,
+            [id]: value,
+            ...(id === "equipe" ? { poste: "" } : {})
+        }));
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await ajouterUtilisateur(states);
+        if (res) {
+            navigate('/gestion_users/');
         }
     };
     return (
@@ -61,21 +89,21 @@ function CreerUser() {
         <div className="pannel_user_creation">
             <h2>Créer un utilisateur</h2>
             <div className="form">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h3>Informations générales</h3>
-                <label>Nom:</label>
-                <input type="text" name="nom" />
-                <label>Prénom:</label>
-                <input type="text" name="prenom" />
-                <label>Email:</label>
-                <input type="email" name="email" />
-                <label>Téléphone:</label>
-                <input type="tel" name="telephone" />
+                <label htmlFor='nom'>Nom:</label>
+                <input type="text" id="nom" name="nom" value={states.nom} onChange={change} />
+                <label htmlFor='prenom'>Prénom:</label>
+                <input type="text" id="prenom" name="prenom" value={states.prenom} onChange={change} />
+                <label htmlFor='email'>Email:</label>
+                <input type="email" id="email" name="email" value={states.email} onChange={change} />
+                <label htmlFor='telephone'>Téléphone:</label>
+                <input type="tel" id="telephone" name="telephone" value={states.telephone} onChange={change} />
                 <div></div>
                 <h3>Informations de gestion</h3>
-                <label>Équipe:</label>
-                <select name="equipe" value={equipeSelectionnee} onChange={handleEquipeChange}>
-                    <option value="">SÃƒÂ©lectionner une ÃƒÂ©quipe</option>
+                <label htmlFor='equipe'>Équipe:</label>
+                <select id="equipe" name="equipe" value={states.equipe} onChange={change}>
+                    <option value="">Selectionner une equipe</option>
                     {equipesLoading && (
                         <option value="" disabled>Chargement...</option>
                     )}
@@ -88,18 +116,10 @@ function CreerUser() {
                         </option>
                     ))}
                 </select>
-                <label>Poste</label>
-                <select name="poste" disabled={!equipeSelectionnee || postesLoading}>
-                    {!equipeSelectionnee && (
-                        <option value="">Choisir une ÃƒÂ©quipe d'abord</option>
-                    )}
-                    {postesLoading && (
-                        <option value="" disabled>Chargement...</option>
-                    )}
-                    {postesError && !postesLoading && (
-                        <option value="" disabled>Erreur de chargement</option>
-                    )}
-                    {!postesLoading && !postesError && postes.map((poste) => (
+                <label htmlFor='poste'>Poste</label>
+                <select id="poste" name="poste" value={states.poste} onChange={change} disabled={!states.equipe}>
+                    <option value="">Selectionner un poste</option>
+                    {postes.map((poste) => (
                         <option key={poste.id_pst} value={poste.id_pst}>
                             {poste.libelle_pst}
                         </option>
@@ -107,13 +127,15 @@ function CreerUser() {
                 </select>
                 <div></div>
                 <h3>Informations de connexion</h3>
-                <label>Identifiant</label>
-                <input type="text" name="identifiant" />
-                <label>Rôle</label>
-                <select name="roles">
+                <label htmlFor='identifiant'>Identifiant</label>
+                <input type="text" id="identifiant" name="identifiant" value={states.identifiant} onChange={change} />
+                <label htmlFor='role'>Rôle</label>
+                <select id="role" name="role" value={states.role} onChange={change}>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                 </select>
+                <label htmlFor='mot_de_passe'>Mot de passe</label>
+                <input type="password" id="mot_de_passe" name="mot_de_passe" value={states.mot_de_passe} onChange={change} />
                 <button type="submit">Créer</button>
             </form>
             </div>
@@ -123,6 +145,31 @@ function CreerUser() {
     );
 }
 
+async function ajouterUtilisateur(user) {
+    try{
+        const res = await fetch('http://localhost:3006/api/auth/signup', {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include',
+            body: JSON.stringify({
+                identifiant: user.identifiant,
+                password: user.mot_de_passe,
+                nom: user.nom,
+                prenom: user.prenom,
+                email: user.email,
+                tel: user.telephone,
+                num_poste: user.poste,
+                role: user.role
+            })
+        });
+        if (!res.ok) throw new Error("Erreur signup");
+        return res.json();
+        
+    }
+    catch(error){
+        console.error(error);
+    }
+}
 async function fetchEquipes() {
    const res = await fetch('http://localhost:3006/api/equipe', {
     method: 'GET',
