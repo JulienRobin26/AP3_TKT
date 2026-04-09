@@ -1,133 +1,77 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./GestionAttractions.css";
 
 function GestionAttractions() {
-  const location = useLocation();
-  const idAttraction = location.state?.idAttraction;
+  const navigate = useNavigate();
+  const [attractions, setAttractions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetchAttractions()
+      .then((data) => {
+        if (isMounted) setAttractions(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Erreur chargement attractions:", err);
+        if (isMounted) setError("Erreur chargement attractions");
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section className="page gestion-attractions-page">
       <h1>Gestion des attractions</h1>
-      {idAttraction ? <ModifAttraction idAttraction={idAttraction} /> : <AjoutAttraction />}
-    </section>
-  )
-}
-
-function AjoutAttraction() {
-  return (
-    <section className="page gestion-attractions-wrapper">
-      <h1>Ajout d'une attraction</h1>
-      <form className="ajout-attraction-form" method="post" action="http://localhost:3006/attraction/ajout">
-        {info("", "", "", "", "", true)}
-      </form>
-    </section>
-  )
-}
-function ModifAttraction({ idAttraction }) {
-  const [attraction, setAttraction] = useState(null);
-  useEffect(() => {
-    fetchAttractionsById(idAttraction)
-      .then((data) => setAttraction(Array.isArray(data) ? (data[0] ?? null) : data))
-      .catch((err) => {
-        console.error("Erreur chargement attraction:", err);
-      });
-  }, [idAttraction]);
-
-  if (!attraction) {
-    return (
-      <section className="page gestion-attractions-wrapper">
-        <h1>Modification d'une attraction</h1>
-        <p>Chargement...</p>
-      </section>
-    );
-  }
-
-  return (
-    <section className="page gestion-attractions-wrapper">
-      <h1>Modification d'une attraction</h1>
-      
-      <form className="modif-attraction-form" method="post" action="http://localhost:3006/attraction/modif">
-        <input type="hidden" name="id" value={idAttraction} />
-        {info(attraction.nom_ift, attraction.description_ift, attraction.image_ift, attraction.id_prc_ift, attraction.tempsAttente, attraction.ouvert, attraction.tailleLimite, attraction.pourEnceinte, attraction.pourLesPetits)}
-      </form>
-    </section>
-  )
-}
-
-function info(nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits) {
-  const isChecked = (value) => value === true || value === 1 || value === "1" || value === "true";
-  return (
-    <>
-      <div className="gestion-attraction-grid">
-        <div className="ga-field ga-field-title">
-          <label htmlFor="nom">Titre</label>
-          <input type="text" id="nom" name="nom" placeholder="Nom" defaultValue={nom || ""} required />
+      <div className="gestion-attractions-wrapper gestion-attractions-list">
+        <div className="ga-list-header">
+          <h2>Liste des attractions</h2>
+          <button type="button" className="ga-primary" onClick={() => navigate("/gestion_attractions/ajout")}>
+            Ajouter une attraction
+          </button>
         </div>
 
-        <div className="ga-field ga-field-description">
-          <label htmlFor="description">Description</label>
-          <textarea id="description" name="description" placeholder="Description" defaultValue={description || ""} required />
-        </div>
+        {loading && <p>Chargement...</p>}
+        {error && <p className="error_message">{error}</p>}
 
-        <div className="ga-field ga-field-image">
-          <label htmlFor="image">Image attraction</label>
-          <input type="text" id="image" name="image" placeholder="URL de l'image" defaultValue={image || ""} required />
-        </div>
-
-        <div className="ga-field ga-field-wait">
-          <label htmlFor="tempsAttente">Temps Attente</label>
-          <input type="text" id="tempsAttente" name="tempsAttente" placeholder="Temps" defaultValue={tempsAttente || ""} required />
-        </div>
-
-        <div className="ga-field ga-field-park">
-          <label htmlFor="parc">Parc</label>
-          <input type="number" id="parc" name="parc" placeholder="Parc" defaultValue={parc || 1} min={1} max={2} required />
-        </div>
-
-        <div className="ga-constraints">
-          <p>Contraintes :</p>
-
-          <label htmlFor="ouvert">Ouvert</label>
-          <input type="checkbox" id="ouvert" name="ouvert" value="1" defaultChecked={isChecked(ouvert)} />
-
-          <label htmlFor="pourEnceinte">Personnes enceintes</label>
-          <input type="checkbox" id="pourEnceinte" name="pourEnceinte" value="1" defaultChecked={isChecked(pourEnceinte)} />
-
-          <label htmlFor="pourLesPetits">Jeunes enfants</label>
-          <input type="checkbox" id="pourLesPetits" name="pourLesPetits" value="1" defaultChecked={isChecked(pourLesPetits)} />
-        </div>
-
-        <div className="ga-field ga-field-size">
-          <label htmlFor="tailleLimite">Taille Limite (m)</label>
-          <input type="number" id="tailleLimite" name="tailleLimite" placeholder="Taille Limite" defaultValue={tailleLimite || 0} min={0} max={2} step="0.1" />
-        </div>
+        {!loading && !error && (
+          <ul className="ga-list">
+            {attractions.map((attraction) => (
+              <li className="ga-list-item" key={attraction.id_ift}>
+                <div className="ga-list-info">
+                  <strong>{attraction.nom_ift}</strong>
+                  <span>Parc {attraction.id_prc_ift}</span>
+                </div>
+                <div className="ga-list-actions">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/gestion_attractions/modifier/${attraction.id_ift}`)}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/gestion_attractions/supprimer/${attraction.id_ift}`)}
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-
-      <input className="ga-submit" type="submit" value="Envoyer" />
-    </>
+    </section>
   );
 }
-function navAttractions() {
-  const [attractions, setAttractions] = useState([])
-  useEffect(() => {
-      fetchAttractions()
-        .then(setAttractions)
-        .catch((err) => {
-          console.error("Erreur chargement attractions:", err);
-        });
-    }, []);
-    
-  return (
-    <select name="attractions" id="attractions">
-      {attractions.map((attraction) => (
-        <option key={attraction.id_ift} value={attraction.id_ift}>
-          {attraction.nom_ift}
-        </option>
-      ))}
-    </select>
-  )
-}
+
 async function fetchAttractions() {
   const res = await fetch(`http://localhost:3006/attraction/`, {
     method: "GET",
@@ -135,15 +79,6 @@ async function fetchAttractions() {
   });
  
   if (!res.ok) throw new Error("Erreur getUsers");
-  return res.json();
-}
-async function fetchAttractionsById(id) {
-  const res = await fetch(`http://localhost:3006/attraction/id/${encodeURIComponent(id)}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
- 
-  if (!res.ok) throw new Error("Erreur getAttractionById");
   return res.json();
 }
 

@@ -102,7 +102,12 @@ function GestionUsers() {
                         Modifier
                       </button>
 
-                      <button>Supprimer</button>
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/supprimer_user/${user.id}`)}
+                      >
+                        Supprimer
+                      </button>
                     </div>
                   </li>
                 ))}

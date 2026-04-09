@@ -1,10 +1,13 @@
 .gestion-attractions-page {
-  min-height: 100%;
+  height: 115%;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  width: 100%;
   gap: 0.9rem;
-  padding: clamp(0.8rem, 2vw, 1.4rem);
+  padding: clamp(0.6rem, 1.4vw, 1.1rem);
+  padding-bottom: clamp(2.4rem, 6vw, 4.4rem);
 }
 
 .gestion-attractions-page > h1 {
@@ -15,14 +18,16 @@
 }
 
 .gestion-attractions-wrapper {
-  width: min(980px, 96vw);
-  border-radius: 34px;
-  padding: clamp(1.2rem, 2.5vw, 2rem);
+  width: min(1200px, 98vw);
+  border-radius: 28px;
+  padding: clamp(0.8rem, 1.6vw, 1.25rem);
   background-image: linear-gradient(145deg, rgba(2, 8, 95, 0.8), rgba(1, 14, 120, 0.74)),
     url("../assets/images/firework.png");
   background-size: cover;
+
   background-position: center;
   box-shadow: 0 14px 36px rgba(4, 9, 59, 0.45);
+  margin-bottom: clamp(1.2rem, 3vw, 2.2rem);
 }
 
 .gestion-attractions-wrapper > h1 {
@@ -35,7 +40,7 @@
 .ajout-attraction-form,
 .modif-attraction-form {
   border-radius: 26px;
-  padding: clamp(1rem, 2vw, 1.6rem);
+  padding: clamp(0.85rem, 1.8vw, 1.4rem);
   background: rgba(5, 16, 114, 0.56);
 }
 
@@ -48,7 +53,7 @@
     "wait constraints"
     "park constraints"
     "size constraints";
-  gap: 1rem 1.4rem;
+  gap: 0.9rem 1.2rem;
   align-items: start;
 }
 
@@ -62,7 +67,7 @@
 .ga-constraints label,
 .ga-constraints p {
   color: #eef5ff;
-  font-size: clamp(1rem, 1.6vw, 1.9rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.5rem);
   line-height: 1.2;
   margin: 0;
 }
@@ -73,12 +78,12 @@
   border-radius: 8px;
   background: #4f84c8;
   color: #eef5ff;
-  padding: 0.8rem 0.9rem;
-  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+  padding: 0.75rem 0.9rem;
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
 }
 
 .ga-field textarea {
-  min-height: 150px;
+  min-height: 130px;
   resize: vertical;
 }
 
@@ -100,9 +105,9 @@
 }
 
 .ga-field-image input {
-  min-height: 210px;
+  min-height: 150px;
   text-align: center;
-  font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+  font-size: clamp(1rem, 1.6vw, 1.6rem);
 }
 
 .ga-field-wait {
@@ -121,7 +126,7 @@
   grid-area: constraints;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 0.75rem 1rem;
+  gap: 0.7rem 1rem;
   align-items: center;
   padding: 0.8rem;
   border-radius: 16px;
@@ -133,21 +138,21 @@
 }
 
 .ga-constraints input[type="checkbox"] {
-  width: 1.28rem;
-  height: 1.28rem;
+  width: 1.1rem;
+  height: 1.1rem;
   accent-color: #7bd5ff;
 }
 
 .ga-submit {
   display: block;
-  margin: 1.2rem auto 0;
-  width: min(280px, 84%);
+  margin: 1rem auto 0;
+  width: min(240px, 84%);
   border: 0;
   border-radius: 10px;
   background: #cbd1db;
   color: #182231;
-  padding: 0.65rem 0.9rem;
-  font-size: clamp(1.1rem, 1.8vw, 1.9rem);
+  padding: 0.6rem 0.9rem;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.16s ease, filter 0.16s ease;
@@ -158,6 +163,82 @@
   transform: translateY(-1px);
   filter: brightness(1.04);
   outline: none;
+}
+
+.gestion-attractions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ga-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ga-list-header h2 {
+  margin: 0;
+  color: #f4f9ff;
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+}
+
+.ga-primary {
+  border: 0;
+  border-radius: 10px;
+  background: #cbd1db;
+  color: #182231;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ga-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ga-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  background: rgba(5, 16, 114, 0.56);
+  color: #eef5ff;
+}
+
+.ga-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ga-list-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.ga-list-actions button {
+  border: 0;
+  border-radius: 10px;
+  background: #cbd1db;
+  color: #182231;
+  padding: 0.45rem 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ga-delete p {
+  color: #eef5ff;
+  margin: 0 0 0.6rem;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 900px) {
@@ -181,5 +262,15 @@
 
   .ga-constraints {
     grid-template-columns: 1fr auto;
+  }
+
+  .ga-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ga-list-item {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react' // hook pour etat + effets
+﻿import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
@@ -18,15 +18,18 @@ import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
 import GestionAttractions from './pages/GestionAttractions' 
+import GestionAttractionsAjout from './pages/GestionAttractionsAjout'
+import GestionAttractionsModif from './pages/GestionAttractionsModif'
+import SuppressionAttraction from './pages/SuppressionAttraction'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
 import GestionAlertes from './pages/GestionAlertes'
-import CreationUsers from './pages/CreerUser';
+import SuppressionUser from './pages/SuppressionUser';
 
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
   const isLoginPage = location.pathname === '/login' || location.pathname === '/' 
-  const hideFooter = location.pathname.startsWith('/gestion_users')
+  
   const showNav = user.auth === 'admin' || user.auth === 'user'
 
   useEffect(() => {
@@ -59,12 +62,12 @@ function App() {
           <Route path="/gestion_users/" element={<GestionUsers />} />
           <Route path="/gestion_missions/" element={<GestionMissions />} />
           <Route path="/gestion_attractions" element={<GestionAttractions />} />
-          <Route path="/add_user" element={<CreationUsers />}/>
+          <Route path="/gestion_attractions/ajout" element={<GestionAttractionsAjout />} />
+          <Route path="/gestion_attractions/modifier/:id" element={<GestionAttractionsModif />} />
+          <Route path="/gestion_attractions/supprimer/:id" element={<SuppressionAttraction />} />
           <Route path="/modifier_user/:id" element={<ModifierUser />} />
+          <Route path="/supprimer_user/:id" element={<SuppressionUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
-          <Route path="/creeruser" element={<Navigate to="/creer_user" replace />} />
-          <Route path="/gestion_attractions" element={<GestionAttractions />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/gestion_alertes" element={<GestionAlertes/>} />
           <Route path="/alerts" element={<Alerts />} />
         </Route>
@@ -86,7 +89,7 @@ function App() {
         </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!isLoginPage && showNav && !hideFooter && <Footer /> }
+      {!isLoginPage && showNav && <Footer /> }
     </>
 
   )

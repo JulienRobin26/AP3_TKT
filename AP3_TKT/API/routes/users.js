@@ -39,19 +39,43 @@ router.get('/affichage/:id', async (req, res) => {
 
 router.post('/modifier/:id', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM nourriture WHERE libelle_food like "$?$"', [req.params.libelle]);
-    res.json(rows);
+    const { nom, prenom, equipe } = req.body;
+    const updates = [];
+    const params = [];
+
+    if (nom !== undefined) {
+      updates.push('nom_usr = ?');
+      params.push(nom);
+    }
+    if (prenom !== undefined) {
+      updates.push('prenom_usr = ?');
+      params.push(prenom);
+    }
+    if (equipe !== undefined && equipe !== "") {
+      updates.push('id_pst_usr = (SELECT id_pst FROM poste WHERE id_eqp_pst = ? LIMIT 1)');
+      params.push(equipe);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'Aucun champ a modifier' });
+    }
+
+    const sql = `UPDATE users SET ${updates.join(', ')} WHERE id_usr = ?`;
+    params.push(req.params.id);
+    const [result] = await db.query(sql, params);
+    res.json({ updated: result.affectedRows });
   } catch (error) {
-    console.error('Error fetching jeux:', error);
+    console.error('Error update user:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/supprimer/:id', async (req, res) => {
+router.post('/supprimer', async (req, res) => {
+  const { id } = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM nourriture WHERE libelle_food like "$?$"', [req.params.libelle]);
+    const [rows] = await db.query('DELETE FROM users WHERE id_usr = ?', [id]);
     res.json(rows);
   } catch (error) {
-    console.error('Error fetching jeux:', error);
+    console.error('Error fetching suppresion Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

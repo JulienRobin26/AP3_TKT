@@ -95,7 +95,7 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pour
   const close = () => setOpenInfos((prev) => ({ ...prev, [id]: false }));
   const goToModification = (event) => {
     event.stopPropagation();
-    navigate("/gestion_attractions", { state: { idAttraction: id } });
+    navigate(`/gestion_attractions/modifier/${id}`);
   };
 
   return (
@@ -120,9 +120,9 @@ function bloc(id, image, titre, infos, ouvert, idParc, temps, tailleLimite, pour
           {isAdmin && (
             <div className="btn_admin">
               <button type="button" onClick={goToModification} >Modifier</button>
-              <form method="post" action={"http://localhost:3006/attraction/supprimer/" + id}>
-                <button type="submit">Supprimer</button>
-              </form>
+              <button type="button" onClick={() => navigate(`/gestion_attractions/supprimer/${id}`)}>
+                Supprimer
+              </button>
             </div>
           )}
         </div>
@@ -172,7 +172,7 @@ function boutonParc(idParc, setIdParc) {
 
 function boutonAjout(navigate) {
   return (
-    <button className="btn_ajouter_attraction" type="button" onClick={() => navigate("/gestion_attractions")}>Ajouter une attraction</button>
+    <button className="btn_ajouter_attraction" type="button" onClick={() => navigate("/gestion_attractions/ajout")}>Ajouter une attraction</button>
   );
 }
 
