@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react' // hook pour etat + effets
+import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
@@ -19,6 +19,7 @@ import Contact from './pages/Contact'
 import Home from './pages/Home'
 import GestionAttractions from './pages/GestionAttractions' 
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import GestionAlertes from './pages/GestionAlertes'
 import CreationUsers from './pages/CreerUser';
 
 function App() {
@@ -61,10 +62,16 @@ function App() {
           <Route path="/add_user" element={<CreationUsers />}/>
           <Route path="/modifier_user/:id" element={<ModifierUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
-          
+          <Route path="/creeruser" element={<Navigate to="/creer_user" replace />} />
+          <Route path="/gestion_attractions" element={<GestionAttractions />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
+          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
           <Route path="/home" element={<Home />} />

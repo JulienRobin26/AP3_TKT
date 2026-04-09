@@ -4,7 +4,10 @@ const db = require('../config/db');
 
 function toDbOuvert(value) {
   if (value === true || value === 1 || value === '1') return 1;
-  if (value === 'on' || value === 'true' || value === 'ouvert') return 1;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'on' || normalized === 'true' || normalized === 'yes') return 1;
+  }
   return 0;
 }
  
