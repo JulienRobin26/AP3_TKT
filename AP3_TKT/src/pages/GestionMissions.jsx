@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./GestionMission.css";
 
 function GestionMissions() {
+  const navigate = useNavigate();
   const [missions, setMissions] = useState([]);
   const [recherche, setRecherche] = useState("");
   const [typeFiltre, setTypeFiltre] = useState("Toutes");
@@ -73,7 +75,9 @@ function GestionMissions() {
                 </ul>
               </li>
               <li>
-                <button>Ajouter une mission</button>
+                <button onClick={() => navigate("/ajouter-mission")}>
+                  Ajouter une mission
+                </button>
               </li>
             </ul>
           </div>
@@ -86,6 +90,9 @@ function GestionMissions() {
                     <strong>{mission.libelle_msn}</strong>
                   </div>
                   <div className="user_cell">{mission.type_msn}</div>
+                  <div className="user_cell">
+                    <button onClick={() => navigate("/assigner-mission")}>Assigner</button>
+                  </div>
                   <div className="user_cell">
                     <button>Modifier</button>
                   </div>

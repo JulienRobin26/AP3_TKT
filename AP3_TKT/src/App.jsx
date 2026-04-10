@@ -24,6 +24,8 @@ import SuppressionAttraction from './pages/SuppressionAttraction'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
 import GestionAlertes from './pages/GestionAlertes'
 import SuppressionUser from './pages/SuppressionUser';
+import AssignerMission from './pages/AssignerMission';
+import AjouterMission from './pages/AjouterMission';
 
 function App() {
   const [user, setUser] = useState({ auth: null })
@@ -69,7 +71,8 @@ function App() {
           <Route path="/supprimer_user/:id" element={<SuppressionUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
           <Route path="/gestion_alertes" element={<GestionAlertes/>} />
-          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/assigner-mission" element={<AssignerMission />} />
+          <Route path="/ajouter-mission" element={<AjouterMission />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
@@ -78,6 +81,7 @@ function App() {
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/alerts" element={<Alerts />} />
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/avertissement" element={<Avertissement />} />
           <Route path="/alerts" element={<Alerts />} />
