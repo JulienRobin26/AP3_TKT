@@ -26,6 +26,9 @@ import GestionAlertes from './pages/GestionAlertes'
 import SuppressionUser from './pages/SuppressionUser';
 import AssignerMission from './pages/AssignerMission';
 import AjouterMission from './pages/AjouterMission';
+import SupprimerMission from './pages/SupprimerMission';
+import ModifierMissions from './pages/ModifierMission';
+import VoirMissions from './pages/VoirMission';
 
 function App() {
   const [user, setUser] = useState({ auth: null })
@@ -71,8 +74,11 @@ function App() {
           <Route path="/supprimer_user/:id" element={<SuppressionUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
           <Route path="/gestion_alertes" element={<GestionAlertes/>} />
-          <Route path="/assigner-mission" element={<AssignerMission />} />
+          <Route path="/assigner-mission/:id" element={<AssignerMission />} />
           <Route path="/ajouter-mission" element={<AjouterMission />} />
+          <Route path="/supprimer-mission/:id" element={<SupprimerMission />} />
+          <Route path="/modifier-mission/:id" element={<ModifierMissions />} />
+          <Route path="/voir_mission/:id" element={<VoirMissions />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />

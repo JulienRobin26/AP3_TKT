@@ -1,17 +1,19 @@
-import { use, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { createPath, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import "./GestionMission.css";
 
 function SupprimerMission() {
     const navigate = useNavigate();
+    const { id } = useParams();
     useEffect(() => {
     }, [])
-    handleSybmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-        fetch("http://localhost:3006/api/missions/supprimer", {
+        fetch(`http://localhost:3006/api/missions/supprimer/${id}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -31,10 +33,11 @@ function SupprimerMission() {
         <div>
             <h1>Supprimer une mission</h1>
             <form action="" method="post" onSubmit={handleSubmit}>
-                <label htmlFor="id">ID de la mission à supprimer :</label>
-                <input type="text" id="id" name="id" required />
+                <label htmlFor="id">Voulez vous vraiment supprimer cette mission ?</label>
                 <button type="submit">Supprimer</button>
             </form>
         </div>
     )
 }
+
+export default SupprimerMission;

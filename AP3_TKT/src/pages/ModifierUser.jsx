@@ -27,7 +27,7 @@ function ModifierUser() {
           equipe: "",
         });
 
-        const resEquipes = await fetch("http://localhost:3006/api/equipe", {
+        const resEquipes = await fetch("http://localhost:3006/api/groupe/equipes", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

@@ -31,15 +31,23 @@ function AjouterMission(){
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-        fetch("http://localhost:3006/api/missions/ajouter", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+       fetch("http://localhost:3006/api/missions/ajouter", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            libelle_msn: data.libelle,
+            type_msn: data.type,
+            dateDebut_msn: data.dateDebut,
+            id_eqp_msn: data.equipe ? Number(data.equipe) : null
         })
+})
 
-            .then((res) => {
-                if (!res.ok) throw new Error("Erreur lors de l'ajout de la mission");
-                alert("Mission ajoutée avec succès !");
+            .then(async (res) => {
+                if (!res.ok) throw new Error("Erreur lors de l'ajout");
+                const json = await res.json();
+                console.log(json); // contient id_msn
                 navigate("/gestion_missions");
             })
             .catch((err) => {
@@ -60,11 +68,9 @@ function AjouterMission(){
                 <input type="date" id="dateDebut" name="dateDebut" required />
                 <label htmlFor="equipe">Équipe :</label>
                 <select name="equipe" id="equipe">
-                    <option value="1">Sélectionner une équipe</option>
+                    <option value="">Sélectionner une équipe</option>
                     {equipe.map((equipe) => (
-                        <option key={equipe.id_equipe} value={equipe.id_equipe}>
-                            {equipe.nom_equipe}
-                        </option>
+                        <option key={equipe.id_eqp} value={equipe.id_eqp}>{equipe.libelle_eqp}</option>
                     ))}
                 </select>
                 <button type="submit">Ajouter</button>
@@ -77,7 +83,7 @@ function AjouterMission(){
 }
 
 async function fetchEquipes() {
-    const res = await fetch("http://localhost:3006/api/missions/equipe_missions", {
+    const res = await fetch("http://localhost:3006/api/equipes", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
     });

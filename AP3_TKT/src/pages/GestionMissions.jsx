@@ -90,14 +90,18 @@ function GestionMissions() {
                     <strong>{mission.libelle_msn}</strong>
                   </div>
                   <div className="user_cell">{mission.type_msn}</div>
-                  <div className="user_cell">
-                    <button onClick={() => navigate("/assigner-mission")}>Assigner</button>
+                  <div className="user_celle">{mission.libelle_eqp}</div>
+                   <div className="user_cell">
+                    <button onClick={() => navigate(`/voir_mission/${mission.id_msn}`)}>Voir</button>
                   </div>
                   <div className="user_cell">
-                    <button>Modifier</button>
+                    <button onClick={() => navigate(`/assigner-mission/${mission.id_msn}`)}>Assigner</button>
                   </div>
                   <div className="user_cell">
-                    <button>Supprimer</button>
+                    <button onClick={() => navigate(`/modifier-mission/${mission.id_msn}`)}>Modifier</button>
+                  </div>
+                  <div className="user_cell">
+                    <button onClick={() => navigate(`/supprimer-mission/${mission.id_msn}`)}>Supprimer</button>
                   </div>
                 </li>
               ))}

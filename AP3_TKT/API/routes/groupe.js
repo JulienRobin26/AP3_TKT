@@ -3,7 +3,7 @@ const router = express.Router();
 const authToken = require('../auth_token');
 const dbt = require('../config/db');
 
-router.get('/equipe', async (req, res) => {
+router.get('/equipes', async (req, res) => {
   try {
     const [rows] = await dbt.query('SELECT id_eqp, libelle_eqp FROM equipes'); 
     res.json(rows);
