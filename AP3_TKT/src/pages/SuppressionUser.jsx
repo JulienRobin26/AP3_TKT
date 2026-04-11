@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionUser.css";
 
 function SuppressionUser() {
@@ -13,7 +14,7 @@ function SuppressionUser() {
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    fetch(`http://localhost:3006/api/users/affichage/${id}`, {
+    fetch(`${API_URL}/api/users/affichage/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -45,7 +46,7 @@ function SuppressionUser() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:3006/api/users/supprimer", {
+      const res = await fetch(`${API_URL}/api/users/supprimer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),

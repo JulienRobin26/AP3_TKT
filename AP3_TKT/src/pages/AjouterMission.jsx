@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionMission.css";
 
 function AjouterMission(){
@@ -31,7 +32,7 @@ function AjouterMission(){
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-       fetch("http://localhost:3006/api/missions/ajouter", {
+       fetch(`${API_URL}/api/missions/ajouter`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -83,7 +84,7 @@ function AjouterMission(){
 }
 
 async function fetchEquipes() {
-    const res = await fetch("http://localhost:3006/api/equipes", {
+    const res = await fetch(`${API_URL}/api/equipes`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
     });

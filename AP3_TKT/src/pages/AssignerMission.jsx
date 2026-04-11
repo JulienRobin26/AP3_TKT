@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionMission.css";
 
 function AssignerMission() {
@@ -12,7 +13,7 @@ function AssignerMission() {
     // 🔹 Charger mission + équipe
     useEffect(() => {
         // Mission
-        fetch(`http://localhost:3006/api/missions/${id}`)
+        fetch(`${API_URL}/api/missions/${id}`)
             .then(res => res.json())
             .then(data => {
                 setLibelle(data.libelle_msn);
@@ -53,7 +54,7 @@ function AssignerMission() {
         const formData = new FormData(e.target);
         const userId = formData.get("user");
 
-        fetch(`http://localhost:3006/api/missions/affecter/${id}`, {
+        fetch(`${API_URL}/api/missions/affecter/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -65,7 +66,7 @@ function AssignerMission() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            navigate("/gestion_mission");
+            navigate("/gestion_missions");
         })
         .catch(err => console.error('Erreur assignation', err));
     };
@@ -98,7 +99,7 @@ function AssignerMission() {
                         )}
                     </select>
 
-                    <input type="submit" value="Assigner" />
+                    <input type="submit" value="Assigner" disabled={users.length === 0} style={{ opacity: users.length === 0 ? 0.5 : 1, cursor: users.length === 0 ? 'not-allowed' : 'pointer' }} />
                 </form>
             </div>
         </section>
@@ -107,12 +108,12 @@ function AssignerMission() {
 
 // 🔹 API
 async function fetchEquipes(id) {
-    const res = await fetch(`http://localhost:3006/api/missions/equipe_missions/${id}`);
+    const res = await fetch(`${API_URL}/api/missions/equipe_missions/${id}`);
     return await res.json();
 }
 
 async function fetchUsers(id_equipe) {
-    const res = await fetch(`http://localhost:3006/api/missions/utilisateurs-equipe/${id_equipe}`);
+    const res = await fetch(`${API_URL}/api/missions/utilisateurs-equipe/${id_equipe}`);
     return await res.json();
 }
 

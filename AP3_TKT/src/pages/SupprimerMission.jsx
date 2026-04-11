@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { createPath, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import API_URL from '../api_url';
 import "./GestionMission.css";
 
 function SupprimerMission() {
@@ -13,7 +14,7 @@ function SupprimerMission() {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-        fetch(`http://localhost:3006/api/missions/supprimer/${id}`, {
+        fetch(`${API_URL}/api/missions/supprimer/${id}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

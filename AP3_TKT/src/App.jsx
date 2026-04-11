@@ -1,7 +1,8 @@
-﻿import { useEffect, useState } from 'react' // hook pour etat + effets
+import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
+import API_URL from './api_url'
 import Guard from "./components/guard";
 import Attractions from './pages/Attractions'
 import MesMissions from './pages/MesMissions'
@@ -17,7 +18,7 @@ import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
-import GestionAttractions from './pages/GestionAttractions' 
+import GestionAttractions from './pages/GestionAttractions'
 import GestionAttractionsAjout from './pages/GestionAttractionsAjout'
 import GestionAttractionsModif from './pages/GestionAttractionsModif'
 import SuppressionAttraction from './pages/SuppressionAttraction'
@@ -29,12 +30,13 @@ import AjouterMission from './pages/AjouterMission';
 import SupprimerMission from './pages/SupprimerMission';
 import ModifierMissions from './pages/ModifierMission';
 import VoirMissions from './pages/VoirMission';
+import VoirMaMission from './pages/VoirMaMission';
 
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
-  const isLoginPage = location.pathname === '/login' || location.pathname === '/' 
-  
+  const isLoginPage = location.pathname === '/login' || location.pathname === '/'
+
   const showNav = user.auth === 'admin' || user.auth === 'user'
 
   useEffect(() => {
@@ -42,13 +44,13 @@ function App() {
       setUser({ auth: null })
       return
     }
-    fetch('http://localhost:3006/api/auth/recup_infos', {
+    fetch(`${API_URL}/api/auth/recup_infos`, {
       method: 'GET',
       credentials: 'include',
     })
       .then(async (res) => {
-        if (!res.ok) { 
-          setUser({ auth: null }) 
+        if (!res.ok) {
+          setUser({ auth: null })
           return
         }
         const data = await res.json()
@@ -60,7 +62,7 @@ function App() {
 
   return (
     <>
-      {!isLoginPage && showNav && <Nav user={user} /> }
+      {!isLoginPage && showNav && <Nav user={user} />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route element={<Guard roles={[1]} />}>
@@ -73,7 +75,7 @@ function App() {
           <Route path="/modifier_user/:id" element={<ModifierUser />} />
           <Route path="/supprimer_user/:id" element={<SuppressionUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
-          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+          <Route path="/gestion_alertes" element={<GestionAlertes />} />
           <Route path="/assigner-mission/:id" element={<AssignerMission />} />
           <Route path="/ajouter-mission" element={<AjouterMission />} />
           <Route path="/supprimer-mission/:id" element={<SupprimerMission />} />
@@ -81,11 +83,13 @@ function App() {
           <Route path="/voir_mission/:id" element={<VoirMissions />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
-          <Route path="/mes_missions" element={<MesMissions />} />
-          <Route path="/gestion_alertes" element={<GestionAlertes/>} />
+
+          <Route path="/gestion_alertes" element={<GestionAlertes />} />
           <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
+          <Route path="/mes_missions" element={<MesMissions />} />
+          <Route path="/voir_ma_mission/:id" element={<VoirMaMission />} />
           <Route path="/home" element={<Home />} />
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/attractions" element={<Attractions />} />
@@ -97,9 +101,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!isLoginPage && showNav && <Footer /> }
+      {!isLoginPage && showNav && <Footer />}
     </>
 
   )

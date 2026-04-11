@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import API_URL from '../api_url';
 import "./Attractions.css";
  
 function Attractions() {
@@ -23,7 +24,7 @@ function Attractions() {
       return;
     }
 
-    fetch("http://localhost:3006/api/auth/recup_infos", {
+    fetch(`${API_URL}/api/auth/recup_infos`, {
       method: "GET",
       credentials: "include",
     })
@@ -194,7 +195,7 @@ async function fetchAttractions(id) {
   if(id === undefined) {
     id=1;
   }
-  const res = await fetch(`http://localhost:3006/attraction/${id}`, {
+  const res = await fetch(`${API_URL}/attraction/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

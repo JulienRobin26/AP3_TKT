@@ -1,12 +1,33 @@
+import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionAttractions.css";
 
 function GestionAttractionsAjout() {
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    // Process checkboxes
+    data.ouvert = data.ouvert ? 1 : 0;
+    data.pourEnceinte = data.pourEnceinte ? 1 : 0;
+    data.pourLesPetits = data.pourLesPetits ? 1 : 0;
+    
+    await fetch(`${API_URL}/attraction/ajout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    navigate("/gestion_attractions");
+  };
+
   return (
     <section className="page gestion-attractions-page">
       <h1>Gestion des attractions</h1>
       <section className="gestion-attractions-wrapper">
         <h1>Ajout d'une attraction</h1>
-        <form className="ajout-attraction-form" method="post" action="http://localhost:3006/attraction/ajout">
+        <form className="ajout-attraction-form" onSubmit={handleSubmit}>
           {info("", "", "", "", "", true)}
         </form>
       </section>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import API_URL from '../api_url'
 
 function ModifierMission() {
     const { id } = useParams()
@@ -10,14 +11,14 @@ function ModifierMission() {
 
     // Charger la mission
     useEffect(() => {
-        fetch(`http://localhost:3006/api/missions/${id}`)
+        fetch(`${API_URL}/api/missions/${id}`)
             .then(res => res.json())
             .then(data => setMission(data))
     }, [id])
 
     // Charger les équipes
     useEffect(() => {
-        fetch("http://localhost:3006/api/equipes")
+        fetch(`${API_URL}/api/equipes`)
             .then(res => res.json())
             .then(data => setEquipe(data))
     }, [])
@@ -28,7 +29,7 @@ function ModifierMission() {
         const formData = new FormData(e.target)
         const data = Object.fromEntries(formData.entries())
 
-        fetch("http://localhost:3006/api/missions/modifier", {
+        fetch(`${API_URL}/api/missions/modifier`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -41,7 +42,10 @@ function ModifierMission() {
                 id_eqp_msn: data.equipe,
             })
         })
-        navigate("/gestion_missions")
+        .then(() => {
+            navigate("/gestion_missions")
+        })
+        .catch(err => console.error("Erreur lors de la modification", err))
     }
 
     // éviter erreur avant chargement

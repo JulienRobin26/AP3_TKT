@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
+import "./GestionMission.css";
 
 function MesMissions() {
   const [missions, setMissions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
 
-    fetchMissions(id_user)
+    fetchMesMissions()
       .then((data) => {
         if (isMounted) setMissions(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
         console.error("[MesMissions] Erreur getMissions", err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
       });
 
     return () => {
@@ -21,51 +27,85 @@ function MesMissions() {
     };
   }, []);
 
-  // 🔹 Valider mission
+  // Valider mission (checkbox)
   const handleValider = (id) => {
-    fetch(`http://localhost:3006/api/missions/valider/${id}`, {
-      method: "POST"
+    if (!window.confirm("Voulez-vous vraiment valider cette mission comme terminée ?")) return;
+
+    fetch(`${API_URL}/api/missions/valider/${id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
     })
-      .then(res => res.json())
-      .then(() => {
-        // refresh liste
-        setMissions(prev => prev.filter(m => m.id_msn !== id));
+      .then((res) => {
+        if (!res.ok) throw new Error("Erreur validation");
+        return res.json();
       })
-      .catch(err => console.error("Erreur validation", err));
+      .then(() => {
+        // Retirer la mission de la liste
+        setMissions((prev) => prev.filter((m) => m.id_msn !== id));
+      })
+      .catch((err) => console.error("Erreur validation", err));
   };
 
-  return (
-    <section className="page">
-      <h1>Mes Missions</h1>
+  if (loading) return <section className="page"><p>Chargement...</p></section>;
 
-      {missions.length === 0 ? (
-        <p>Aucune mission assignée.</p>
-      ) : (
-        <ul>
-          {missions.map((m) => (
-            <li key={m.id_msn}>
-              {m.libelle_msn} - {m.type_msn}
-              <button onClick={() => handleValider(m.id_msn)}>
-                Valider
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+  return (
+    <>
+      <section className="gestion_user">
+        <div className="pannele_user">
+          <div className="tool">
+            <h2>Mes Missions</h2>
+            <div className="blur_pannel">
+              <div className="pannel_user_liste">
+                {missions.length === 0 ? (
+                  <p style={{ textAlign: "center", color: "#fff", padding: "2em" }}>
+                    Aucune mission assignée.
+                  </p>
+                ) : (
+                  <ul className="brique_user">
+                    {missions.map((m) => (
+                      <li className="brique_user_item" key={m.id_msn}>
+                        <div className="user_cell user_name">
+                          <strong>{m.libelle_msn}</strong>
+                        </div>
+                        <div className="user_cell">{m.type_msn}</div>
+                        <div className="user_cell">
+                          <button onClick={() => navigate(`/voir_ma_mission/${m.id_msn}`)}>
+                            Voir
+                          </button>
+                        </div>
+                        <div className="user_cell">
+                          <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", color: "#fff", fontWeight: 700 }}>
+                            <input
+                              type="checkbox"
+                              onChange={() => handleValider(m.id_msn)}
+                              style={{ width: "18px", height: "18px", cursor: "pointer" }}
+                            />
+                            Valider
+                          </label>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
-async function fetchMissions(id_user) {
-  const res = await fetch("http://localhost:3006/api/missions/mes-missions/${id_user]");
-
-  console.log("STATUS:", res.status);
-
-  const text = await res.text();
-  console.log("RESPONSE:", text);
+async function fetchMesMissions() {
+  const res = await fetch(`${API_URL}/api/missions/mes-missions`, {
+    method: "GET",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  });
 
   if (!res.ok) throw new Error("Erreur getMissions");
-
-  return JSON.parse(text);
+  return res.json();
 }
+
 export default MesMissions;

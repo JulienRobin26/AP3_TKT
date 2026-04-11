@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from '../api_url';
 import "./CreerUser.css";
 
 function ModifierUser() {
@@ -13,7 +14,7 @@ function ModifierUser() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const resUser = await fetch(`http://localhost:3006/api/users/affichage/${id}`, {
+        const resUser = await fetch(`${API_URL}/api/users/affichage/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -27,7 +28,7 @@ function ModifierUser() {
           equipe: "",
         });
 
-        const resEquipes = await fetch("http://localhost:3006/api/groupe/equipes", {
+        const resEquipes = await fetch(`${API_URL}/api/groupe/equipes`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -64,7 +65,7 @@ function ModifierUser() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3006/api/users/modifier/${id}`, {
+      const res = await fetch(`${API_URL}/api/users/modifier/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

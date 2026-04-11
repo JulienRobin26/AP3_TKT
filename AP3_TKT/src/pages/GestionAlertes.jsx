@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionAlertes.css";
  
 function GestionAlertes() {
@@ -9,23 +10,38 @@ function GestionAlertes() {
         return (
     <section className="page">
       <h1>Gestion des alertes</h1>
-      {idAlertes ? ModifAlertes(idAlertes) : AjoutAlertes(idAvertissement)}
+      {idAlertes ? <ModifAlertes idAlertes={idAlertes} /> : <AjoutAlertes idAvertissement={idAvertissement} />}
     </section>
   )
 }
-function AjoutAlertes(idAvertissement) {
+function AjoutAlertes({ idAvertissement }) {
+    const navigate = useNavigate();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+      data.idAvertissement = idAvertissement;
+      await fetch(`${API_URL}/avertissements/ajout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      navigate("/alerts");
+    };
+
     return (
       <section className="page">
         <h1>Ajout d'une alerte</h1>
-        <form className="ajout-alerte-form" method="post" action="http://localhost:3006/avertissements/ajout">
+        <form className="ajout-alerte-form" onSubmit={handleSubmit}>
           {info("")}
           <input type="hidden" name={`idAvertissement`} value={idAvertissement} />
         </form>
       </section>
     )
   }
-function ModifAlertes(idAlertes) {
+function ModifAlertes({ idAlertes }) {
   const [alertes, setAlertes] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchAlertesById(idAlertes)
       .then((data) => setAlertes(Array.isArray(data) ? (data[0] ?? null) : data))
@@ -34,10 +50,23 @@ function ModifAlertes(idAlertes) {
       });
   }, [idAlertes]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    data.id = idAlertes;
+    await fetch(`${API_URL}/avertissements/modif`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    navigate("/alerts");
+  };
+
   return(
     <section className="page">
         <h1>Modification d'une alerte</h1>
-        <form className="modif-alerte-form" method="post" action="http://localhost:3006/avertissements/modif">
+        <form className="modif-alerte-form" onSubmit={handleSubmit}>
           {info(alertes.contenu_alr)}
           <input type="hidden" name="id" value={idAlertes} />
         </form>
@@ -51,7 +80,7 @@ function info(description) {
     </>)}
 
 async function fetchAlertesById(id) {
-  const res = await fetch(`http://localhost:3006/avertissements/alertes/${id}`, {
+  const res = await fetch(`${API_URL}/avertissements/alertes/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
