@@ -86,10 +86,11 @@ function CreerUser() {
     };
     return (
         <>
-            <section className="page">
-                <div className="pannel_user_creation">
+            <section className="gestion_user">
+                <div className="pannel_user">
+                <div className="tool">
                     <h2>Créer un utilisateur</h2>
-                    <div className="form">
+                    <div className="blur_pannel">
                         <form onSubmit={handleSubmit}>
                             <h3>Informations générales</h3>
                             <label htmlFor='nom'>Nom:</label>
@@ -140,6 +141,7 @@ function CreerUser() {
                             <button type="submit">Créer</button>
                         </form>
                     </div>
+                </div>
                 </div>
             </section>
         </>

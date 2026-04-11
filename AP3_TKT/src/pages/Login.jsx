@@ -37,7 +37,6 @@ function Login() {
           </div>
           <button className='button_submit' type="submit">Connexion</button>
           {error && <p className="error_message">{error}</p>}
-          <a href="" >Mot de passe oublie ?</a>
         </form>
       </div>
     </section>
@@ -46,6 +45,7 @@ function Login() {
 async function auth_User(identifiant, pass) { // fonction appel API login
   let res;
   try {
+    console.log(API_URL)
     res = await fetch(`${API_URL}/api/auth/login`, { // endpoint login
       method: "POST", // envoi des identifiants
       headers: { "Content-Type": "application/json" }, // payload JSON

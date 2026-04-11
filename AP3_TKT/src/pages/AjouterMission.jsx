@@ -57,9 +57,11 @@ function AjouterMission(){
             });
     }
     return (
-        <section className="page">
-        <div className="gestion-missions-wrapper">
-            <h1>Ajouter une mission</h1>
+        <section className="gestion_user">
+        <div className="pannele_user">
+        <div className="tool">
+            <h2>Ajouter une mission</h2>
+            <div className="blur_pannel">
             <form action="" method="post" onSubmit={handleSubmit}>
                 <label htmlFor="libelle">Libellé :</label>
                 <input type="text" id="libelle" name="libelle" required />
@@ -76,6 +78,8 @@ function AjouterMission(){
                 </select>
                 <button type="submit">Ajouter</button>
             </form>
+            </div>
+        </div>
         </div>
         </section>
     )

@@ -52,11 +52,12 @@ function ModifierMission() {
     if (!mission) return <p>Chargement...</p>
 
     return (
-        <section className="page">
-            <div className="gestion-missions-wrapper">
-                <h1>Modifier une mission</h1>
-
-                <form onSubmit={handleSubmit}>
+        <section className="gestion_user">
+            <div className="pannele_user">
+            <div className="tool">
+                <h2>Modifier une mission</h2>
+                <div className="blur_pannel">
+                <form action="" onSubmit={handleSubmit}>
                     <label>Libellé :</label>
                     <input type="text" name="libelle" defaultValue={mission.libelle_msn} required />
 
@@ -78,6 +79,8 @@ function ModifierMission() {
 
                     <button type="submit">Modifier</button>
                 </form>
+                </div>
+            </div>
             </div>
         </section>
     )

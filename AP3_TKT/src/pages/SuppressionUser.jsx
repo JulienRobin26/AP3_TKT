@@ -64,34 +64,38 @@ function SuppressionUser() {
     <section className="gestion_user">
       <div className="pannel_user">
         <div className="tool">
-          <h2>Suppression utilisateur</h2>
-          {loading ? (
-            <p>Chargement...</p>
-          ) : (
-            <div className="pannel_user_liste">
-              <p>
-                Confirmer la suppression de{" "}
-                <strong>
-                  {user?.prenom_usr || user?.prenom || "Utilisateur"}{" "}
-                  {user?.nom_usr || user?.nom || ""}
-                </strong>
-                ?
-              </p>
-              <p>Cette action est irréversible.</p>
-              {error && <p className="error_message">{error}</p>}
-              <div className="btn_admin">
-                <button type="button" onClick={handleCancel} disabled={submitting}>
-                  Annuler
-                </button>
-                <button type="button" onClick={handleConfirm} disabled={submitting}>
-                  Oui, supprimer
-                </button>
-              </div>
-            </div>
-          )}
-          {!loading && !user && !error && (
-            <p className="error_message">Utilisateur introuvable</p>
-          )}
+          <h2>Ceci est la page de suppression</h2>
+          <div className="blur_pannel">
+            <form>
+              {loading ? (
+                <p>Chargement...</p>
+              ) : (
+                <div className="pannel_user_liste">
+                  <p>
+                    Confirmer la suppression de{" "}
+                    <strong>
+                      {user?.prenom_usr || user?.prenom || "Utilisateur"}{" "}
+                      {user?.nom_usr || user?.nom || ""}
+                    </strong>
+                    ?
+                  </p>
+                  <p>Cette action est irréversible.</p>
+                  {error && <p className="error_message">{error}</p>}
+                  <div className="btn_admin">
+                    <button type="button" onClick={handleCancel} disabled={submitting}>
+                      Annuler
+                    </button>
+                    <button type="button" onClick={handleConfirm} disabled={submitting}>
+                      Oui, supprimer
+                    </button>
+                  </div>
+                </div>
+              )}
+              {!loading && !user && !error && (
+                <p className="error_message">Utilisateur introuvable</p>
+              )}
+            </form>
+          </div>
         </div>
       </div>
     </section>

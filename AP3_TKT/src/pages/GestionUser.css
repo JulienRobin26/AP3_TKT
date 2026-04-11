@@ -58,11 +58,10 @@
   height: auto;
 }
 .pannel_user{
-  margin-top: 2em;
   margin: 2em;
   border-radius: 3em;
   height: auto;
-  padding: auto;
+  padding-bottom: 3em;
   background-image: url(/src/assets/images/gestion.webp);
   background-size: cover;
   background-position: right;

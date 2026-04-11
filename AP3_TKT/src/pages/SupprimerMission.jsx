@@ -31,13 +31,19 @@ function SupprimerMission() {
             });
     }
     return (
-        <div>
-            <h1>Supprimer une mission</h1>
+        <section className="gestion_user">
+            <div className="pannele_user">
+            <div className="tool">
+                <h2>Supprimer une mission</h2>
+                <div className="blur_pannel">
             <form action="" method="post" onSubmit={handleSubmit}>
                 <label htmlFor="id">Voulez vous vraiment supprimer cette mission ?</label>
                 <button type="submit">Supprimer</button>
             </form>
-        </div>
+            </div>
+            </div>
+            </div>
+        </section>
     )
 }
 

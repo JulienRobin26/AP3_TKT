@@ -79,9 +79,11 @@ function ModifierUser() {
 
   return (
     <>
-      <section className="page">
-        <div className="pannel_user_creation">
+      <section className="gestion_user">
+        <div className="pannel_user">
+        <div className="tool">
           <h2>Modifier un utilisateur</h2>
+          <div className="blur_pannel">
           {loading ? (
             <p>Chargement...</p>
           ) : (
@@ -102,6 +104,8 @@ function ModifierUser() {
               <button type="submit">Modifier</button>
             </form>
           )}
+          </div>
+        </div>
         </div>
       </section>
     </>

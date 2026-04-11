@@ -72,9 +72,11 @@ function AssignerMission() {
     };
 
     return (
-        <section className="page">
-            <div className="gestion-missions-wrapper">
-                <h1>Assigner une mission</h1>
+        <section className="gestion_user">
+            <div className="pannele_user">
+            <div className="tool">
+                <h2>Assigner une mission</h2>
+                <div className="blur_pannel">
 
                 <h3>Mission : {libelle}</h3>
 
@@ -101,6 +103,8 @@ function AssignerMission() {
 
                     <input type="submit" value="Assigner" disabled={users.length === 0} style={{ opacity: users.length === 0 ? 0.5 : 1, cursor: users.length === 0 ? 'not-allowed' : 'pointer' }} />
                 </form>
+                </div>
+            </div>
             </div>
         </section>
     );
