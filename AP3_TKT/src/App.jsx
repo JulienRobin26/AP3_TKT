@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react' // hook pour etat + effets
+﻿import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
@@ -31,7 +31,7 @@ import SupprimerMission from './pages/SupprimerMission';
 import ModifierMissions from './pages/ModifierMission';
 import VoirMissions from './pages/VoirMission';
 import VoirMaMission from './pages/VoirMaMission';
-
+import CreerEquipe from './pages/CreerEquipe';
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
@@ -81,6 +81,7 @@ function App() {
           <Route path="/supprimer-mission/:id" element={<SupprimerMission />} />
           <Route path="/modifier-mission/:id" element={<ModifierMissions />} />
           <Route path="/voir_mission/:id" element={<VoirMissions />} />
+          <Route path="/creer_equipe" element={<CreerEquipe />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
 

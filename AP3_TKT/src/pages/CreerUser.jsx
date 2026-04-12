@@ -17,7 +17,7 @@ function CreerUser() {
         equipe: "",
         poste: "",
         identifiant: "",
-        role: "user",
+        role: 0,
         mot_de_passe: ""
     });
 
@@ -133,8 +133,8 @@ function CreerUser() {
                             <input type="text" id="identifiant" name="identifiant" value={states.identifiant} onChange={change} />
                             <label htmlFor='role'>Rôle</label>
                             <select id="role" name="role" value={states.role} onChange={change}>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
+                                <option value="1">Admin</option>
+                                <option value="0">User</option>
                             </select>
                             <label htmlFor='mot_de_passe'>Mot de passe</label>
                             <input type="password" id="mot_de_passe" name="mot_de_passe" value={states.mot_de_passe} onChange={change} />
@@ -162,7 +162,7 @@ async function ajouterUtilisateur(user) {
                 email: user.email,
                 tel: user.telephone,
                 num_poste: user.poste,
-                role: user.role
+                role: Number(user.role)
             })
         });
         if (!res.ok) throw new Error("Erreur signup");

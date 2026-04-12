@@ -82,6 +82,13 @@ function GestionUsers() {
                     Ajouter un utilisateur
                   </button>
                 </li>
+                <li>
+                  <button type="button" onClick={() => navigate("/creer_equipe")}>
+                    Ajouter une équipe
+                  </button>
+                </li>
+                <li>
+                </li>
               </ul>
             </div>
           </div>

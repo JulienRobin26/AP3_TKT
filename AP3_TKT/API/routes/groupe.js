@@ -23,4 +23,18 @@ router.get('/poste/:id', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.post('/ajouter', async (req, res) =>{
+  const {libelle} = req.body;
+  try{
+    const [rows] = await dbt.query('INSERT INTO equipes (libelle_eqp) VALUE(?)', [libelle]);
+  }
+  catch (error){
+    console.log("Erreur d'ajout de l'équipe");
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 module.exports = router;
