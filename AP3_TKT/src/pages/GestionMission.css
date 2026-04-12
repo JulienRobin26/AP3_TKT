@@ -1,0 +1,176 @@
+:root {
+  --blue-900: #0f2cc4;
+  --blue-700: #1c4dff;
+  --blue-500: #3e74ba;
+  --blue-100: #eef3ff;
+  --white: #ffffff;
+  --off-white: #ecf6ff;
+  --shadow-strong: 0 12px 24px rgba(18, 30, 68, 0.18);
+  --shadow-soft: 0 6px 16px rgba(18, 30, 68, 0.12);
+  --border-soft: rgba(15, 44, 196, 0.25);
+  --panel-bg: rgba(255, 255, 255, 0.85);
+}
+
+.btn_equipes ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.btn_equipes button {
+  border: 0;
+  height: 36px;
+  padding: 8px 14px;
+  font-weight: 700;
+  color: var(--off-white);
+  background: linear-gradient(180deg, var(--blue-700), var(--blue-900));
+  cursor: pointer;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.tools_outils{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 1em;
+  box-sizing: border-box;
+}
+
+.blur_pannel{
+  width: 90%;
+  margin: auto;
+  margin-top: 3em !important;
+  backdrop-filter: blur(10px);
+  border-radius: 2em;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pannele_user{
+  margin: 2em;
+  border-radius: 3em;
+  height: auto;
+  padding-bottom: 3em;
+  background-image: url(/src/assets/images/agenda.jpg);
+  background-size: cover;
+  background-position: right;
+}
+
+.brique_user{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.searchbar{
+  width: min-content;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+}
+
+.brique_user_item{
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+  color: var(--white);
+  background-color: var(--blue-500) !important;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow-soft);
+}
+
+.brique_user_item .user_cell{
+  display: flex;
+  align-items: center;
+}
+
+.brique_user_item .user_name{
+  font-size: 1.05rem;
+}
+
+.brique_user_item button{
+  border: 0;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: var(--blue-900);
+  background: var(--blue-100);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.brique_user_item button:hover{
+  filter: brightness(0.95);
+}
+
+.gestion_user{
+  color: white;
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.panne_user h1{
+  background-color: white;
+  margin: 0;
+}
+
+.btn_equipes button:hover {
+  filter: brightness(1.08);
+}
+
+.equipes-menu {
+  position: relative;
+}
+
+.equipes-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: var(--shadow-strong);
+  display: grid;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  z-index: 10;
+}
+
+.equipes-menu:hover .equipes-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.equipes-dropdown button {
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+
+.equipes-dropdown button.is-active {
+  background: var(--blue-900);
+  color: var(--white);
+}

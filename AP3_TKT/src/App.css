@@ -1,42 +1,122 @@
+/* App-wide layout */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Knewave&display=swap');
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  height: 100vh;
+
+}
+body{
+  margin: 0;
+  height: 100vh;
+}
+.page {
   padding: 2rem;
-  text-align: center;
 }
+#icone_liens:hover .liens_invisibles {display:block;} 
 
+.liens_invisibles{
+  display: none;
+}
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+}
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+margin-top: 1em;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.nav .logo {
+  height: 48px;
+  width: auto;
+  display: block;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.liens {
+  list-style: none;
+  display: flex;
+  font-family: "Inter", sans-serif;
+  gap: 1.25rem;
+  margin: 0;
+  
+  padding: 0;
+}
+ .footer{
+    display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0;
+  gap: 2px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+ }
+.liens a {
+  text-decoration: none;
+  color: #1a1a1a;
+  font-weight: 600;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.liens a.active {
+  color: #005bff;
 }
 
-.card {
-  padding: 2em;
+/* Footer */
+.footer {
+
+  border-top: 1px solid #e6e6e6;
+  background: #ffffff;
 }
 
-.read-the-docs {
-  color: #888;
+.footer ul {
+  list-style: none;
+  display: flex;
+  gap: 1.25rem;
+  margin: 0 0 1rem 0;
+  padding: 0;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #1a1a1a;
+}
+.accueil_banniere{
+  background-image: url('./assets/images/home.webp');
+  background-size: cover;
+  box-shadow: #0000006a 3px 0px 15px;
+  border-radius: 20px;
+  margin: auto;
+  padding: 1em;
+  height: 28em;
+  overflow: hidden;
+  
+  
+}
+
+.titre_accueil {
+  margin-left: 5em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #000000;
+  background-color: rgba(255, 0, 0, 0.8);
+  width: max-content;
+  padding: 0em 1em;
+  border-radius: 20px;
+}
+
+.description_accueil {
+  margin-left: 5em;
+  color: #000000;
+backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  background-color: rgba(255, 255, 255, 0.8);
+  width: max-content;
+  padding: 0.5em 1em;
+  border-radius: 20px;
 }
