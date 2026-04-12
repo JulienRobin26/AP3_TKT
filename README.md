@@ -1,7 +1,8 @@
 # AP3_TKT
 
+Application Réact de gestion pour pour le parc Disneyland Paris.
 
-Jeu d'esai utilisateurs :
+Jeu d'essai utilisateurs :
 
 ID: LMartin | Nom: Léa Martin | Email: lea.martin@disneyland.fr
  | Mot de passe: L7m@N9qP2xVb
