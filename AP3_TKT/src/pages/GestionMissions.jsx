@@ -1,22 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./GestionMission.css";
 
-function GestionUsers() {
-  // const [utilisateur, setUtilisateurs] = useState([]);
-  const utilisateur = [
-    { id: 1, nom: "Dupont", prenom: "Alice", equipe: "Billetterie" },
-    { id: 2, nom: "Benali", prenom: "Karim", equipe: "Entretien" },
-    { id: 3, nom: "Martin", prenom: "Sophie", equipe: "Accueil" },
-    { id: 4, nom: "Leroux", prenom: "Mehdi", equipe: "Securite" },
-    { id: 5, nom: "Moreau", prenom: "Nina", equipe: "Accueil" },
+function GestionMissions() {
+  const [missions, setMissions] = useState([]);
+  const [recherche, setRecherche] = useState("");
+  const [typeFiltre, setTypeFiltre] = useState("Toutes");
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchMissions()
+      .then((data) => {
+        if (isMounted) setMissions(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("[GestionMissions] Erreur getMissions", err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const types = [
+    "Toutes",
+    ...new Set(missions.map((mission) => mission.type_msn)),
   ];
-  const [searchbar, setSearchBar] = useState("");
-  const [equipeFiltre, setEquipeFiltre] = useState("Toutes");
-  const equipes = ["Toutes", ...new Set(utilisateur.map((user) => user.equipe))];
-  const utilisateursFiltres =
-    equipeFiltre === "Toutes"
-      ? utilisateur
-      : utilisateur.filter((user) => user.equipe === equipeFiltre);
+
+  const missionsFiltrees = missions
+    .filter((mission) =>
+      typeFiltre === "Toutes" ? true : mission.type_msn === typeFiltre
+    )
+    .filter((mission) => {
+      const terme = recherche.trim().toLowerCase();
+      if (!terme) return true;
+      const libelle = String(mission.libelle_msn || "").toLowerCase();
+      return libelle.includes(terme);
+    });
 
   return (
     <>
@@ -28,42 +46,46 @@ function GestionUsers() {
           <div className="blur_pannel">
           
             <div className="tools_outils">
-            <input type="text" placeholder="Rechercher un utilisateur" className="searchbar"/>
+            <input
+              type="text"
+              placeholder="Rechercher une mission"
+              className="searchbar"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+            />
           
           <div className="btn_equipes">
             <ul>
               <li className="equipes-menu">
-                <button type="button">Equipes</button>
+                <button type="button">Types</button>
                 <ul className="equipes-dropdown">
-                  {equipes.map((equipe) => (
-                    <li key={equipe}>
+                  {types.map((type) => (
+                    <li key={type}>
                       <button
                         type="button"
-                        className={equipeFiltre === equipe ? "is-active" : ""}
-                        onClick={() => setEquipeFiltre(equipe)}
+                        className={typeFiltre === type ? "is-active" : ""}
+                        onClick={() => setTypeFiltre(type)}
                       >
-                        {equipe}
+                        {type}
                       </button>
                     </li>
                   ))}
                 </ul>
               </li>
               <li>
-                <button>Ajouter un utilisateur</button>
+                <button>Ajouter une mission</button>
               </li>
             </ul>
           </div>
           </div>
           <div className="pannel_user_liste">
             <ul className="brique_user">
-              {utilisateursFiltres.map((user) => (
-                <li className="brique_user_item" key={user.id}>
+              {missionsFiltrees.map((mission) => (
+                <li className="brique_user_item" key={mission.id_msn}>
                   <div className="user_cell user_name">
-                    <strong>
-                      {user.prenom} {user.nom}
-                    </strong>
+                    <strong>{mission.libelle_msn}</strong>
                   </div>
-                  <div className="user_cell">{user.equipe}</div>
+                  <div className="user_cell">{mission.type_msn}</div>
                   <div className="user_cell">
                     <button>Modifier</button>
                   </div>
@@ -82,11 +104,12 @@ function GestionUsers() {
   );
 }
 
-async function recup_users(id) {
-  if (id == undefined) {
-    id = 1;
-  }
-
-  const res = await fetch("");
+async function fetchMissions() {
+  const res = await fetch("http://localhost:3006/api/missions", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Erreur getMissions");
+  return res.json();
 }
-export default GestionUsers;
+export default GestionMissions;

@@ -27,7 +27,7 @@ function Nav({ user }) {
               <li><NavLink to="/attractions">Les attractions</NavLink></li>
               <li><NavLink to="/mes_missions">Mes Missions</NavLink></li>
               <li><NavLink to="/avertissement">Avertissement</NavLink></li>
-              <li><NavLink to="/profil" id="icone_liens"><span class="material-symbols-outlined">account_circle</span></NavLink></li>
+              <li><NavLink to="/profil" id="icone_liens"><span className="material-symbols-outlined">account_circle</span></NavLink></li>
               
             </>
           ) : null}
