@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionUser.css";
 
 function GestionUsers() {
@@ -81,6 +82,13 @@ function GestionUsers() {
                     Ajouter un utilisateur
                   </button>
                 </li>
+                <li>
+                  <button type="button" onClick={() => navigate("/creer_equipe")}>
+                    Ajouter une équipe
+                  </button>
+                </li>
+                <li>
+                </li>
               </ul>
             </div>
           </div>
@@ -122,7 +130,7 @@ function GestionUsers() {
 }
 
 async function recup_users() {
-    const res = await fetch("http://localhost:3006/api/users/utilisateurs", {
+    const res = await fetch(`${API_URL}/api/users/utilisateurs`, {
       method: 'GET',
       headers: { "Content-Type": "application/json" },
     });
@@ -132,7 +140,7 @@ async function recup_users() {
 }
 
 async function recup_equipes() {
-  const res = await fetch("http://localhost:3006/api/groupe/equipe", {
+  const res = await fetch(`${API_URL}/api/groupe/equipe`, {
     method: 'GET',
     headers: { "Content-Type": "application/json" },
   });

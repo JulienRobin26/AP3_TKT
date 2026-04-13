@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
+import API_URL from '../api_url';
 import "./Alerts.css";
 
 function Alert() {
@@ -52,6 +53,17 @@ function Alert() {
 }
 function blocAlert(id, user, date, description, openInfos, setOpenInfos, navigate) {
   const isOpen = Boolean(openInfos[id]);
+  
+  const handleSuppr = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch(`${API_URL}/avertissements/suppr/${id}`, { method: "POST" });
+      navigate(0); // reload page equivalent
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <article key={id} className="alerts-row" id={`alert-${id}`}>
       <div className="alerts-row-main">
@@ -75,7 +87,7 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos, navigat
             Modifier
           </button>
         
-          <form method="post" action={"http://localhost:3006/avertissements/suppr/" + id}>
+          <form onSubmit={handleSuppr}>
               <button type="submit" className="alerts-view-btn">Supprimer</button>
             </form></>)}
       </div>
@@ -93,7 +105,7 @@ function modifierAlertes(idAlerte, navigate) {
 }
 async function fetchAlertes(id) {
   
-  const res = await fetch(`http://localhost:3006/avertissements/${id}`, {
+  const res = await fetch(`${API_URL}/avertissements/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

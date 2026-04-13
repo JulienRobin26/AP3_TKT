@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./Avertissement.css";
 
 function Avertissement() {
@@ -61,7 +62,7 @@ function blocAvertissement(avertissement, navigate) {
 
 async function fetchAlertes() {
   
-  const res = await fetch(`http://localhost:3006/avertissements/`, {
+  const res = await fetch(`${API_URL}/avertissements/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

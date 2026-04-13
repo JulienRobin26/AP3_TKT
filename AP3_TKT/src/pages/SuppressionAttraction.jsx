@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionAttractions.css";
 
 function SuppressionAttraction() {
@@ -39,7 +40,7 @@ function SuppressionAttraction() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`http://localhost:3006/attraction/supprimer/${id}`, {
+      const res = await fetch(`${API_URL}/attraction/supprimer/${id}`, {
         method: "POST",
       });
       if (!res.ok) throw new Error("Erreur suppression attraction");
@@ -81,7 +82,7 @@ function SuppressionAttraction() {
 }
 
 async function fetchAttractionsById(id) {
-  const res = await fetch(`http://localhost:3006/attraction/id/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${API_URL}/attraction/id/${encodeURIComponent(id)}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

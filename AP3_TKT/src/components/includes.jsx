@@ -5,11 +5,11 @@ import logoDisney from '../assets/images/logo_Disney_nav.png'
 function Nav({ user }) {
   return (
     <>
-    <center><img src={logoDisney} alt="Logo_Disney" className='logo' /></center>
+      <center><img src={logoDisney} alt="Logo_Disney" className='logo' /></center>
       <div className='nav'>
-        
+
         <NavLink to="/" aria-label="Accueil">
-          
+
         </NavLink>
         <ul className='liens'>
           {user.auth === 'admin' ? (
@@ -18,9 +18,10 @@ function Nav({ user }) {
               <li><NavLink to="/gestion_users">Gestions Users</NavLink></li>
               <li><NavLink to="/gestion_missions">Gestion Missions</NavLink></li>
               <li><NavLink to="/avertissement">Avertissements</NavLink></li>
+              <li><NavLink to="/mes_missions">Mes Missions</NavLink></li>
               <li><NavLink to="/profil" id="icone_liens"><span className="material-symbols-outlined">account_circle</span></NavLink><ul className="liens_invisibles"><li><NavLink to="/deconnexion">Déconnexion</NavLink></li>
-<li><NavLink to="/profil">Profil</NavLink></li>
-</ul></li>
+                <li><NavLink to="/profil">Profil</NavLink></li>
+              </ul></li>
             </>
           ) : user.auth === 'user' ? (
             <>
@@ -28,7 +29,7 @@ function Nav({ user }) {
               <li><NavLink to="/mes_missions">Mes Missions</NavLink></li>
               <li><NavLink to="/avertissement">Avertissement</NavLink></li>
               <li><NavLink to="/profil" id="icone_liens"><span className="material-symbols-outlined">account_circle</span></NavLink></li>
-              
+
             </>
           ) : null}
         </ul>
@@ -40,7 +41,7 @@ function Nav({ user }) {
 const Footer = () => {
   return (
     <>
-    
+
       <div className='footer'>
         <p>Toutes les images sont la propriété de Disney.</p>
         <ul className='liens'>
@@ -48,9 +49,9 @@ const Footer = () => {
           <li><NavLink to="/contact">Contact</NavLink></li>
           <li><NavLink to="/politique_de_confidentialite">Politique de confidentialité</NavLink></li>
         </ul>
-        
-        
-</div>
+
+
+      </div>
     </>
   )
 }

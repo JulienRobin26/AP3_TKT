@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API_URL from '../api_url';
 import "./Profil.css";
 
 function Profil() {
@@ -16,7 +17,7 @@ function Profil() {
   useEffect(() => {
     const chargerProfil = async () => {
       try {
-        const resAuth = await fetch("http://localhost:3006/api/auth/recup_infos", {
+        const resAuth = await fetch(`${API_URL}/api/auth/recup_infos`, {
           method: "GET",
           credentials: "include",
         });
@@ -25,7 +26,7 @@ function Profil() {
         const userId = authData?.user?.id;
         if (!userId) return;
 
-        const resUser = await fetch(`http://localhost:3006/api/users/affichage/${userId}`, {
+        const resUser = await fetch(`${API_URL}/api/users/affichage/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

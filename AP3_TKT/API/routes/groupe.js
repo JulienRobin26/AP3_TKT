@@ -3,7 +3,7 @@ const router = express.Router();
 const authToken = require('../auth_token');
 const dbt = require('../config/db');
 
-router.get('/equipe', async (req, res) => {
+router.get('/equipes', async (req, res) => {
   try {
     const [rows] = await dbt.query('SELECT id_eqp, libelle_eqp FROM equipes'); 
     res.json(rows);
@@ -23,4 +23,18 @@ router.get('/poste/:id', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.post('/ajouter', async (req, res) =>{
+  const {libelle} = req.body;
+  try{
+    const [rows] = await dbt.query('INSERT INTO equipes (libelle_eqp) VALUE(?)', [libelle]);
+  }
+  catch (error){
+    console.log("Erreur d'ajout de l'équipe");
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 module.exports = router;

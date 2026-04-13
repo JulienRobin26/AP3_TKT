@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import API_URL from '../api_url';
 
 export default function Guard({ roles = [] }) {
   const [status, setStatus] = useState('loading');
@@ -8,7 +9,7 @@ export default function Guard({ roles = [] }) {
 
   useEffect(() => {
     setStatus('loading');
-    fetch('http://localhost:3006/api/auth/recup_infos', {
+    fetch(`${API_URL}/api/auth/recup_infos`, {
       method: 'GET',
       credentials: 'include',
     })

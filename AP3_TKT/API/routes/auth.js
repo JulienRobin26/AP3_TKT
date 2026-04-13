@@ -28,8 +28,8 @@ router.post('/login', async (req, res) => {
 
       res.cookie('token', token, {httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 3600000      }
+        sameSite: 'none',
+        secure: true     }
 
       );
       return res.json({message: "Connexion réussie"});

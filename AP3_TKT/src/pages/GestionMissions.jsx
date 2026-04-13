@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionMission.css";
 
 function GestionMissions() {
+  const navigate = useNavigate();
   const [missions, setMissions] = useState([]);
   const [recherche, setRecherche] = useState("");
   const [typeFiltre, setTypeFiltre] = useState("Toutes");
@@ -73,27 +76,52 @@ function GestionMissions() {
                 </ul>
               </li>
               <li>
-                <button>Ajouter une mission</button>
+                <button onClick={() => navigate("/ajouter-mission")}>
+                  Ajouter une mission
+                </button>
               </li>
             </ul>
           </div>
           </div>
           <div className="pannel_user_liste">
             <ul className="brique_user">
-              {missionsFiltrees.map((mission) => (
+              {missionsFiltrees.map((mission) => {
+                const isAssigned = mission.nb_assigned > 0;
+                return (
                 <li className="brique_user_item" key={mission.id_msn}>
                   <div className="user_cell user_name">
                     <strong>{mission.libelle_msn}</strong>
+                    {isAssigned && <span style={{ marginLeft: 8, fontSize: "0.8em", color: "#90ee90" }}>✔ Assignée</span>}
                   </div>
                   <div className="user_cell">{mission.type_msn}</div>
-                  <div className="user_cell">
-                    <button>Modifier</button>
+                  <div className="user_celle">{mission.libelle_eqp}</div>
+                   <div className="user_cell">
+                    <button onClick={() => navigate(`/voir_mission/${mission.id_msn}`)}>Voir</button>
                   </div>
                   <div className="user_cell">
-                    <button>Supprimer</button>
+                    <button
+                      disabled={isAssigned}
+                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
+                      onClick={() => !isAssigned && navigate(`/assigner-mission/${mission.id_msn}`)}
+                    >Assigner</button>
+                  </div>
+                  <div className="user_cell">
+                    <button
+                      disabled={isAssigned}
+                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
+                      onClick={() => !isAssigned && navigate(`/modifier-mission/${mission.id_msn}`)}
+                    >Modifier</button>
+                  </div>
+                  <div className="user_cell">
+                    <button
+                      disabled={isAssigned}
+                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
+                      onClick={() => !isAssigned && navigate(`/supprimer-mission/${mission.id_msn}`)}
+                    >Supprimer</button>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -105,7 +133,7 @@ function GestionMissions() {
 }
 
 async function fetchMissions() {
-  const res = await fetch("http://localhost:3006/api/missions", {
+  const res = await fetch(`${API_URL}/api/missions`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

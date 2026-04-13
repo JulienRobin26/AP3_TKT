@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionAttractions.css";
 
 function GestionAttractions() {
@@ -73,7 +74,7 @@ function GestionAttractions() {
 }
 
 async function fetchAttractions() {
-  const res = await fetch(`http://localhost:3006/attraction/`, {
+  const res = await fetch(`${API_URL}/attraction/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

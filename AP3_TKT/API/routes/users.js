@@ -13,6 +13,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+
+router.get('/user_by_team/:id_eqp', async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT id_usr, nom_usr, prenom_usr FROM users INNER JOIN poste ON users.id_pst_usr = poste.id_pst INNER JOIN equipes ON poste.id_eqp_pst = equipes.id_eqp WHERE equipes.id_eqp = ?',
+      [req.params.id_eqp]
+    );
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching users by team:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.get('/utilisateurs', async (req, res) => {
   try {
     const [rows] = await db.query(

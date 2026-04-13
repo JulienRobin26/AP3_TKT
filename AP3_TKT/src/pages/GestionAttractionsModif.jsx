@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./GestionAttractions.css";
 
 function GestionAttractionsModif() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [attraction, setAttraction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -29,6 +31,26 @@ function GestionAttractionsModif() {
     };
   }, [id]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    data.ouvert = data.ouvert ? 1 : 0;
+    data.pourEnceinte = data.pourEnceinte ? 1 : 0;
+    data.pourLesPetits = data.pourLesPetits ? 1 : 0;
+    
+    try {
+      await fetch(`${API_URL}/attraction/modif`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      navigate("/gestion_attractions");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <section className="page gestion-attractions-page">
       <h1>Gestion des attractions</h1>
@@ -37,7 +59,7 @@ function GestionAttractionsModif() {
         {loading && <p>Chargement...</p>}
         {error && <p className="error_message">{error}</p>}
         {!loading && !error && attraction && (
-          <form className="modif-attraction-form" method="post" action="http://localhost:3006/attraction/modif">
+          <form className="modif-attraction-form" onSubmit={handleSubmit}>
             <input type="hidden" name="id" value={id} />
             {info(
               attraction.nom_ift,
@@ -112,7 +134,7 @@ function info(nom, description, image, parc, tempsAttente, ouvert, tailleLimite,
 }
 
 async function fetchAttractionsById(id) {
-  const res = await fetch(`http://localhost:3006/attraction/id/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${API_URL}/attraction/id/${encodeURIComponent(id)}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

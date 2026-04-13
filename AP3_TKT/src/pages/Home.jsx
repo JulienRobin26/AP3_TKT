@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from '../api_url';
 
 function Home() {
   const [nom, setNom] = useState("");
@@ -7,7 +8,7 @@ function Home() {
   useEffect(() => {
     const chargerUtilisateur = async () => {
       try {
-        const recup = await fetch("http://localhost:3006/api/auth/recup_infos", {
+        const recup = await fetch(`${API_URL}/api/auth/recup_infos`, {
           method: "GET",
           credentials: "include",
         });
@@ -16,7 +17,7 @@ function Home() {
         const userId = authData?.user?.id;
         if (!userId) return;
 
-        const resUser = await fetch(`http://localhost:3006/api/users/affichage/${userId}`, {
+        const resUser = await fetch(`${API_URL}/api/users/affichage/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
