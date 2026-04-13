@@ -1,6 +1,6 @@
 # AP3_TKT
 
-Application web de gestion (attractions, missions, alertes, utilisateurs) avec authentification par cookie JWT.
+Application React de gestion pour le parc Disneyland Paris, avec authentification par cookie JWT.
 
 ## Stack technique
 
@@ -112,6 +112,18 @@ npm run dev
 - affichages des Users (Admin)
 - Déconnection 
 - Profil utilisateur
+
+## Jeu d'essai utilisateurs
+
+Les identifiants ci-dessous peuvent servir pour les tests de connexion:
+
+| ID | Nom | Email | Mot de passe |
+| --- | --- | --- | --- |
+| LMartin | Léa Martin | lea.martin@disneyland.fr | L7m@N9qP2xVb |
+| LBernard | Lucas Bernard | lucas.bernard@disneyland.fr | aT8#rK3vN9sD |
+| EDubois | Emma Dubois | emma.dubois@disneyland.fr | Z2w$L9pQ7mRx |
+| HLaurent | Hugo Laurent | hugo.laurent@disneyland.fr | qH6!tB8nV3kP |
+| CMoreau | Chloé Moreau | chloe.moreau@disneyland.fr | M9y@dF4sJ7xL |
 
 ## Depannage rapide
 
