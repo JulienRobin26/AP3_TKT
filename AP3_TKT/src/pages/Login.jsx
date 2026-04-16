@@ -1,5 +1,6 @@
 import { useState } from 'react' // etats locaux du formulaire
 import { useNavigate } from 'react-router-dom' // navigation apres login
+import API_URL from '../api_url'
 import logoDisney from '../assets/images/logo_Disney.png'
 import '../assets/style.css'
 
@@ -28,15 +29,14 @@ function Login() {
       <div className="login_form">
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">Identifiant :</label>
-          <input type="text" id="username" name="username" placeholder="ADupont" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} required/>
+          <input type="text" id="username" name="username" placeholder="ADupont" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} required />
           <label htmlFor="password">Mot de passe : </label>
-          <input type={showPassword ? 'text' : 'password'} name="password" placeholder="UnM0tDeP@sse" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+          <input type={showPassword ? 'text' : 'password'} name="password" placeholder="UnM0tDeP@sse" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <div>
-            
+
           </div>
           <button className='button_submit' type="submit">Connexion</button>
           {error && <p className="error_message">{error}</p>}
-          <a href="" >Mot de passe oublie ?</a>
         </form>
       </div>
     </section>
@@ -45,7 +45,8 @@ function Login() {
 async function auth_User(identifiant, pass) { // fonction appel API login
   let res;
   try {
-    res = await fetch(`http://localhost:3006/api/auth/login`, { // endpoint login
+    console.log(API_URL)
+    res = await fetch(`${API_URL}/api/auth/login`, { // endpoint login
       method: "POST", // envoi des identifiants
       headers: { "Content-Type": "application/json" }, // payload JSON
       credentials: 'include', // envoie/recupere le cookie

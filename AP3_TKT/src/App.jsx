@@ -2,6 +2,7 @@
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
+import API_URL from './api_url'
 import Guard from "./components/guard";
 import Attractions from './pages/Attractions'
 import MesMissions from './pages/MesMissions'
@@ -17,15 +18,25 @@ import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
-import GestionAttractions from './pages/GestionAttractions' 
+import GestionAttractions from './pages/GestionAttractions'
+import GestionAttractionsAjout from './pages/GestionAttractionsAjout'
+import GestionAttractionsModif from './pages/GestionAttractionsModif'
+import SuppressionAttraction from './pages/SuppressionAttraction'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
-import CreationUsers from './pages/CreerUser';
-
+import GestionAlertes from './pages/GestionAlertes'
+import SuppressionUser from './pages/SuppressionUser';
+import AssignerMission from './pages/AssignerMission';
+import AjouterMission from './pages/AjouterMission';
+import SupprimerMission from './pages/SupprimerMission';
+import ModifierMissions from './pages/ModifierMission';
+import VoirMissions from './pages/VoirMission';
+import VoirMaMission from './pages/VoirMaMission';
+import {GestionEquipe, CreerEquipe, ModifierEquipe, SupprimerEquipe} from './pages/GestionEquipes'
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
-  const isLoginPage = location.pathname === '/login' || location.pathname === '/' 
-  const hideFooter = location.pathname.startsWith('/gestion_users')
+  const isLoginPage = location.pathname === '/login' || location.pathname === '/'
+
   const showNav = user.auth === 'admin' || user.auth === 'user'
 
   useEffect(() => {
@@ -33,13 +44,13 @@ function App() {
       setUser({ auth: null })
       return
     }
-    fetch('http://localhost:3006/api/auth/recup_infos', {
+    fetch(`${API_URL}/api/auth/recup_infos`, {
       method: 'GET',
       credentials: 'include',
     })
       .then(async (res) => {
-        if (!res.ok) { 
-          setUser({ auth: null }) 
+        if (!res.ok) {
+          setUser({ auth: null })
           return
         }
         const data = await res.json()
@@ -51,23 +62,40 @@ function App() {
 
   return (
     <>
-      {!isLoginPage && showNav && <Nav user={user} /> }
+      {!isLoginPage && showNav && <Nav user={user} />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route element={<Guard roles={[1]} />}>
           <Route path="/gestion_users/" element={<GestionUsers />} />
           <Route path="/gestion_missions/" element={<GestionMissions />} />
           <Route path="/gestion_attractions" element={<GestionAttractions />} />
-          <Route path="/add_user" element={<CreationUsers />}/>
+          <Route path="/gestion_attractions/ajout" element={<GestionAttractionsAjout />} />
+          <Route path="/gestion_attractions/modifier/:id" element={<GestionAttractionsModif />} />
+          <Route path="/gestion_attractions/supprimer/:id" element={<SuppressionAttraction />} />
           <Route path="/modifier_user/:id" element={<ModifierUser />} />
+          <Route path="/supprimer_user/:id" element={<SuppressionUser />} />
           <Route path="/creer_user" element={<CreerUser />} />
-          
+          <Route path="/gestion_alertes" element={<GestionAlertes />} />
+          <Route path="/assigner-mission/:id" element={<AssignerMission />} />
+          <Route path="/ajouter-mission" element={<AjouterMission />} />
+          <Route path="/supprimer-mission/:id" element={<SupprimerMission />} />
+          <Route path="/modifier-mission/:id" element={<ModifierMissions />} />
+          <Route path="/voir_mission/:id" element={<VoirMissions />} />
+          <Route path="/creer_equipe" element={<CreerEquipe />} />
+          <Route path="/modifier_equipe/:id" element={<ModifierEquipe />} />
+          <Route path="/supprimer_equipe/:id" element={<SupprimerEquipe />} />
+          <Route path="/gerer_equipes" element={<GestionEquipe/>}/>
         </Route>
         <Route element={<Guard roles={[0]} />}>
-          <Route path="/mes_missions" element={<MesMissions />} />
+
+          <Route path="/gestion_alertes" element={<GestionAlertes />} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
+          <Route path="/mes_missions" element={<MesMissions />} />
+          <Route path="/voir_ma_mission/:id" element={<VoirMaMission />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/alerts" element={<Alerts />} />
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/avertissement" element={<Avertissement />} />
           <Route path="/alerts" element={<Alerts />} />
@@ -77,9 +105,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!isLoginPage && showNav && !hideFooter && <Footer /> }
+      {!isLoginPage && showNav && <Footer />}
     </>
 
   )

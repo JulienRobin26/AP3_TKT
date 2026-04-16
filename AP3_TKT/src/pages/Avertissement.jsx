@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from '../api_url';
 import "./Avertissement.css";
 
 function Avertissement() {
@@ -20,7 +21,7 @@ function Avertissement() {
             blocAvertissement(avertissement, navigate)
           ))}
         </div>
-        <button type="button" className="avertissement-create-btn">Ajouter</button>
+        
       </div>
       
     </section>
@@ -57,11 +58,14 @@ function blocAvertissement(avertissement, navigate) {
     </div>
   )
 }
+
+
 async function fetchAlertes() {
   
-  const res = await fetch(`http://localhost:3006/avertissements/`, {
+  const res = await fetch(`${API_URL}/avertissements/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Erreur getUsers");

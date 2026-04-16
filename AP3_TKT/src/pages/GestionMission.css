@@ -56,11 +56,10 @@
 }
 
 .pannele_user{
-  margin-top: 2em;
   margin: 2em;
   border-radius: 3em;
-  height: 100%;
-  padding: auto;
+  height: auto;
+  padding-bottom: 3em;
   background-image: url(/src/assets/images/agenda.jpg);
   background-size: cover;
   background-position: right;

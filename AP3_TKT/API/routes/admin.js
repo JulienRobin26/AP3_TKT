@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
-router.get('/', async (req, res) => {
+router.get('/', authToken, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM nourriture');
     res.json(rows);
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/:libelle', async (req, res) => {
+router.get('/:libelle', authToken, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM nourriture WHERE libelle_food like "$?$"', [req.params.libelle]);
     res.json(rows);
