@@ -17,6 +17,7 @@ function SuppressionUser() {
     fetch(`${API_URL}/api/users/affichage/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Erreur chargement utilisateur");
@@ -49,6 +50,7 @@ function SuppressionUser() {
       const res = await fetch(`${API_URL}/api/users/supprimer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ id }),
       });
       if (!res.ok) throw new Error("Erreur suppression utilisateur");

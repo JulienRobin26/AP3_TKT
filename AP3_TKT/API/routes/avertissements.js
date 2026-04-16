@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
-router.get('/', async (req, res) => {
+router.get('/', authToken, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM niveaualerte');
     res.json(rows);
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/:id', async (req, res) => {
+router.get('/:id', authToken, async (req, res) => {
   try {
     const [rows] = await db.query(`Select id_alr, contenu_alr , dateCréation, prenom_usr, nom_usr from users join alerte on id_usr = id_usr_alr  inner join niveaualerte on id_nv = id_nv_alr where id_nv = ?`, [req.params.id]);
     res.json(rows);
@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/alertes/:id', async (req, res) => {
+router.get('/alertes/:id', authToken, async (req, res) => {
   try {
     const [rows] = await db.query(`Select contenu_alr from alerte where id_alr = ?`, [req.params.id]);
     res.json(rows);

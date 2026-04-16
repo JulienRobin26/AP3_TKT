@@ -57,7 +57,10 @@ function blocAlert(id, user, date, description, openInfos, setOpenInfos, navigat
   const handleSuppr = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`${API_URL}/avertissements/suppr/${id}`, { method: "POST" });
+      await fetch(`${API_URL}/avertissements/suppr/${id}`, {
+        method: "POST",
+        credentials: "include",
+      });
       navigate(0); // reload page equivalent
     } catch (err) {
       console.error(err);
@@ -108,6 +111,7 @@ async function fetchAlertes(id) {
   const res = await fetch(`${API_URL}/avertissements/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Erreur getUsers");

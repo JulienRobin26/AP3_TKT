@@ -77,6 +77,7 @@ async function fetchAttractions() {
   const res = await fetch(`${API_URL}/attraction/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
  
   if (!res.ok) throw new Error("Erreur getUsers");

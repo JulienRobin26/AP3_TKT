@@ -136,6 +136,7 @@ async function fetchMissions() {
   const res = await fetch(`${API_URL}/api/missions`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Erreur getMissions");
   return res.json();

@@ -65,6 +65,7 @@ async function fetchAlertes() {
   const res = await fetch(`${API_URL}/avertissements/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Erreur getUsers");

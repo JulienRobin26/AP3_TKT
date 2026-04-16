@@ -29,6 +29,7 @@ function Profil() {
         const resUser = await fetch(`${API_URL}/api/users/affichage/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
         if (!resUser.ok) return;
         const data = await resUser.json();

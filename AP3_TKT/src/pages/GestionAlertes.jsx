@@ -24,6 +24,7 @@ function AjoutAlertes({ idAvertissement }) {
       await fetch(`${API_URL}/avertissements/ajout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
       });
       navigate("/alerts");
@@ -58,6 +59,7 @@ function ModifAlertes({ idAlertes }) {
     await fetch(`${API_URL}/avertissements/modif`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(data),
     });
     navigate("/alerts");
@@ -83,6 +85,7 @@ async function fetchAlertesById(id) {
   const res = await fetch(`${API_URL}/avertissements/alertes/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
  
   if (!res.ok) throw new Error("Erreur getAttractionById");

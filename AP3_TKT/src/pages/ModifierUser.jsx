@@ -17,6 +17,7 @@ function ModifierUser() {
         const resUser = await fetch(`${API_URL}/api/users/affichage/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
         if (!resUser.ok) throw new Error("Erreur chargement utilisateur");
         const data = await resUser.json();
@@ -31,6 +32,7 @@ function ModifierUser() {
         const resEquipes = await fetch(`${API_URL}/api/groupe/equipes`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
         if (resEquipes.ok) {
           const equipesData = await resEquipes.json();
@@ -68,6 +70,7 @@ function ModifierUser() {
       const res = await fetch(`${API_URL}/api/users/modifier/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erreur modification utilisateur");

@@ -17,6 +17,7 @@ function GestionAttractionsAjout() {
     await fetch(`${API_URL}/attraction/ajout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(data)
     });
     navigate("/gestion_attractions");

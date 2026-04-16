@@ -82,13 +82,7 @@ function GestionUsers() {
                     Ajouter un utilisateur
                   </button>
                 </li>
-                <li>
-                  <button type="button" onClick={() => navigate("/creer_equipe")}>
-                    Ajouter une équipe
-                  </button>
-                </li>
-                <li>
-                </li>
+                
               </ul>
             </div>
           </div>
@@ -133,6 +127,7 @@ async function recup_users() {
     const res = await fetch(`${API_URL}/api/users/utilisateurs`, {
       method: 'GET',
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
     if (!res.ok) throw new Error("Erreur getUsers");
     return res.json();
@@ -143,6 +138,7 @@ async function recup_equipes() {
   const res = await fetch(`${API_URL}/api/groupe/equipe`, {
     method: 'GET',
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Erreur getEquipes");
   return res.json();

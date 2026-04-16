@@ -17,6 +17,7 @@ function SupprimerMission() {
         fetch(`${API_URL}/api/missions/supprimer/${id}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(data),
         })
 

@@ -9,7 +9,9 @@ function VoirMission() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/missions/${id}`)
+    fetch(`${API_URL}/api/missions/${id}`, {
+      credentials: "include",
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Erreur récupération mission");
         return res.json();

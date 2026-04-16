@@ -7,7 +7,7 @@ const authToken = require('../auth_token');
 
 
 
-router.get('/equipe_missions/:id', async (req, res) => {
+router.get('/equipe_missions/:id', authToken, async (req, res) => {
     try {
         const id_msn = req.params.id;
         const [rows] = await db.query(
@@ -20,7 +20,7 @@ router.get('/equipe_missions/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-router.get('/', async (req, res) => {
+router.get('/', authToken, async (req, res) => {
   try {
     const [rows] = await db.query(`
       SELECT m.*, e.libelle_eqp,
@@ -64,7 +64,7 @@ router.post('/valider/:id', authToken, async (req, res) => {
 });
 
 // Récupère une mission par son ID + utilisateurs assignés
-router.get('/:id', async (req, res) => {
+router.get('/:id', authToken, async (req, res) => {
   try {
     const [rows] = await db.query(`
       SELECT m.*, e.libelle_eqp 
@@ -87,7 +87,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Ajoute une mission
-router.post('/ajouter', async (req, res) => {
+router.post('/ajouter', authToken, async (req, res) => {
   try {
     console.log(req.body);
     const { libelle_msn, type_msn, dateDebut_msn, id_eqp_msn } = req.body;
@@ -103,7 +103,7 @@ router.post('/ajouter', async (req, res) => {
 });
 
 // Modifie une mission (sauf dateFin_msn) — bloqué si assignée
-router.post('/modifier', async (req, res) => {
+router.post('/modifier', authToken, async (req, res) => {
   try {
     const { id_msn, libelle_msn, type_msn, dateDebut_msn, id_eqp_msn } = req.body;
     // Vérifier si la mission est assignée à des utilisateurs
@@ -124,7 +124,7 @@ router.post('/modifier', async (req, res) => {
 
 
 // Supprime une mission — bloqué si assignée
-router.post('/supprimer/:id', async (req, res) => {
+router.post('/supprimer/:id', authToken, async (req, res) => {
   try {
     // Vérifier si la mission est assignée à des utilisateurs
     const [assigned] = await db.query('SELECT COUNT(*) as nb FROM users WHERE id_msn_usr = ?', [req.params.id]);
@@ -140,7 +140,7 @@ router.post('/supprimer/:id', async (req, res) => {
 });
 
 // Récupère les utilisateurs d'une équipe
-router.get('/utilisateurs-equipe/:id_equipe', async (req, res) => {
+router.get('/utilisateurs-equipe/:id_equipe', authToken, async (req, res) => {
     try {
         const id_equipe = req.params.id_equipe;
         const [rows] = await db.query(
@@ -155,7 +155,7 @@ router.get('/utilisateurs-equipe/:id_equipe', async (req, res) => {
 });
 
 // Affecte une mission à des utilisateurs — bloqué si déjà assignée
-router.post('/affecter/:id', async (req, res) => {
+router.post('/affecter/:id', authToken, async (req, res) => {
     try {
         const id_msn = req.params.id;
         const { userIds } = req.body;

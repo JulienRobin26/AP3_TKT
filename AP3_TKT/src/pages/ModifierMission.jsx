@@ -11,14 +11,18 @@ function ModifierMission() {
 
     // Charger la mission
     useEffect(() => {
-        fetch(`${API_URL}/api/missions/${id}`)
+        fetch(`${API_URL}/api/missions/${id}`, {
+            credentials: "include",
+        })
             .then(res => res.json())
             .then(data => setMission(data))
     }, [id])
 
     // Charger les équipes
     useEffect(() => {
-        fetch(`${API_URL}/api/equipes`)
+        fetch(`${API_URL}/api/equipes`, {
+            credentials: "include",
+        })
             .then(res => res.json())
             .then(data => setEquipe(data))
     }, [])
@@ -34,6 +38,7 @@ function ModifierMission() {
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify({
                 id_msn: id,
                 libelle_msn: data.libelle,

@@ -177,6 +177,7 @@ async function fetchEquipes() {
     const res = await fetch(`${API_URL}/api/equipes`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
     });
 
     if (!res.ok) throw new Error("Erreur getEquipes");
@@ -186,6 +187,7 @@ async function fetchPostes(id) {
     const res = await fetch(`${API_URL}/api/poste/${id}`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
     });
     if (!res.ok) throw new Error("Erreur getPostes");
     return res.json();

@@ -43,6 +43,7 @@ function GestionAttractionsModif() {
       await fetch(`${API_URL}/attraction/modif`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data)
       });
       navigate("/gestion_attractions");
@@ -137,6 +138,7 @@ async function fetchAttractionsById(id) {
   const res = await fetch(`${API_URL}/attraction/id/${encodeURIComponent(id)}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Erreur getAttractionById");
   return res.json();
