@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const authToken = require('../auth_token');
+
+router.use(authToken);
 
 function toDbOuvert(value) {
   if (value === true || value === 1 || value === '1') return 1;

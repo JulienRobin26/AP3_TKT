@@ -1,51 +1,31 @@
-import { useEffect, useState } from "react";
-import API_URL from '../api_url';
+import { useEffect, useState } from 'react'
+import { serviceAuthentification } from '../services/authentification.service'
+import BanniereAccueil from '../components/home/BanniereAccueil'
 
 function Home() {
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
+  const [nom, setNom] = useState('')
+  const [prenom, setPrenom] = useState('')
 
   useEffect(() => {
     const chargerUtilisateur = async () => {
       try {
-        const recup = await fetch(`${API_URL}/api/auth/recup_infos`, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!recup.ok) return;
-        const authData = await recup.json();
-        const userId = authData?.user?.id;
-        if (!userId) return;
-
-        const resUser = await fetch(`${API_URL}/api/users/affichage/${userId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!resUser.ok) return;
-        const data = await resUser.json();
-        const firstUser = Array.isArray(data) ? data[0] : data;
-        setNom(firstUser?.nom_usr || firstUser?.nom || "");
-        setPrenom(firstUser?.prenom_usr || firstUser?.prenom || "");
+        const firstUser = await serviceAuthentification.recupererProfilConnecte()
+        if (!firstUser) return
+        setNom(firstUser?.nom_usr || firstUser?.nom || '')
+        setPrenom(firstUser?.prenom_usr || firstUser?.prenom || '')
       } catch {
-        console.error("Erreur lors du chargement de l'utilisateur");
+        console.error("Erreur lors du chargement de l'utilisateur")
       }
-    };
+    }
 
-    chargerUtilisateur();
-  }, []);
+    chargerUtilisateur()
+  }, [])
 
   return (
     <section className="page">
-      <div className="accueil_banniere">
-        <div className="titre_accueil">
-          <h1>Accueil {prenom} {nom}</h1>
-        </div>
-        <div className="description_accueil">
-          <p>Bienvenue à DisneyLand Paris pour une nouvelle journée !</p>
-        </div>
-      </div>
+      <BanniereAccueil prenom={prenom} nom={nom} />
     </section>
-  );
+  )
 }
 
-export default Home;
+export default Home

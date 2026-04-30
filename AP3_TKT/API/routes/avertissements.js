@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
+router.use(authToken);
+
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM niveaualerte');
@@ -30,7 +32,7 @@ router.get('/alertes/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/ajout', authToken, async (req, res) => {
+router.post('/ajout', async (req, res) => {
   try {
     const { description, idAvertissement } = req.body;
     console.log(description, idAvertissement);
@@ -41,7 +43,7 @@ router.post('/ajout', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/modif', authToken, async (req, res) => {
+router.post('/modif', async (req, res) => {
   try {
     const { description, id } = req.body;
     console.log(description, id);
@@ -52,7 +54,7 @@ router.post('/modif', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/suppr/:id', authToken, async (req, res) => {
+router.post('/suppr/:id', async (req, res) => {
   try {
     await db.query('Delete from alerte where id_alr = ?', [req.params.id]);
     res.status(201).json({ message: 'Alerte supprimée avec succès' });

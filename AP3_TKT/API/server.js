@@ -30,15 +30,15 @@ app.use('/api/groupe', groupeRoutes);
 app.use('/avertissements', avertRoutes);
 app.use('/missions', missionRoutes);
 app.use('/api/missions', missionRoutes);
+// Les routes d'authentification doivent rester accessibles sans token
+// avant le montage generique /api utilise par le routeur groupe.
+app.use('/api/auth', authRoutes);
 app.use('/api', groupeRoutes);
 // ROUTE DE TEST
 
 app.get('/', (req, res) => {
   res.send('API AP3_TKT en ligne');
 })
-
-
-app.use('/api/auth', authRoutes);
 app.get('/api/message',authToken,  (req, res) => {
     infos = {
         nom: 'Alexis Déjean',

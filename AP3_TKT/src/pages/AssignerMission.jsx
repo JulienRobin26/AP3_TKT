@@ -1,124 +1,77 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import API_URL from '../api_url';
-import "./GestionMission.css";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import FormulaireAssignationMission from '../components/missions/FormulaireAssignationMission'
+import { serviceMissions } from '../services/missions.service'
 
 function AssignerMission() {
-    const [equipes, setEquipes] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [libelle, setLibelle] = useState("");
-    const { id } = useParams();
-    const navigate = useNavigate();
+  const [equipe, setEquipe] = useState(null)
+  const [users, setUsers] = useState([])
+  const [libelle, setLibelle] = useState('')
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-    // 🔹 Charger mission + équipe
-    useEffect(() => {
-        // Mission
-        fetch(`${API_URL}/api/missions/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                setLibelle(data.libelle_msn);
-            })
-            .catch(err => console.error('Erreur mission', err));
+  useEffect(() => {
+    serviceMissions
+      .recuperer(id)
+      .then((data) => {
+        setLibelle(data?.libelle_msn || '')
+      })
+      .catch((error) => console.error('Erreur mission', error))
 
-        // Équipe
-        fetchEquipes(id)
-            .then((data) => {
-                setEquipes(Array.isArray(data) ? data : []);
-            })
-            .catch((err) => {
-                console.error('[AssignerMission] Erreur fetchEquipes', err);
-            });
+    serviceMissions
+      .recupererEquipe(id)
+      .then((data) => {
+        const premiereEquipe = Array.isArray(data) ? data[0] : null
+        setEquipe(premiereEquipe || null)
+      })
+      .catch((error) => {
+        console.error('[AssignerMission] Erreur fetchEquipes', error)
+      })
+  }, [id])
 
-    }, [id]);
+  useEffect(() => {
+    if (!equipe?.id_eqp) return
 
-    // 🔹 Charger users UNE FOIS que l'équipe est connue
-    useEffect(() => {
-        if (equipes.length === 0) return;
+    serviceMissions
+      .recupererUtilisateursEquipe(equipe.id_eqp)
+      .then((data) => {
+        setUsers(Array.isArray(data) ? data : [])
+      })
+      .catch((error) => {
+        console.error('[AssignerMission] Erreur fetchUsers', error)
+      })
+  }, [equipe])
 
-        const id_equipe = equipes[0].id_eqp;
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const userId = formData.get('user')
 
-        fetchUsers(id_equipe)
-            .then((data) => {
-                setUsers(Array.isArray(data) ? data : []);
-            })
-            .catch((err) => {
-                console.error('[AssignerMission] Erreur fetchUsers', err);
-            });
+    try {
+      await serviceMissions.affecter(id, [userId])
+      navigate('/gestion_missions')
+    } catch (error) {
+      console.error('Erreur assignation', error)
+    }
+  }
 
-    }, [equipes]);
-
-    // 🔹 Submit
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(e.target);
-        const userId = formData.get("user");
-
-        fetch(`${API_URL}/api/missions/affecter/${id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                userIds: [userId] // backend attend un tableau
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            navigate("/gestion_missions");
-        })
-        .catch(err => console.error('Erreur assignation', err));
-    };
-
-    return (
-        <section className="gestion_user">
-            <div className="pannele_user">
-            <div className="tool">
-                <h2>Assigner une mission</h2>
-                <div className="blur_pannel">
-
-                <h3>Mission : {libelle}</h3>
-
-                <h3>
-                    Équipe : {equipes.length > 0
-                        ? equipes[0].libelle_eqp
-                        : 'Non assignée'}
-                </h3>
-
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="user">Utilisateur :</label>
-
-                    <select name="user" id="user" required>
-                        {users.length > 0 ? (
-                            users.map((user) => (
-                                <option key={user.id_usr} value={user.id_usr}>
-                                    {user.prenom_usr} {user.nom_usr}
-                                </option>
-                            ))
-                        ) : (
-                            <option>Aucun utilisateur</option>
-                        )}
-                    </select>
-
-                    <input type="submit" value="Assigner" disabled={users.length === 0} style={{ opacity: users.length === 0 ? 0.5 : 1, cursor: users.length === 0 ? 'not-allowed' : 'pointer' }} />
-                </form>
-                </div>
-            </div>
-            </div>
-        </section>
-    );
+  return (
+    <section className="gestion_user">
+      <div className="pannele_user">
+        <div className="tool">
+          <h2>Assigner une mission</h2>
+          <div className="blur_pannel">
+            <FormulaireAssignationMission
+              libelleMission={libelle}
+              equipe={equipe}
+              utilisateurs={users}
+              onSoumettre={handleSubmit}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }
 
-// 🔹 API
-async function fetchEquipes(id) {
-    const res = await fetch(`${API_URL}/api/missions/equipe_missions/${id}`);
-    return await res.json();
-}
-
-async function fetchUsers(id_equipe) {
-    const res = await fetch(`${API_URL}/api/missions/utilisateurs-equipe/${id_equipe}`);
-    return await res.json();
-}
-
-export default AssignerMission;
+export default AssignerMission

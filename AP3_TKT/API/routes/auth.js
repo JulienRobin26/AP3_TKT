@@ -2,81 +2,95 @@ const express = require('express');
 const router = express.Router();
 const authToken = require('../auth_token');
 const dbt = require('../config/db');
-const jwt = require('jsonwebtoken')
-
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+
 const saltRounds = 10;
 
-
 router.post('/login', async (req, res) => {
-  const {identifiant, password} = req.body;
+  const { identifiant, password } = req.body;
+
   try {
-    const [rows] = await dbt.query('SELECT id_usr, login_usr, mdp_usr,role_usr FROM users WHERE login_usr = ?', [req.body.identifiant]);
-    let user = rows.length > 0 ? rows[0] : null;
-    
-    if (!user){
-      return res.status(401).json({erreur: "Utilisateur introuvable"});
-    }
-    const pass_db = user.mdp_usr;
-    const valider = await bcrypt.compare(password, pass_db);
+    const [rows] = await dbt.query(
+      'SELECT id_usr, login_usr, mdp_usr, role_usr FROM users WHERE login_usr = ?',
+      [identifiant]
+    );
+    const user = rows.length > 0 ? rows[0] : null;
 
-    if (valider){
-      const token = jwt.sign(
-      {id:user.id_usr, identifiant: user.login_usr, role:user.role_usr},
+    if (!user) {
+      return res.status(401).json({ erreur: 'Utilisateur introuvable' });
+    }
+
+    const valider = await bcrypt.compare(password, user.mdp_usr);
+    if (!valider) {
+      return res.status(401).json({ erreur: 'Mot de passe incorrect' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id_usr, identifiant: user.login_usr, role: user.role_usr },
       process.env.JWT_SECRET,
-      {expiresIn: "10days"})
+      { expiresIn: '20min' }
+    );
 
-      res.cookie('token', token, {httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
-        secure: true     }
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      path: '/',
+      maxAge: 20 * 60 * 1000,
+    });
 
-      );
-      return res.json({message: "Connexion réussie"});
-    
-    }
-    return res.status(401).json({erreur: "Mot de passe incorrect"});
-    
+    return res.json({
+      message: 'Connexion reussie',
+      user: {
+        id: user.id_usr,
+        identifiant: user.login_usr,
+        role: user.role_usr,
+      },
+    });
   } catch (error) {
     console.error('Error fetching auth:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+router.use(authToken);
 
+router.post('/signup', async (req, res) => {
+  const { identifiant, password, nom, prenom, email, tel, num_poste, role } = req.body;
 
-
-
-
-
-router.post('/signup', authToken, async (req, res) => {
-  const {identifiant, password, nom, prenom, email,tel,num_poste,role} = req.body;
   try {
     const password_hash = await bcrypt.hash(password, saltRounds);
-    const [rows] = await dbt.query('INSERT INTO users (login_usr, mdp_usr, nom_usr, prenom_usr, email_usr, num_usr, id_pst_usr, role_usr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [identifiant, password_hash, nom, prenom, email, tel, num_poste, role]);
-    res.json(password_hash)
-    //res.json({message: "Utilisateur créé avec succès", userId: rows.insertId});
+    await dbt.query(
+      'INSERT INTO users (login_usr, mdp_usr, nom_usr, prenom_usr, email_usr, num_usr, id_pst_usr, role_usr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [identifiant, password_hash, nom, prenom, email, tel, num_poste, role]
+    );
+    res.json(password_hash);
   } catch (error) {
     console.error('Error fetching auth:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 router.post('/logout', (req, res) => {
   if (!req.cookies.token) {
-    return res.status(400).json({ message: 'Aucun token trouvÃ©' });
+    return res.status(400).json({ message: 'Aucun token trouve' });
   }
+
+  const isProduction = process.env.NODE_ENV === 'production';
   res.clearCookie('token', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    path: '/',
   });
-  res.json({ message: 'DÃ©connectÃ©' });
+
+  return res.json({ message: 'Deconnecte' });
 });
 
-router.get('/recup_infos', authToken, async (req, res) => {
-
-  return res.json({user:req.user});
+router.get('/recup_infos', async (req, res) => {
+  return res.json({ user: req.user });
 });
+
 module.exports = router;
-
-

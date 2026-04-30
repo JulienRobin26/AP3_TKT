@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
+router.use(authToken);
+
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT id_usr, nom_usr, prenom_usr FROM users');
@@ -41,7 +43,10 @@ router.get('/utilisateurs', async (req, res) => {
 
 router.get('/affichage/:id', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT id_usr, prenom_usr, nom_usr, email_usr FROM users WHERE id_usr = ?', [req.params.id]);
+    const [rows] = await db.query(
+      'SELECT users.id_usr, users.prenom_usr, users.nom_usr, users.email_usr, users.id_pst_usr, poste.id_eqp_pst FROM users LEFT JOIN poste ON users.id_pst_usr = poste.id_pst WHERE users.id_usr = ?',
+      [req.params.id]
+    );
     res.json(rows);
   }
   catch(error){
@@ -53,7 +58,7 @@ router.get('/affichage/:id', async (req, res) => {
 
 router.post('/modifier/:id', async (req, res) => {
   try {
-    const { nom, prenom, equipe } = req.body;
+    const { nom, prenom, poste } = req.body;
     const updates = [];
     const params = [];
 
@@ -65,9 +70,9 @@ router.post('/modifier/:id', async (req, res) => {
       updates.push('prenom_usr = ?');
       params.push(prenom);
     }
-    if (equipe !== undefined && equipe !== "") {
-      updates.push('id_pst_usr = (SELECT id_pst FROM poste WHERE id_eqp_pst = ? LIMIT 1)');
-      params.push(equipe);
+    if (poste !== undefined && poste !== "") {
+      updates.push('id_pst_usr = ?');
+      params.push(poste);
     }
 
     if (updates.length === 0) {

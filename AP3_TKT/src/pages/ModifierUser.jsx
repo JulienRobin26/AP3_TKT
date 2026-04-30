@@ -1,115 +1,120 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import API_URL from '../api_url';
-import "./CreerUser.css";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import FormulaireModificationUtilisateur from '../components/users/FormulaireModificationUtilisateur'
+import { serviceEquipes } from '../services/equipes.service'
+import { serviceUtilisateurs } from '../services/utilisateurs.service'
 
 function ModifierUser() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [original, setOriginal] = useState(null);
-  const [form, setForm] = useState({ nom: "", prenom: "", equipe: "" });
-  const [equipes, setEquipes] = useState([]);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [original, setOriginal] = useState(null)
+  const [form, setForm] = useState({ nom: '', prenom: '', equipe: '', poste: '' })
+  const [equipes, setEquipes] = useState([])
+  const [postes, setPostes] = useState([])
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const resUser = await fetch(`${API_URL}/api/users/affichage/${id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!resUser.ok) throw new Error("Erreur chargement utilisateur");
-        const data = await resUser.json();
-        const user = Array.isArray(data) ? data[0] : data;
-        setOriginal(user || null);
+        const [dataUtilisateur, dataEquipes] = await Promise.all([
+          serviceUtilisateurs.recuperer(id),
+          serviceEquipes.lister(),
+        ])
+
+        const user = Array.isArray(dataUtilisateur) ? dataUtilisateur[0] : dataUtilisateur
+        setOriginal(user || null)
         setForm({
-          nom: user?.nom_usr || "",
-          prenom: user?.prenom_usr || "",
-          equipe: "",
-        });
-
-        const resEquipes = await fetch(`${API_URL}/api/groupe/equipes`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (resEquipes.ok) {
-          const equipesData = await resEquipes.json();
-          setEquipes(Array.isArray(equipesData) ? equipesData : []);
-        }
-      } catch (err) {
-        console.error("Erreur chargement user:", err);
+          nom: user?.nom_usr || '',
+          prenom: user?.prenom_usr || '',
+          equipe: '',
+          poste: '',
+        })
+        setEquipes(Array.isArray(dataEquipes) ? dataEquipes : [])
+      } catch (error) {
+        console.error('Erreur chargement user:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    loadData();
-  }, [id]);
+    loadData()
+  }, [id])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  useEffect(() => {
+    let isMounted = true
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (!form.equipe) {
+      setPostes([])
+      return () => {
+        isMounted = false
+      }
+    }
 
-    const payload = {};
-    if (form.nom !== (original?.nom_usr || "")) payload.nom = form.nom;
-    if (form.prenom !== (original?.prenom_usr || "")) payload.prenom = form.prenom;
-    if (form.equipe) payload.equipe = form.equipe;
+    serviceUtilisateurs
+      .listerPostes(form.equipe)
+      .then((data) => {
+        if (!isMounted) return
+        setPostes(Array.isArray(data) ? data : [])
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setPostes([])
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [form.equipe])
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setForm((precedent) => ({
+      ...precedent,
+      [name]: value,
+      ...(name === 'equipe' ? { poste: '' } : {}),
+    }))
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    const payload = {}
+    if (form.nom !== (original?.nom_usr || '')) payload.nom = form.nom
+    if (form.prenom !== (original?.prenom_usr || '')) payload.prenom = form.prenom
+    if (form.poste) payload.poste = form.poste
 
     if (Object.keys(payload).length === 0) {
-      navigate("/gestion_users/");
-      return;
+      navigate('/gestion_users/')
+      return
     }
 
     try {
-      const res = await fetch(`${API_URL}/api/users/modifier/${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Erreur modification utilisateur");
-      navigate("/gestion_users/");
-    } catch (err) {
-      console.error("Erreur modification user:", err);
+      await serviceUtilisateurs.modifier(id, payload)
+      navigate('/gestion_users/')
+    } catch (error) {
+      console.error('Erreur modification user:', error)
     }
-  };
+  }
 
   return (
-    <>
-      <section className="gestion_user">
-        <div className="pannel_user">
+    <section className="gestion_user">
+      <div className="pannel_user">
         <div className="tool">
           <h2>Modifier un utilisateur</h2>
           <div className="blur_pannel">
-          {loading ? (
-            <p>Chargement...</p>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <label>Nom:</label>
-              <input type="text" name="nom" value={form.nom} onChange={handleChange} />
-              <label>Prenom:</label>
-              <input type="text" name="prenom" value={form.prenom} onChange={handleChange} />
-              <label>Equipe:</label>
-              <select name="equipe" value={form.equipe} onChange={handleChange}>
-                <option value="">Ne pas changer</option>
-                {equipes.map((equipe) => (
-                  <option key={equipe.id_eqp} value={equipe.id_eqp}>
-                    {equipe.libelle_eqp}
-                  </option>
-                ))}
-              </select>
-              <button type="submit">Modifier</button>
-            </form>
-          )}
+            <FormulaireModificationUtilisateur
+              loading={loading}
+              form={form}
+              equipes={equipes}
+              postes={postes}
+              onChanger={handleChange}
+              onSoumettre={handleSubmit}
+            />
           </div>
         </div>
-        </div>
-      </section>
-    </>
-  );
+      </div>
+    </section>
+  )
 }
 
-export default ModifierUser;
+export default ModifierUser
