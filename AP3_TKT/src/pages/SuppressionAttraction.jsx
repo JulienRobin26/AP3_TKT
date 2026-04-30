@@ -1,57 +1,51 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import API_URL from '../api_url';
-import "./GestionAttractions.css";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import ConfirmationSuppressionAttraction from '../components/attractions/ConfirmationSuppressionAttraction'
+import { serviceAttractions } from '../services/attractions.service'
 
 function SuppressionAttraction() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [attraction, setAttraction] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [attraction, setAttraction] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    fetchAttractionsById(id)
+    let isMounted = true
+    setLoading(true)
+
+    serviceAttractions
+      .recuperer(id)
       .then((data) => {
-        const item = Array.isArray(data) ? (data[0] ?? null) : data;
-        if (isMounted) setAttraction(item);
+        const item = Array.isArray(data) ? (data[0] ?? null) : data
+        if (isMounted) setAttraction(item)
       })
       .catch((err) => {
-        console.error("Erreur chargement attraction:", err);
-        if (isMounted) setError("Erreur chargement attraction");
+        console.error('Erreur chargement attraction:', err)
+        if (isMounted) setError('Erreur chargement attraction')
       })
       .finally(() => {
-        if (isMounted) setLoading(false);
-      });
+        if (isMounted) setLoading(false)
+      })
 
     return () => {
-      isMounted = false;
-    };
-  }, [id]);
-
-  const handleCancel = () => {
-    navigate("/gestion_attractions");
-  };
+      isMounted = false
+    }
+  }, [id])
 
   const handleConfirm = async () => {
-    setSubmitting(true);
-    setError("");
+    setSubmitting(true)
+    setError('')
     try {
-      const res = await fetch(`${API_URL}/attraction/supprimer/${id}`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Erreur suppression attraction");
-      navigate("/gestion_attractions");
+      await serviceAttractions.supprimer(id)
+      navigate('/gestion_attractions')
     } catch (err) {
-      setError(err?.message || "Erreur suppression attraction");
+      setError(err?.message || 'Erreur suppression attraction')
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <section className="page gestion-attractions-page">
@@ -61,35 +55,16 @@ function SuppressionAttraction() {
         {loading && <p>Chargement...</p>}
         {error && <p className="error_message">{error}</p>}
         {!loading && !error && (
-          <div className="ga-delete">
-            <p>
-              Confirmer la suppression de{" "}
-              <strong>{attraction?.nom_ift || "l'attraction"}</strong> ?
-            </p>
-            <p>Cette action est irréversible.</p>
-            <div className="ga-list-actions">
-              <button type="button" onClick={handleCancel} disabled={submitting}>
-                Annuler
-              </button>
-              <button type="button" onClick={handleConfirm} disabled={submitting}>
-                Oui, supprimer
-              </button>
-            </div>
-          </div>
+          <ConfirmationSuppressionAttraction
+            attraction={attraction}
+            submitting={submitting}
+            onAnnuler={() => navigate('/gestion_attractions')}
+            onConfirmer={handleConfirm}
+          />
         )}
       </section>
     </section>
-  );
+  )
 }
 
-async function fetchAttractionsById(id) {
-  const res = await fetch(`${API_URL}/attraction/id/${encodeURIComponent(id)}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Erreur getAttractionById");
-  return res.json();
-}
-
-export default SuppressionAttraction;
+export default SuppressionAttraction

@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
+router.use(authToken);
+
 function toDbOuvert(value) {
   if (value === true || value === 1 || value === '1') return 1;
   if (typeof value === 'string') {
@@ -12,7 +14,7 @@ function toDbOuvert(value) {
   return 0;
 }
  
-router.get('/', authToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente, id_prc_ift FROM `infrastructure`');
     res.json(rows);
@@ -23,7 +25,7 @@ router.get('/', authToken, async (req, res) => {
 });
 
 
-router.get('/:id', authToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente,tailleLimite, pourEnceinte, pourLesPetits, id_prc_ift FROM `infrastructure` WHERE id_prc_ift = ?', [req.params.id]);
     res.json(rows);
@@ -32,7 +34,7 @@ router.get('/:id', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/id/:id', authToken, async (req, res) => {
+router.get('/id/:id', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente,tailleLimite, pourEnceinte, pourLesPetits, id_prc_ift FROM `infrastructure` WHERE id_ift = ?', [req.params.id]);
     res.json(rows);
@@ -43,7 +45,7 @@ router.get('/id/:id', authToken, async (req, res) => {
 });
 
 
-router.post('/ajout', authToken, async (req, res) => {
+router.post('/ajout', async (req, res) => {
   try {
     const { nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
 
@@ -73,7 +75,7 @@ router.post('/ajout', authToken, async (req, res) => {
   }
 });
 
-router.post('/modif', authToken, async (req, res) => {
+router.post('/modif', async (req, res) => {
   try {
     const id = req.body.id ?? req.body.id_ift ?? req.body.attractions;
     const { nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
@@ -109,7 +111,7 @@ router.post('/modif', authToken, async (req, res) => {
   }
 });
 
-router.post('/supprimer/:id', authToken, async (req, res) => {
+router.post('/supprimer/:id', async (req, res) => {
   try {
     const id = req.params.id;
 

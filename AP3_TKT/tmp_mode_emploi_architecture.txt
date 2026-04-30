@@ -1,0 +1,621 @@
+Mode d'emploi temporaire - Architecture front actuelle
+
+Ce document explique clairement :
+- pourquoi on a introduit des services et des composants
+- ce que veulent dire les callbacks comme onSupprimer ou onModifier
+- comment circulent les donnees dans l'application
+- comment ajouter a l'avenir une page, un composant, un service ou une fonctionnalite
+
+
+1. Idee generale
+
+Le projet avait au depart beaucoup de pages qui faisaient tout a la fois :
+- appeler l'API
+- afficher l'interface
+- filtrer les donnees
+- gerer la navigation
+- gerer les actions metier
+
+Cela marche, mais plus le projet grandit, plus cela devient difficile a maintenir.
+
+Le but des modifications faites est de separer les responsabilites.
+
+On cherche maintenant a avoir :
+- une page qui orchestre
+- des composants qui affichent
+- des services qui parlent a l'API
+
+
+2. Regle simple a retenir
+
+- Une page = un grand ecran de l'application
+- Un composant = un morceau d'interface reutilisable
+- Un service = un fichier qui appelle l'API
+- Plus tard, un hook = un fichier qui gere un etat reutilisable
+
+
+3. La structure actuelle introduite
+
+Des dossiers/fichiers ont ete poses pour structurer le front :
+
+src/
+  pages/
+    GestionUsers.jsx
+    GestionMissions.jsx
+    Attractions.jsx
+    Alerts.jsx
+    Avertissement.jsx
+
+  components/
+    users/
+      BarreOutilsUtilisateurs.jsx
+      ListeUtilisateurs.jsx
+      LigneUtilisateur.jsx
+    missions/
+      BarreOutilsMissions.jsx
+      ListeMissions.jsx
+      LigneMission.jsx
+    attractions/
+      BarreOutilsAttractions.jsx
+      ListeAttractions.jsx
+      CarteAttraction.jsx
+      FenetreAttraction.jsx
+    alertes/
+      ListeAlertes.jsx
+      LigneAlerte.jsx
+      ListeNiveauxAvertissement.jsx
+
+  services/
+    clientApi.js
+    utilisateurs.service.js
+    missions.service.js
+    attractions.service.js
+    alertes.service.js
+    authentification.service.js
+
+
+4. Pourquoi on n'a pas touche a App, Guard et Nav
+
+Le but etait de ne pas casser le fonctionnement global.
+
+On a garde :
+- App.jsx comme point d'entree
+- Guard pour la protection des routes
+- la Nav telle qu'elle fonctionne aujourd'hui
+- les routes principales intactes
+
+Ce choix permet de refactoriser l'interieur des pages sans changer l'ossature du projet.
+
+
+5. Le role des pages
+
+Les pages actuelles restent des conteneurs.
+
+Exemple :
+- GestionUsers.jsx
+- GestionMissions.jsx
+
+Leur role est maintenant de :
+- charger les donnees
+- conserver les etats utiles a l'ecran
+- filtrer ou preparer les donnees
+- transmettre les donnees aux composants
+- gerer les actions de navigation
+
+Une page ne devrait plus contenir tout le JSX detaille d'affichage si ce JSX peut etre extrait.
+
+
+6. Le role des composants
+
+Les composants sont des blocs d'interface specialises.
+
+Exemple sur les utilisateurs :
+
+- BarreOutilsUtilisateurs.jsx
+  gere :
+  - la recherche
+  - le filtre
+  - le bouton d'ajout
+
+- ListeUtilisateurs.jsx
+  gere :
+  - la structure de la liste
+  - le rendu de plusieurs utilisateurs
+
+- LigneUtilisateur.jsx
+  gere :
+  - l'affichage d'un seul utilisateur
+  - les boutons Modifier / Supprimer
+
+Les composants ont pour but de rendre le code plus lisible et plus reutilisable.
+
+
+7. Le role des services
+
+Les services servent a centraliser les appels API.
+
+Avant :
+- chaque page faisait ses propres fetch(...)
+- chaque page repetait credentials: 'include'
+- chaque page gerait les erreurs
+
+Maintenant :
+- les appels API sont regroupes dans des fichiers dedies
+
+Exemples :
+- serviceUtilisateurs.lister()
+- serviceMissions.lister()
+- serviceAttractions.listerParParc(idParc)
+- serviceAlertes.listerParNiveau(id)
+- serviceAuthentification.recupererInfos()
+
+Cela permet :
+- une lecture plus simple des pages
+- moins de duplication
+- une maintenance plus facile
+
+
+8. Le role de clientApi.js
+
+clientApi.js contient la fonction commune appelApi().
+
+Son travail :
+- ajouter l'URL de base de l'API
+- envoyer automatiquement les cookies avec credentials: 'include'
+- poser les headers JSON
+- parser la reponse JSON
+- remonter une erreur exploitable si la requete echoue
+
+Cela signifie que les autres services n'ont plus a reecrire cette logique.
+
+
+9. Exemple de chaine complete
+
+Prenons la gestion des utilisateurs.
+
+Le flux est :
+
+GestionUsers.jsx
+  -> appelle serviceUtilisateurs.lister()
+  -> recupere les donnees
+  -> filtre les utilisateurs
+  -> transmet la liste a ListeUtilisateurs
+
+ListeUtilisateurs.jsx
+  -> boucle sur les utilisateurs
+  -> rend une LigneUtilisateur pour chacun
+
+LigneUtilisateur.jsx
+  -> affiche le nom, l'equipe
+  -> expose les boutons Modifier et Supprimer
+
+Donc :
+- la page sait quoi faire
+- la liste sait quoi afficher
+- la ligne sait comment afficher un item
+
+
+10. Que veulent dire les noms onSupprimer, onModifier, onChangerRecherche, etc.
+
+Ce sont des callbacks.
+
+Un callback est une fonction transmise par un composant parent a un composant enfant.
+
+Exemple :
+
+<ListeUtilisateurs
+  utilisateurs={utilisateursFiltres}
+  onModifierUtilisateur={(userId) => navigate(`/modifier_user/${userId}`)}
+  onSupprimerUtilisateur={(userId) => navigate(`/supprimer_user/${userId}`)}
+/>
+
+Ici :
+- la page transmet deux fonctions a ListeUtilisateurs
+- ces fonctions disent quoi faire quand l'utilisateur veut modifier ou supprimer
+
+Ensuite ListeUtilisateurs transmet ces fonctions a LigneUtilisateur.
+
+Puis LigneUtilisateur les declenche quand on clique sur un bouton.
+
+
+11. Pourquoi on utilise des callbacks
+
+Parce qu'on veut separer :
+- la logique metier
+- l'affichage
+
+Le composant enfant ne doit pas decider tout seul :
+- quelle route utiliser
+- quel fetch executer
+- quelle page ouvrir
+
+Il doit seulement signaler :
+- "on vient de cliquer sur supprimer"
+- "on vient de cliquer sur modifier"
+
+Le parent, lui, sait quelle action concrete il faut executer.
+
+
+12. Lecture mentale d'un callback
+
+Tu peux lire :
+
+- onSupprimer = "au moment de supprimer"
+- onModifier = "au moment de modifier"
+- onChangerRecherche = "au moment ou la recherche change"
+- onCreerUtilisateur = "au moment de creer un utilisateur"
+
+Le prefixe on... est une convention tres utilisee en React.
+
+
+13. Exemple simple de callback
+
+Dans un parent :
+
+function Parent() {
+  const supprimerUtilisateur = (id) => {
+    console.log("Supprimer l'utilisateur", id)
+  }
+
+  return <Enfant onSupprimer={supprimerUtilisateur} />
+}
+
+Dans l'enfant :
+
+function Enfant({ onSupprimer }) {
+  return <button onClick={() => onSupprimer(12)}>Supprimer</button>
+}
+
+Quand on clique :
+- l'enfant appelle la fonction recue
+- le parent execute sa logique
+
+
+14. Pourquoi les pages sont plus lisibles maintenant
+
+Exemple avant :
+- une page contenait fetch + filtrage + grand bloc JSX + boutons + logique de navigation
+
+Exemple maintenant :
+- la page se concentre sur la coordination
+- l'affichage detaille est delegue a des composants nommes clairement
+- les appels API sont delegues aux services
+
+Cela rend les fichiers plus courts et plus comprehensibles.
+
+
+15. Comment les donnees circulent
+
+Le schema le plus simple est :
+
+Service -> Page -> Composant de liste -> Composant de ligne
+
+Exemple :
+
+serviceUtilisateurs.lister()
+  -> GestionUsers.jsx
+  -> ListeUtilisateurs.jsx
+  -> LigneUtilisateur.jsx
+
+La navigation suit l'autre sens :
+
+clic bouton
+  -> LigneUtilisateur appelle onModifier
+  -> ListeUtilisateurs transmet
+  -> GestionUsers decide de faire navigate(...)
+
+
+16. Pourquoi cette approche ne casse pas Guard ou Nav
+
+Parce que :
+- on n'a pas change la logique de routing globale
+- on n'a pas retire les routes actuelles
+- on n'a pas deplace la logique d'authentification globale
+
+On a seulement reorganise l'interieur des pages.
+
+Donc :
+- Guard continue de proteger les memes routes
+- Nav continue d'etre affichee selon les memes regles
+
+
+17. Ce qui a ete fait sur les principales pages
+
+GestionUsers.jsx
+- utilise serviceUtilisateurs
+- utilise BarreOutilsUtilisateurs
+- utilise ListeUtilisateurs
+
+GestionMissions.jsx
+- utilise serviceMissions
+- utilise BarreOutilsMissions
+- utilise ListeMissions
+
+Attractions.jsx
+- utilise serviceAttractions
+- utilise serviceAuthentification
+- utilise BarreOutilsAttractions
+- utilise ListeAttractions
+
+Alerts.jsx
+- utilise serviceAlertes
+- utilise ListeAlertes
+
+Avertissement.jsx
+- utilise serviceAlertes
+- utilise ListeNiveauxAvertissement
+
+
+18. Mode d'emploi - ajouter un nouveau service
+
+Quand ajouter un service :
+- des que tu dois appeler l'API pour un domaine metier
+
+Exemple :
+tu veux gerer des postes
+
+Etapes :
+
+1. Creer un fichier :
+src/services/postes.service.js
+
+2. Importer appelApi :
+import { appelApi } from './clientApi'
+
+3. Exposer des methodes claires :
+
+export const servicePostes = {
+  lister() {
+    return appelApi('/api/postes')
+  },
+
+  recupererParId(id) {
+    return appelApi(`/api/postes/${id}`)
+  },
+
+  creer(payload) {
+    return appelApi('/api/postes', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+  },
+}
+
+Regle :
+- un service = un domaine metier
+- des noms de methodes simples et transparents
+
+
+19. Mode d'emploi - ajouter un nouveau composant
+
+Quand ajouter un composant :
+- des qu'un morceau d'interface est lisible comme un bloc autonome
+
+Exemples :
+- une barre d'outils
+- une carte
+- une ligne
+- une liste
+- une modale
+
+Etapes :
+
+1. Choisir le bon dossier
+Exemple :
+src/components/postes/
+
+2. Nommer clairement
+Exemples :
+- BarreOutilsPostes.jsx
+- ListePostes.jsx
+- LignePoste.jsx
+
+3. Lui donner un role simple
+Exemple :
+- ListePostes affiche plusieurs postes
+- LignePoste affiche un seul poste
+
+4. Le composant recoit des props
+Exemple :
+- les donnees
+- les callbacks
+
+5. Le parent garde la logique metier
+
+
+20. Mode d'emploi - ajouter une nouvelle page
+
+Quand ajouter une page :
+- quand il s'agit d'un vrai ecran metier
+- pas juste d'un petit bouton d'action
+
+Exemples de vraies pages :
+- TableauDeBordAdmin
+- TableauDeBordUtilisateur
+- Profil
+- Connexion
+
+Exemples de choses qui ne meritent pas toujours une page separee :
+- une confirmation de suppression
+- un petit formulaire de modification
+- une vue detail dans une modale
+
+Etapes :
+
+1. Creer le fichier dans src/pages/
+2. Faire de la page un conteneur
+3. Charger les donnees depuis un service
+4. Garder les etats globaux de l'ecran
+5. Deleguer l'affichage aux composants
+
+
+21. Comment savoir si quelque chose doit etre une page ou un composant
+
+Question utile :
+"Est-ce un grand ecran metier autonome, ou juste un bloc d'interface ?"
+
+Si c'est un grand ecran -> page
+Si c'est un bloc d'interface -> composant
+
+Exemple :
+- GestionMissions = page
+- ListeMissions = composant
+- LigneMission = composant
+
+
+22. Comment ajouter une nouvelle fonctionnalite proprement
+
+Exemple : ajouter une gestion des postes
+
+Ordre recommande :
+
+1. Verifier ou creer les routes backend
+2. Creer le service front :
+   src/services/postes.service.js
+3. Creer la page conteneur ou la section :
+   src/pages/GestionPostes.jsx
+4. Creer les composants :
+   src/components/postes/BarreOutilsPostes.jsx
+   src/components/postes/ListePostes.jsx
+   src/components/postes/LignePoste.jsx
+5. Brancher la route dans App.jsx si c'est une vraie page
+
+
+23. Exemple de methode complete pour une nouvelle liste
+
+Tu veux afficher une liste de postes.
+
+1. Service :
+servicePostes.lister()
+
+2. Page :
+GestionPostes.jsx
+- charge les donnees
+- garde la recherche
+- filtre la liste
+
+3. Composants :
+- BarreOutilsPostes
+- ListePostes
+- LignePoste
+
+4. Navigation :
+les callbacks de modification/suppression restent dans la page
+
+
+24. Convention de nommage conseillee
+
+Services :
+- clientApi.js
+- utilisateurs.service.js
+- missions.service.js
+- alertes.service.js
+
+Objets exportes :
+- serviceUtilisateurs
+- serviceMissions
+- serviceAlertes
+
+Methodes :
+- lister
+- recupererParId
+- creer
+- modifier
+- supprimer
+
+Composants :
+- BarreOutilsUtilisateurs
+- ListeUtilisateurs
+- LigneUtilisateur
+- BarreOutilsMissions
+- ListeMissions
+- LigneMission
+
+Callbacks :
+- onModifier
+- onSupprimer
+- onChangerRecherche
+- onChangerType
+- onCreerUtilisateur
+
+
+25. Comment commenter proprement le code
+
+Ne pas commenter chaque ligne.
+
+Commenter seulement :
+- les blocs importants
+- les choix de structure
+- les parties non evidentes
+
+Exemples utiles :
+- "La page orchestre les donnees et delegue l'affichage"
+- "Le service centralise les appels API"
+- "La liste reste volontairement presentationnelle"
+
+Exemples inutiles :
+- "on cree une variable"
+- "on retourne un bouton"
+
+
+26. Ce qu'il faudra probablement faire ensuite
+
+La suite logique, si on veut aller plus loin proprement, serait :
+
+1. Ajouter des hooks
+Exemples :
+- useUtilisateurs
+- useMissions
+- useAttractions
+- useAlertes
+
+Le but serait de sortir des pages :
+- useEffect
+- loading
+- error
+- reload
+
+2. Extraire des composants partages
+Exemples :
+- BarreRecherche
+- EtatVide
+- BoutonsActions
+- FenetreConfirmation
+
+3. Eventuellement reduire le nombre de pages plus tard
+Mais seulement quand tous les morceaux seront stables.
+
+
+27. Regle d'or a retenir
+
+Si tu ajoutes une fonctionnalite, pense toujours dans cet ordre :
+
+API
+  -> Service
+    -> Page
+      -> Composants
+
+Et pour les actions utilisateur :
+
+Bouton
+  -> callback on...
+    -> page conteneur
+      -> navigation ou action metier
+
+
+28. Resume final
+
+Ce qui a ete mis en place repose sur une logique simple :
+
+- les services parlent a l'API
+- les pages organisent
+- les composants affichent
+- les callbacks font remonter les actions utilisateur vers le parent
+
+Cette structure rend le projet :
+- plus lisible
+- plus maintenable
+- plus facile a faire evoluer
+- moins fragile qu'un gros fichier qui fait tout
+
+Fin du mode d'emploi temporaire.

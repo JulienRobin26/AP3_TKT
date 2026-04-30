@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API_URL from '../api_url';
-import "./GestionAttractions.css";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ListeAttractionsGestion from '../components/attractions/ListeAttractionsGestion'
+import { serviceAttractions } from '../services/attractions.service'
 
 function GestionAttractions() {
-  const navigate = useNavigate();
-  const [attractions, setAttractions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const navigate = useNavigate()
+  const [attractions, setAttractions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    fetchAttractions()
+    let isMounted = true
+    setLoading(true)
+
+    serviceAttractions
+      .listerGestion()
       .then((data) => {
-        if (isMounted) setAttractions(Array.isArray(data) ? data : []);
+        if (isMounted) setAttractions(Array.isArray(data) ? data : [])
       })
       .catch((err) => {
-        console.error("Erreur chargement attractions:", err);
-        if (isMounted) setError("Erreur chargement attractions");
+        console.error('Erreur chargement attractions:', err)
+        if (isMounted) setError('Erreur chargement attractions')
       })
       .finally(() => {
-        if (isMounted) setLoading(false);
-      });
+        if (isMounted) setLoading(false)
+      })
+
     return () => {
-      isMounted = false;
-    };
-  }, []);
+      isMounted = false
+    }
+  }, [])
 
   return (
     <section className="page gestion-attractions-page">
@@ -34,7 +37,7 @@ function GestionAttractions() {
       <div className="gestion-attractions-wrapper gestion-attractions-list">
         <div className="ga-list-header">
           <h2>Liste des attractions</h2>
-          <button type="button" className="ga-primary" onClick={() => navigate("/gestion_attractions/ajout")}>
+          <button type="button" className="ga-primary" onClick={() => navigate('/gestion_attractions/ajout')}>
             Ajouter une attraction
           </button>
         </div>
@@ -43,45 +46,15 @@ function GestionAttractions() {
         {error && <p className="error_message">{error}</p>}
 
         {!loading && !error && (
-          <ul className="ga-list">
-            {attractions.map((attraction) => (
-              <li className="ga-list-item" key={attraction.id_ift}>
-                <div className="ga-list-info">
-                  <strong>{attraction.nom_ift}</strong>
-                  <span>Parc {attraction.id_prc_ift}</span>
-                </div>
-                <div className="ga-list-actions">
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/gestion_attractions/modifier/${attraction.id_ift}`)}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/gestion_attractions/supprimer/${attraction.id_ift}`)}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <ListeAttractionsGestion
+            attractions={attractions}
+            onModifierAttraction={(idAttraction) => navigate(`/gestion_attractions/modifier/${idAttraction}`)}
+            onSupprimerAttraction={(idAttraction) => navigate(`/gestion_attractions/supprimer/${idAttraction}`)}
+          />
         )}
       </div>
     </section>
-  );
-}
-
-async function fetchAttractions() {
-  const res = await fetch(`${API_URL}/attraction/`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
- 
-  if (!res.ok) throw new Error("Erreur getUsers");
-  return res.json();
+  )
 }
 
 export default GestionAttractions

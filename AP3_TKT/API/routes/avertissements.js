@@ -3,7 +3,9 @@ const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
 
-router.get('/', authToken, async (req, res) => {
+router.use(authToken);
+
+router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM niveaualerte');
     res.json(rows);
@@ -12,7 +14,7 @@ router.get('/', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/:id', authToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const [rows] = await db.query(`Select id_alr, contenu_alr , dateCréation, prenom_usr, nom_usr from users join alerte on id_usr = id_usr_alr  inner join niveaualerte on id_nv = id_nv_alr where id_nv = ?`, [req.params.id]);
     res.json(rows);
@@ -21,7 +23,7 @@ router.get('/:id', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get('/alertes/:id', authToken, async (req, res) => {
+router.get('/alertes/:id', async (req, res) => {
   try {
     const [rows] = await db.query(`Select contenu_alr from alerte where id_alr = ?`, [req.params.id]);
     res.json(rows);
@@ -30,7 +32,7 @@ router.get('/alertes/:id', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/ajout', authToken, async (req, res) => {
+router.post('/ajout', async (req, res) => {
   try {
     const { description, idAvertissement } = req.body;
     console.log(description, idAvertissement);
@@ -41,7 +43,7 @@ router.post('/ajout', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/modif', authToken, async (req, res) => {
+router.post('/modif', async (req, res) => {
   try {
     const { description, id } = req.body;
     console.log(description, id);
@@ -52,7 +54,7 @@ router.post('/modif', authToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/suppr/:id', authToken, async (req, res) => {
+router.post('/suppr/:id', async (req, res) => {
   try {
     await db.query('Delete from alerte where id_alr = ?', [req.params.id]);
     res.status(201).json({ message: 'Alerte supprimée avec succès' });

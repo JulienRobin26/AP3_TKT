@@ -1,51 +1,36 @@
-import { useEffect } from "react";
-import { createPath, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
-import API_URL from '../api_url';
-import "./GestionMission.css";
+import { useNavigate, useParams } from 'react-router-dom'
+import ConfirmationSuppressionEquipe from '../components/equipes/ConfirmationSuppressionEquipe'
+import { serviceMissions } from '../services/missions.service'
 
 function SupprimerMission() {
-    const navigate = useNavigate();
-    const { id } = useParams();
-    useEffect(() => {
-    }, [])
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        fetch(`${API_URL}/api/missions/supprimer/${id}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(data),
-        })
+  const navigate = useNavigate()
+  const { id } = useParams()
 
-            .then((res) => {
-                if (!res.ok) throw new Error("Erreur lors de la suppression de la mission");
-                alert("Mission supprimée avec succès !");
-                navigate("/gestion_missions");
-            })
-            .catch((err) => {
-                console.error("Erreur lors de la suppression de la mission", err);
-                alert("Erreur lors de la suppression de la mission");
-            });
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    try {
+      await serviceMissions.supprimer(id)
+      alert('Mission supprimee avec succes !')
+      navigate('/gestion_missions')
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la mission', error)
+      alert('Erreur lors de la suppression de la mission')
     }
-    return (
-        <section className="gestion_user">
-            <div className="pannele_user">
-            <div className="tool">
-                <h2>Supprimer une mission</h2>
-                <div className="blur_pannel">
-            <form action="" method="post" onSubmit={handleSubmit}>
-                <label htmlFor="id">Voulez vous vraiment supprimer cette mission ?</label>
-                <button type="submit">Supprimer</button>
-            </form>
-            </div>
-            </div>
-            </div>
-        </section>
-    )
+  }
+
+  return (
+    <section className="gestion_user">
+      <div className="pannele_user">
+        <div className="tool">
+          <h2>Supprimer une mission</h2>
+          <div className="blur_pannel">
+            <ConfirmationSuppressionEquipe onConfirmer={handleSubmit} />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }
 
-export default SupprimerMission;
+export default SupprimerMission
