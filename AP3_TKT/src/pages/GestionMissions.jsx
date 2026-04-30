@@ -1,144 +1,72 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API_URL from '../api_url';
-import "./GestionMission.css";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import BarreOutilsMissions from '../components/missions/BarreOutilsMissions'
+import ListeMissions from '../components/missions/ListeMissions'
+import { serviceMissions } from '../services/missions.service'
 
 function GestionMissions() {
-  const navigate = useNavigate();
-  const [missions, setMissions] = useState([]);
-  const [recherche, setRecherche] = useState("");
-  const [typeFiltre, setTypeFiltre] = useState("Toutes");
+  const navigate = useNavigate()
+  const [missions, setMissions] = useState([])
+  const [recherche, setRecherche] = useState('')
+  const [typeFiltre, setTypeFiltre] = useState('Toutes')
 
   useEffect(() => {
-    let isMounted = true;
-    fetchMissions()
+    let isMounted = true
+
+    serviceMissions
+      .lister()
       .then((data) => {
-        if (isMounted) setMissions(Array.isArray(data) ? data : []);
+        if (isMounted) {
+          setMissions(Array.isArray(data) ? data : [])
+        }
       })
-      .catch((err) => {
-        console.error("[GestionMissions] Erreur getMissions", err);
-      });
+      .catch((error) => {
+        console.error('[GestionMissions] Erreur getMissions', error)
+      })
+
     return () => {
-      isMounted = false;
-    };
-  }, []);
+      isMounted = false
+    }
+  }, [])
 
-  const types = [
-    "Toutes",
-    ...new Set(missions.map((mission) => mission.type_msn)),
-  ];
-
+  const types = ['Toutes', ...new Set(missions.map((mission) => mission.type_msn))]
+  // Le conteneur prepare ici les donnees a afficher pour eviter de charger les composants.
   const missionsFiltrees = missions
-    .filter((mission) =>
-      typeFiltre === "Toutes" ? true : mission.type_msn === typeFiltre
-    )
+    .filter((mission) => (typeFiltre === 'Toutes' ? true : mission.type_msn === typeFiltre))
     .filter((mission) => {
-      const terme = recherche.trim().toLowerCase();
-      if (!terme) return true;
-      const libelle = String(mission.libelle_msn || "").toLowerCase();
-      return libelle.includes(terme);
-    });
+      const terme = recherche.trim().toLowerCase()
+      if (!terme) return true
+      const libelle = String(mission.libelle_msn || '').toLowerCase()
+      return libelle.includes(terme)
+    })
 
   return (
-    <>
-      <section className="gestion_user">
-        <div className="pannele_user">
-        
+    // La route reste identique ; seule l'organisation interne a ete clarifiee.
+    <section className="gestion_user">
+      <div className="pannele_user missions_panel">
         <div className="tool">
           <h2>Gestion des missions</h2>
-          <div className="blur_pannel">
-          
-            <div className="tools_outils">
-            <input
-              type="text"
-              placeholder="Rechercher une mission"
-              className="searchbar"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
+          <div className="blur_pannel missions_blur_panel">
+            <BarreOutilsMissions
+              recherche={recherche}
+              typeFiltre={typeFiltre}
+              types={types}
+              onChangerRecherche={setRecherche}
+              onChangerType={setTypeFiltre}
+              onCreerMission={() => navigate('/ajouter-mission')}
             />
-          
-          <div className="btn_equipes">
-            <ul>
-              <li className="equipes-menu">
-                <button type="button">Types</button>
-                <ul className="equipes-dropdown">
-                  {types.map((type) => (
-                    <li key={type}>
-                      <button
-                        type="button"
-                        className={typeFiltre === type ? "is-active" : ""}
-                        onClick={() => setTypeFiltre(type)}
-                      >
-                        {type}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              <li>
-                <button onClick={() => navigate("/ajouter-mission")}>
-                  Ajouter une mission
-                </button>
-              </li>
-            </ul>
-          </div>
-          </div>
-          <div className="pannel_user_liste">
-            <ul className="brique_user">
-              {missionsFiltrees.map((mission) => {
-                const isAssigned = mission.nb_assigned > 0;
-                return (
-                <li className="brique_user_item" key={mission.id_msn}>
-                  <div className="user_cell user_name">
-                    <strong>{mission.libelle_msn}</strong>
-                    {isAssigned && <span style={{ marginLeft: 8, fontSize: "0.8em", color: "#90ee90" }}>✔ Assignée</span>}
-                  </div>
-                  <div className="user_cell">{mission.type_msn}</div>
-                  <div className="user_celle">{mission.libelle_eqp}</div>
-                   <div className="user_cell">
-                    <button onClick={() => navigate(`/voir_mission/${mission.id_msn}`)}>Voir</button>
-                  </div>
-                  <div className="user_cell">
-                    <button
-                      disabled={isAssigned}
-                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
-                      onClick={() => !isAssigned && navigate(`/assigner-mission/${mission.id_msn}`)}
-                    >Assigner</button>
-                  </div>
-                  <div className="user_cell">
-                    <button
-                      disabled={isAssigned}
-                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
-                      onClick={() => !isAssigned && navigate(`/modifier-mission/${mission.id_msn}`)}
-                    >Modifier</button>
-                  </div>
-                  <div className="user_cell">
-                    <button
-                      disabled={isAssigned}
-                      style={isAssigned ? { opacity: 0.4, cursor: "not-allowed" } : {}}
-                      onClick={() => !isAssigned && navigate(`/supprimer-mission/${mission.id_msn}`)}
-                    >Supprimer</button>
-                  </div>
-                </li>
-                );
-              })}
-            </ul>
+            <ListeMissions
+              missions={missionsFiltrees}
+              onVoirMission={(missionId) => navigate(`/voir_mission/${missionId}`)}
+              onAssignerMission={(missionId) => navigate(`/assigner-mission/${missionId}`)}
+              onModifierMission={(missionId) => navigate(`/modifier-mission/${missionId}`)}
+              onSupprimerMission={(missionId) => navigate(`/supprimer-mission/${missionId}`)}
+            />
           </div>
         </div>
-        </div>
-        </div>
-      </section>
-    </>
-  );
+      </div>
+    </section>
+  )
 }
 
-async function fetchMissions() {
-  const res = await fetch(`${API_URL}/api/missions`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Erreur getMissions");
-  return res.json();
-}
-export default GestionMissions;
+export default GestionMissions

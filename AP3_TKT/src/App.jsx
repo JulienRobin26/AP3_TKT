@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import './App.css'
 import API_URL from './api_url'
 import Guard from "./components/guard";
 import Attractions from './pages/Attractions'
@@ -31,7 +30,7 @@ import SupprimerMission from './pages/SupprimerMission';
 import ModifierMissions from './pages/ModifierMission';
 import VoirMissions from './pages/VoirMission';
 import VoirMaMission from './pages/VoirMaMission';
-import {GestionEquipe, CreerEquipe, ModifierEquipe, SupprimerEquipe} from './pages/GestionEquipes'
+import { GestionEquipe, CreerEquipe, ModifierEquipe, SupprimerEquipe } from './pages/GestionEquipes'
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
@@ -84,18 +83,16 @@ function App() {
           <Route path="/creer_equipe" element={<CreerEquipe />} />
           <Route path="/modifier_equipe/:id" element={<ModifierEquipe />} />
           <Route path="/supprimer_equipe/:id" element={<SupprimerEquipe />} />
-          <Route path="/gerer_equipes" element={<GestionEquipe/>}/>
+          <Route path="/gerer_equipes" element={<GestionEquipe />} />
         </Route>
         <Route element={<Guard roles={[0]} />}>
 
           <Route path="/gestion_alertes" element={<GestionAlertes />} />
-          <Route path="/alerts" element={<Alerts />} />
         </Route>
         <Route element={<Guard roles={[1, 0]} />}>
           <Route path="/mes_missions" element={<MesMissions />} />
           <Route path="/voir_ma_mission/:id" element={<VoirMaMission />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/alerts" element={<Alerts />} />
           <Route path="/attractions" element={<Attractions />} />
           <Route path="/avertissement" element={<Avertissement />} />
           <Route path="/alerts" element={<Alerts />} />

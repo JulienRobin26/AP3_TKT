@@ -1,217 +1,156 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import API_URL from "../api_url";
-import "./GestionUser.css";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import BarreOutilsEquipes from '../components/equipes/BarreOutilsEquipes'
+import ListeEquipes from '../components/equipes/ListeEquipes'
+import FormulaireEquipe from '../components/equipes/FormulaireEquipe'
+import ConfirmationSuppressionEquipe from '../components/equipes/ConfirmationSuppressionEquipe'
+import { serviceEquipes } from '../services/equipes.service'
 
-/* =========================
-   LISTE DES EQUIPES
-========================= */
 export function GestionEquipe() {
-  const navigate = useNavigate();
-  const [equipes, setEquipes] = useState([]);
-  const [recherche, setRecherche] = useState("");
+  const navigate = useNavigate()
+  const [equipes, setEquipes] = useState([])
+  const [recherche, setRecherche] = useState('')
 
   useEffect(() => {
-    recup_equipes()
+    let isMounted = true
+
+    serviceEquipes
+      .lister()
       .then((data) => {
-        const formatted = data.map((e) => ({
-          id: e.id_eqp,
-          libelle: e.libelle_eqp,
-        }));
-        setEquipes(formatted);
+        if (!isMounted) return
+        setEquipes(
+          (Array.isArray(data) ? data : []).map((equipe) => ({
+            id: equipe.id_eqp,
+            libelle: equipe.libelle_eqp,
+          }))
+        )
       })
-      .catch(console.error);
-  }, []);
+      .catch(console.error)
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const equipesFiltrees = equipes.filter((equipe) =>
-    (equipe.libelle || "")
+    String(equipe.libelle || '')
       .toLowerCase()
       .includes(recherche.toLowerCase())
-  );
+  )
 
   return (
     <section className="gestion_user">
       <div className="pannel_user">
         <div className="tool">
-          <h2>Gestion des équipes</h2>
-
-          <div className="tools_outils">
-            <input
-              type="text"
-              placeholder="Rechercher une équipe"
-              className="searchbar"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-            />
-
-            <button onClick={() => navigate("/creer_equipe")}>
-              Ajouter une équipe
-            </button>
-          </div>
-
+          <h2>Gestion des equipes</h2>
+          <BarreOutilsEquipes
+            recherche={recherche}
+            onChangerRecherche={setRecherche}
+            onCreerEquipe={() => navigate('/creer_equipe')}
+          />
           <div className="blur_pannel">
-            <ul className="brique_user">
-              {equipesFiltrees.map((equipe) => (
-                <li key={equipe.id} className="brique_user_item">
-                  <div className="user_cell">
-                    <strong>{equipe.libelle}</strong>
-
-                    <button onClick={() => navigate(`/modifier_equipe/${equipe.id}`)}>
-                      Modifier
-                    </button>
-
-                    <button onClick={() => navigate(`/supprimer_equipe/${equipe.id}`)}>
-                      Supprimer
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <ListeEquipes
+              equipes={equipesFiltrees}
+              onModifierEquipe={(idEquipe) => navigate(`/modifier_equipe/${idEquipe}`)}
+              onSupprimerEquipe={(idEquipe) => navigate(`/supprimer_equipe/${idEquipe}`)}
+            />
           </div>
-
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-/* =========================
-   API
-========================= */
-async function recup_equipes() {
-  const res = await fetch(`${API_URL}/api/groupe/equipes`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
-
-  if (!res.ok) throw new Error("Erreur getEquipes");
-  return res.json();
-}
-
-/* =========================
-   CREER
-========================= */
 export function CreerEquipe() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const data = Object.fromEntries(new FormData(event.target))
 
-    const res = await fetch(`${API_URL}/api/groupe/ajouter`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        libelle: data.equipe
-      })
-    });
-
-    if (res.ok) {
-      navigate("/gestion_equipes");
+    try {
+      await serviceEquipes.creer(data.equipe)
+      navigate('/gerer_equipes')
+    } catch (error) {
+      console.error('Erreur creation equipe', error)
     }
-  };
+  }
 
   return (
     <section className="gestion_user">
       <div className="pannel_user">
-        <h2>Créer une équipe</h2>
-
-        <form onSubmit={handleSubmit}>
-          <input name="equipe" placeholder="Nom d'équipe" required />
-          <button type="submit">Créer</button>
-        </form>
+        <h2>Creer une equipe</h2>
+        <FormulaireEquipe titreBouton="Creer" onSoumettre={handleSubmit} />
       </div>
     </section>
-  );
+  )
 }
 
-/* =========================
-   MODIFIER
-========================= */
 export function ModifierEquipe() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [libelle, setLibelle] = useState('')
 
   useEffect(() => {
-    recup_equipes()
+    let isMounted = true
+
+    serviceEquipes
+      .lister()
       .then((data) => {
-        const formatted = data.map((e) => ({
-          id: e.id_eqp,
-          libelle: e.libelle_eqp,
-        }));
-        setEquipes(formatted);
+        if (!isMounted) return
+        const equipe = (Array.isArray(data) ? data : []).find((item) => String(item.id_eqp) === String(id))
+        setLibelle(equipe?.libelle_eqp || '')
       })
-      .catch(console.error);
-  }, []);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
+      .catch(console.error)
 
-    const res = await fetch(`${API_URL}/api/groupe/modifier/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        libelle: data.equipe
-      })
-    });
-
-    if (res.ok) {
-      navigate("/gestion_equipes");
+    return () => {
+      isMounted = false
     }
-  };
+  }, [id])
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const data = Object.fromEntries(new FormData(event.target))
+
+    try {
+      await serviceEquipes.modifier(id, data.equipe)
+      navigate('/gerer_equipes')
+    } catch (error) {
+      console.error('Erreur modification equipe', error)
+    }
+  }
 
   return (
     <section className="gestion_user">
       <div className="pannel_user">
-        <h2>Modifier une équipe</h2>
-
-        <form onSubmit={handleSubmit}>
-          <input name="equipe" placeholder= "" required />
-          <button type="submit">Modifier</button>
-        </form>
+        <h2>Modifier une equipe</h2>
+        <FormulaireEquipe titreBouton="Modifier" valeur={libelle} onSoumettre={handleSubmit} />
       </div>
     </section>
-  );
+  )
 }
 
-/* =========================
-   SUPPRIMER
-========================= */
 export function SupprimerEquipe() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
-    const res = await fetch(`${API_URL}/api/groupe/supprimer/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (res.ok) {
-      navigate("/gestion_equipes");
+    try {
+      await serviceEquipes.supprimer(id)
+      navigate('/gerer_equipes')
+    } catch (error) {
+      console.error('Erreur suppression equipe', error)
     }
-  };
+  }
 
   return (
     <section className="gestion_user">
       <div className="pannel_user">
-        <h2>Supprimer une équipe</h2>
-
-        <form onSubmit={handleSubmit}>
-          <p>Confirmer la suppression ?</p>
-          <button type="submit">Supprimer</button>
-        </form>
+        <h2>Supprimer une equipe</h2>
+        <ConfirmationSuppressionEquipe onConfirmer={handleSubmit} />
       </div>
     </section>
-  );
-}   
+  )
+}
