@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import BarreOutilsEquipes from '../components/equipes/BarreOutilsEquipes'
 import ListeEquipes from '../components/equipes/ListeEquipes'
 import FormulaireEquipe from '../components/equipes/FormulaireEquipe'
+import ListeUtilisateursByTeam from '../components/equipes/ListeUserByTeam'
 import ConfirmationSuppressionEquipe from '../components/equipes/ConfirmationSuppressionEquipe'
 import { serviceEquipes } from '../services/equipes.service'
+
 
 export function GestionEquipe() {
   const navigate = useNavigate()
@@ -51,8 +53,11 @@ export function GestionEquipe() {
           <div className="blur_pannel">
             <ListeEquipes
               equipes={equipesFiltrees}
+              
               onModifierEquipe={(idEquipe) => navigate(`/modifier_equipe/${idEquipe}`)}
               onSupprimerEquipe={(idEquipe) => navigate(`/supprimer_equipe/${idEquipe}`)}
+              onVoirMembres={(idEquipe) => navigate(`/voir_membres/${idEquipe}`)}
+              
             />
           </div>
         </div>
@@ -130,6 +135,59 @@ export function ModifierEquipe() {
   )
 }
 
+
+
+export function VoirMembres() {
+  const [membre, setMembre] = useState([])
+  const [nomEquipe, setNomEquipe] = useState('')
+  const { id } = useParams()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    let isMounted = true
+
+    // Fetch members
+    serviceEquipes.VoirMembres(id)
+      .then((data) => {
+        if (!isMounted) return
+        setMembre(Array.isArray(data) ? data : []) 
+      })
+      .catch((error) => console.error('Erreur affichage membres equipe', error));
+
+    // Fetch team name
+    serviceEquipes.getEquipeById(id)
+      .then((data) => {
+        if (!isMounted) return
+        if (data && data.length > 0) {
+          setNomEquipe(data[0].libelle_eqp)
+        }
+      })
+      .catch((error) => console.error('Erreur récupération nom equipe', error));
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
+
+  return (
+    <section className="gestion_user">
+      <div className="pannel_user">
+        <div className="tool">
+          <div className="tools_outils" style={{ justifyContent: 'space-between', padding: '0 2rem' }}>
+            <h2 style={{ marginLeft: 0 }}>
+              Membres de l'équipe {nomEquipe && `: ${nomEquipe}`}
+            </h2>
+            <button type="button" onClick={() => navigate('/gerer_equipes')}>
+              Retour
+            </button>
+          </div>
+          <ListeUtilisateursByTeam utilisateurs={membre} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export function SupprimerEquipe() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -146,6 +204,7 @@ export function SupprimerEquipe() {
   }
 
   return (
+    
     <section className="gestion_user">
       <div className="pannel_user">
         <h2>Supprimer une equipe</h2>

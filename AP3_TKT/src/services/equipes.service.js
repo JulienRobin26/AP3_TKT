@@ -1,3 +1,4 @@
+import { VoirMembres } from '../pages/GestionEquipes'
 import { appelApi } from './clientApi'
 
 // Rassemble les appels equipes utilises dans plusieurs pages.
@@ -6,10 +7,13 @@ export const serviceEquipes = {
     return appelApi('/api/groupe/equipes')
   },
 
-  listerReference() {
-    return appelApi('/api/equipes')
-  },
 
+  VoirMembres(idEquipe) {
+    return appelApi(`/api/groupe/voir_membre/${idEquipe}`)
+  },
+  getEquipeById(idEquipe) {
+    return appelApi(`/api/groupe/equipe_id/${idEquipe}`)
+  },
   creer(libelle) {
     return appelApi('/api/groupe/ajouter', {
       method: 'POST',

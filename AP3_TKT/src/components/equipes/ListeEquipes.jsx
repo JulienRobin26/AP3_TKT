@@ -1,6 +1,6 @@
 import LigneEquipe from './LigneEquipe'
 
-function ListeEquipes({ equipes, onModifierEquipe, onSupprimerEquipe }) {
+function ListeEquipes({ equipes, onModifierEquipe, onSupprimerEquipe, onVoirMembres}) {
   if (!equipes.length) {
     return <p className="empty_state">Aucune equipe trouvee.</p>
   }
@@ -14,6 +14,7 @@ function ListeEquipes({ equipes, onModifierEquipe, onSupprimerEquipe }) {
             equipe={equipe}
             onModifierEquipe={onModifierEquipe}
             onSupprimerEquipe={onSupprimerEquipe}
+            onVoirMembres={onVoirMembres}
           />
         ))}
       </ul>

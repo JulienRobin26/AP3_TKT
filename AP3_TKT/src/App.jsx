@@ -30,7 +30,7 @@ import SupprimerMission from './pages/SupprimerMission';
 import ModifierMissions from './pages/ModifierMission';
 import VoirMissions from './pages/VoirMission';
 import VoirMaMission from './pages/VoirMaMission';
-import { GestionEquipe, CreerEquipe, ModifierEquipe, SupprimerEquipe } from './pages/GestionEquipes'
+import { GestionEquipe, CreerEquipe, ModifierEquipe, SupprimerEquipe,VoirMembres } from './pages/GestionEquipes'
 function App() {
   const [user, setUser] = useState({ auth: null })
   const location = useLocation()
@@ -79,6 +79,7 @@ function App() {
           <Route path="/ajouter-mission" element={<AjouterMission />} />
           <Route path="/supprimer-mission/:id" element={<SupprimerMission />} />
           <Route path="/modifier-mission/:id" element={<ModifierMissions />} />
+          <Route path="/voir_membres/:id" element={<VoirMembres />} />
           <Route path="/voir_mission/:id" element={<VoirMissions />} />
           <Route path="/creer_equipe" element={<CreerEquipe />} />
           <Route path="/modifier_equipe/:id" element={<ModifierEquipe />} />
