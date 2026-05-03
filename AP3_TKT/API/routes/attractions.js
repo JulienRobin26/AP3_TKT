@@ -2,6 +2,22 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const authToken = require('../auth_token');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configuration de multer pour le stockage des images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/attractions/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ storage: storage });
 
 router.use(authToken);
 
@@ -45,9 +61,12 @@ router.get('/id/:id', async (req, res) => {
 });
 
 
-router.post('/ajout', async (req, res) => {
+router.post('/ajout', upload.single('image'), async (req, res) => {
   try {
-    const { nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
+    const { nom, description, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
+    
+    // Si un fichier a été uploadé, on prend son nom, sinon on prend la valeur texte (si elle existe encore)
+    const image = req.file ? req.file.filename : (req.body.image || '');
 
     if (!nom) {
       return res.status(400).json({ error: 'Le nom est obligatoire' });
@@ -58,7 +77,7 @@ router.post('/ajout', async (req, res) => {
       [
         nom,
         description ?? '',
-        image ?? '',
+        image,
         toDbOuvert(ouvert),
         tempsAttente ?? '',
         parc ?? null,
@@ -75,13 +94,31 @@ router.post('/ajout', async (req, res) => {
   }
 });
 
-router.post('/modif', async (req, res) => {
+router.post('/modif', upload.single('image'), async (req, res) => {
   try {
     const id = req.body.id ?? req.body.id_ift ?? req.body.attractions;
-    const { nom, description, image, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
-
+    const { nom, description, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
+    
     if (!id) {
       return res.status(400).json({ error: 'ID attraction obligatoire' });
+    }
+
+    // Récupérer l'ancienne image pour garder la valeur si on ne change pas la photo
+    const [oldRows] = await db.query('SELECT image_ift FROM `infrastructure` WHERE id_ift = ?', [id]);
+    const oldImage = oldRows.length > 0 ? oldRows[0].image_ift : '';
+
+    let image = oldImage;
+    if (req.file) {
+      image = req.file.filename;
+      // Supprimer l'ancienne image du disque si elle existe et n'est pas une URL externe
+      if (oldImage && !oldImage.startsWith('http')) {
+        const oldPath = path.join(__dirname, '..', 'public', 'uploads', 'attractions', oldImage);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+    } else if (req.body.image) {
+       image = req.body.image;
     }
 
     const [result] = await db.query(
@@ -89,7 +126,7 @@ router.post('/modif', async (req, res) => {
       [
         nom ?? '',
         description ?? '',
-        image ?? '',
+        image,
         toDbOuvert(ouvert),
         tempsAttente ?? '',
         parc ?? null,
@@ -117,6 +154,18 @@ router.post('/supprimer/:id', async (req, res) => {
 
     if (!id) {
       return res.status(400).json({ error: 'ID attraction obligatoire' });
+    }
+
+    // Récupérer le nom de l'image avant de supprimer
+    const [rows] = await db.query('SELECT image_ift FROM `infrastructure` WHERE id_ift = ?', [id]);
+    if (rows.length > 0) {
+      const image = rows[0].image_ift;
+      if (image && !image.startsWith('http')) {
+        const imagePath = path.join(__dirname, '..', 'public', 'uploads', 'attractions', image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      }
     }
 
     const [result] = await db.query('DELETE FROM `infrastructure` WHERE id_ift = ?', [id]);

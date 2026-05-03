@@ -27,15 +27,17 @@ function FormulaireAttraction({
         </div>
 
         <div className="ga-field ga-field-image">
-          <label htmlFor="image">Image attraction</label>
+          <label htmlFor="image">Photo de l'attraction</label>
           <input
-            type="text"
+            type="file"
             id="image"
             name="image"
-            placeholder="URL de l'image"
-            defaultValue={attraction.image_ift || ''}
-            required
+            accept="image/*"
+            required={mode === 'ajout'}
           />
+          {attraction.image_ift && (
+            <p className="current-image-info">Image actuelle : {attraction.image_ift}</p>
+          )}
         </div>
 
         <div className="ga-field ga-field-wait">

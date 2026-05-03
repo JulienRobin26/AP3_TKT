@@ -1,9 +1,12 @@
 require('dotenv').config()
 const authToken = require('./auth_token');
 const express = require('express')
+const path = require('path')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
+
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')))
 const jwt = require('jsonwebtoken')
 const utilisateurs = require ('./routes/users');
 const attraRoutes  = require('./routes/attractions');

@@ -35,16 +35,11 @@ function GestionAttractionsModif() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const data = Object.fromEntries(new FormData(event.target).entries())
+    const formData = new FormData(event.target)
 
     try {
-      await serviceAttractions.modifier({
-        ...data,
-        ouvert: data.ouvert ? 1 : 0,
-        pourEnceinte: data.pourEnceinte ? 1 : 0,
-        pourLesPetits: data.pourLesPetits ? 1 : 0,
-      })
-      navigate('/gestion_attractions')
+      await serviceAttractions.modifier(formData)
+      navigate('/attractions')
     } catch (err) {
       console.error(err)
     }

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react' // hook pour etat + effets
+import { useEffect, useState } from 'react' // hook pour etat + effets
 import { Nav, Footer } from './components/includes'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import API_URL from './api_url'
@@ -17,7 +17,6 @@ import Login from './pages/Login'
 import MentionsLegales from './pages/MentionsLegales'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
-import GestionAttractions from './pages/GestionAttractions'
 import GestionAttractionsAjout from './pages/GestionAttractionsAjout'
 import GestionAttractionsModif from './pages/GestionAttractionsModif'
 import SuppressionAttraction from './pages/SuppressionAttraction'
@@ -64,10 +63,11 @@ function App() {
       {!isLoginPage && showNav && <Nav user={user} />}
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route element={<Guard roles={[1]} />}>
           <Route path="/gestion_users/" element={<GestionUsers />} />
           <Route path="/gestion_missions/" element={<GestionMissions />} />
-          <Route path="/gestion_attractions" element={<GestionAttractions />} />
+          
           <Route path="/gestion_attractions/ajout" element={<GestionAttractionsAjout />} />
           <Route path="/gestion_attractions/modifier/:id" element={<GestionAttractionsModif />} />
           <Route path="/gestion_attractions/supprimer/:id" element={<SuppressionAttraction />} />
@@ -103,7 +103,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/politique_de_confidentialite" element={<PolitiqueConfidentialite />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
       {!isLoginPage && showNav && <Footer />}
     </>

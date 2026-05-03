@@ -16,7 +16,7 @@ function Login() {
 
     try {
       await serviceAuthentification.connexion(identifiant, password)
-      navigate('/home')
+      navigate('/attractions')
     } catch (err) {
       setError(err?.message || 'Erreur de connexion')
       console.error(err)

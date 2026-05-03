@@ -28,14 +28,32 @@ export async function appelApiLogin(chemin, options = {}) {
 
 // Point d'entree unique pour les appels API front.
 export async function appelApi(chemin, options = {}) {
-  const response = await fetch(`${API_URL}${chemin}`, {
+  const isFormData = options.body instanceof FormData
+  
+  const config = {
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
     ...options,
-  })
+    headers: {
+      ...(options.headers || {}),
+    }
+  }
+
+  if (isFormData) {
+    // Ne pas définir Content-Type pour laisser le navigateur mettre le boundary multipart/form-data
+    config.body = options.body
+  } else if (options.body) {
+    if (typeof options.body !== 'string') {
+      config.headers['Content-Type'] = 'application/json'
+      config.body = JSON.stringify(options.body)
+    } else {
+      config.body = options.body
+      if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json'
+      }
+    }
+  }
+
+  const response = await fetch(`${API_URL}${chemin}`, config)
 
   let donnees = null
   try {

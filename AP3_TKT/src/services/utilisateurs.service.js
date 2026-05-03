@@ -14,7 +14,7 @@ export const serviceUtilisateurs = {
   creer(utilisateur) {
     return appelApi('/api/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({
+      body: {
         identifiant: utilisateur.identifiant,
         password: utilisateur.mot_de_passe,
         nom: utilisateur.nom,
@@ -23,21 +23,21 @@ export const serviceUtilisateurs = {
         tel: utilisateur.telephone,
         num_poste: utilisateur.poste,
         role: Number(utilisateur.role),
-      }),
+      },
     })
   },
 
   modifier(idUtilisateur, payload) {
     return appelApi(`/api/users/modifier/${idUtilisateur}`, {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: payload,
     })
   },
 
   supprimer(idUtilisateur) {
     return appelApi('/api/users/supprimer', {
       method: 'POST',
-      body: JSON.stringify({ id: idUtilisateur }),
+      body: { id: idUtilisateur },
     })
   },
 

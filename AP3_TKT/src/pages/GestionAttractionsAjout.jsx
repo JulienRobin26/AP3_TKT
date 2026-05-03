@@ -7,15 +7,11 @@ function GestionAttractionsAjout() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const data = Object.fromEntries(new FormData(event.target).entries())
+    const formData = new FormData(event.target)
 
-    await serviceAttractions.ajouter({
-      ...data,
-      ouvert: data.ouvert ? 1 : 0,
-      pourEnceinte: data.pourEnceinte ? 1 : 0,
-      pourLesPetits: data.pourLesPetits ? 1 : 0,
-    })
-    navigate('/gestion_attractions')
+    // FormData envoie les fichiers et les champs texte correctement pour Multer
+    await serviceAttractions.ajouter(formData)
+    navigate('/attractions')
   }
 
   return (

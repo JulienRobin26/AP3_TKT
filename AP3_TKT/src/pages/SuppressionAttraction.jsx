@@ -39,7 +39,7 @@ function SuppressionAttraction() {
     setError('')
     try {
       await serviceAttractions.supprimer(id)
-      navigate('/gestion_attractions')
+      navigate('/attractions')
     } catch (err) {
       setError(err?.message || 'Erreur suppression attraction')
     } finally {
@@ -58,7 +58,7 @@ function SuppressionAttraction() {
           <ConfirmationSuppressionAttraction
             attraction={attraction}
             submitting={submitting}
-            onAnnuler={() => navigate('/gestion_attractions')}
+            onAnnuler={() => navigate('/attractions')}
             onConfirmer={handleConfirm}
           />
         )}

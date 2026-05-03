@@ -1,4 +1,5 @@
 import FenetreAttraction from './FenetreAttraction'
+import { getImageUrl } from '../../utils/image'
 
 export default function CarteAttraction({
   attraction,
@@ -23,7 +24,7 @@ export default function CarteAttraction({
           }
         }}
       >
-        <img src={attraction.image_ift} />
+        <img src={getImageUrl(attraction.image_ift)} alt={attraction.nom_ift} />
         <div className="atraction-content">
           <h2>{attraction.nom_ift}</h2>
           <ul>

@@ -1,3 +1,5 @@
+import { getImageUrl } from '../../utils/image'
+
 export default function FenetreAttraction({
   image,
   titre,
@@ -14,7 +16,7 @@ export default function FenetreAttraction({
     // Fenetre de detail reutilisable, fermee en cliquant hors du contenu.
     <div className="attraction-overlay" role="dialog" aria-modal="true" onClick={onFermer}>
       <div className="attraction-modal" onClick={(event) => event.stopPropagation()}>
-        <img src={image} alt={`Photo de ${titre}`} />
+        <img src={getImageUrl(image)} alt={`Photo de ${titre}`} />
         <h3>{titre}</h3>
         <p className="attraction-modal-info">{description}</p>
         <div className="attraction-modal-meta">

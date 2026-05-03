@@ -6,7 +6,9 @@ export const serviceEquipes = {
   lister() {
     return appelApi('/api/groupe/equipes')
   },
-
+  listerReference() {
+    return appelApi('/api/groupe/equipes')
+  },
 
   VoirMembres(idEquipe) {
     return appelApi(`/api/groupe/voir_membre/${idEquipe}`)
@@ -17,14 +19,14 @@ export const serviceEquipes = {
   creer(libelle) {
     return appelApi('/api/groupe/ajouter', {
       method: 'POST',
-      body: JSON.stringify({ libelle }),
+      body: { libelle },
     })
   },
 
   modifier(idEquipe, libelle) {
     return appelApi(`/api/groupe/modifier/${idEquipe}`, {
       method: 'POST',
-      body: JSON.stringify({ libelle }),
+      body: { libelle },
     })
   },
 

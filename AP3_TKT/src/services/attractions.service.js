@@ -18,14 +18,14 @@ export const serviceAttractions = {
   ajouter(payload) {
     return appelApi('/attraction/ajout', {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: payload,
     })
   },
 
   modifier(payload) {
     return appelApi('/attraction/modif', {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: payload,
     })
   },
 
