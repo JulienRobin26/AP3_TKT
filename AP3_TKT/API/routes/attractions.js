@@ -30,7 +30,25 @@ function toDbOuvert(value) {
   return 0;
 }
  
+/**
+ * @swagger
+ * tags:
+ *   name: Attractions
+ *   description: Gestion des attractions (infrastructure)
+ */
+
+/**
+ * @swagger
+ * /attraction:
+ *   get:
+ *     summary: Récupérer toutes les attractions
+ *     tags: [Attractions]
+ *     responses:
+ *       200:
+ *         description: Liste des attractions
+ */
 router.get('/', async (req, res) => {
+
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente, id_prc_ift FROM `infrastructure`');
     res.json(rows);
@@ -41,7 +59,25 @@ router.get('/', async (req, res) => {
 });
 
 
+/**
+ * @swagger
+ * /attraction/{id}:
+ *   get:
+ *     summary: Récupérer les attractions d'un parc spécifique
+ *     tags: [Attractions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID du parc
+ *     responses:
+ *       200:
+ *         description: Liste des attractions du parc
+ */
 router.get('/:id', async (req, res) => {
+
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente,tailleLimite, pourEnceinte, pourLesPetits, id_prc_ift FROM `infrastructure` WHERE id_prc_ift = ?', [req.params.id]);
     res.json(rows);
@@ -50,7 +86,25 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+/**
+ * @swagger
+ * /attraction/id/{id}:
+ *   get:
+ *     summary: Récupérer une attraction par son ID
+ *     tags: [Attractions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de l'attraction
+ *     responses:
+ *       200:
+ *         description: Détails de l'attraction
+ */
 router.get('/id/:id', async (req, res) => {
+
   try {
     const [rows] = await db.query('SELECT id_ift, nom_ift, description_ift, image_ift, ouvert, tempsAttente,tailleLimite, pourEnceinte, pourLesPetits, id_prc_ift FROM `infrastructure` WHERE id_ift = ?', [req.params.id]);
     res.json(rows);
@@ -61,7 +115,43 @@ router.get('/id/:id', async (req, res) => {
 });
 
 
+/**
+ * @swagger
+ * /attraction/ajout:
+ *   post:
+ *     summary: Ajouter une nouvelle attraction
+ *     tags: [Attractions]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nom:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               parc:
+ *                 type: integer
+ *               tempsAttente:
+ *                 type: string
+ *               ouvert:
+ *                 type: boolean
+ *               tailleLimite:
+ *                 type: integer
+ *               pourEnceinte:
+ *                 type: boolean
+ *               pourLesPetits:
+ *                 type: boolean
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Attraction ajoutée
+ */
 router.post('/ajout', upload.single('image'), async (req, res) => {
+
   try {
     const { nom, description, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
     
@@ -94,7 +184,45 @@ router.post('/ajout', upload.single('image'), async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /attraction/modif:
+ *   post:
+ *     summary: Modifier une attraction existante
+ *     tags: [Attractions]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               nom:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               parc:
+ *                 type: integer
+ *               tempsAttente:
+ *                 type: string
+ *               ouvert:
+ *                 type: boolean
+ *               tailleLimite:
+ *                 type: integer
+ *               pourEnceinte:
+ *                 type: boolean
+ *               pourLesPetits:
+ *                 type: boolean
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Attraction modifiée
+ */
 router.post('/modif', upload.single('image'), async (req, res) => {
+
   try {
     const id = req.body.id ?? req.body.id_ift ?? req.body.attractions;
     const { nom, description, parc, tempsAttente, ouvert, tailleLimite, pourEnceinte, pourLesPetits } = req.body;
@@ -148,7 +276,25 @@ router.post('/modif', upload.single('image'), async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /attraction/supprimer/{id}:
+ *   post:
+ *     summary: Supprimer une attraction
+ *     tags: [Attractions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de l'attraction à supprimer
+ *     responses:
+ *       200:
+ *         description: Attraction supprimée
+ */
 router.post('/supprimer/:id', async (req, res) => {
+
   try {
     const id = req.params.id;
 

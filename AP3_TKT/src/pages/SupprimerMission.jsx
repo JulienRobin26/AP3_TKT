@@ -15,7 +15,7 @@ function SupprimerMission() {
       navigate('/gestion_missions')
     } catch (error) {
       console.error('Erreur lors de la suppression de la mission', error)
-      alert('Erreur lors de la suppression de la mission')
+      alert(error?.message || 'Erreur lors de la suppression de la mission')
     }
   }
 

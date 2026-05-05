@@ -2014,6 +2014,11 @@ body,
   margin-right: auto;
 }
 
+.alert-board h1{
+  color:white;
+  margin-top: auto;
+  width: max-content;
+}
 .pannel_user,
 .pannele_user {
   margin-top: 2rem;

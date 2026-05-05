@@ -20,6 +20,7 @@ function Avertissement() {
     // Ce conteneur charge les niveaux puis redirige vers la page detaillee au clic.
     <section className="page avertissement-page">
       <div className="alert-board">
+        <h1>Gestion des Alertes</h1>
         <ListeNiveauxAvertissement
           niveaux={niveauxAvertissement}
           onSelectionnerNiveau={(avertissement) =>

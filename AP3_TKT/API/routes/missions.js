@@ -35,7 +35,33 @@ async function getAssignedMissionByIdForUser(userId, missionId) {
   return rows[0] || null;
 }
 
+/**
+ * @swagger
+ * tags:
+ *   name: Missions
+ *   description: Gestion des missions et affectations
+ */
+
+/**
+ * @swagger
+ * /missions/equipe_missions/{id}:
+ *   get:
+ *     summary: Récupérer l'équipe d'une mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Liste des équipes de la mission
+ */
 router.get('/equipe_missions/:id', async (req, res) => {
+
   try {
     const id_msn = req.params.id;
     const [rows] = await db.query(
@@ -49,14 +75,27 @@ router.get('/equipe_missions/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions:
+ *   get:
+ *     summary: Récupérer toutes les missions
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste des missions
+ */
 router.get('/', async (req, res) => {
+
   try {
     const [rows] = await db.query(`
       SELECT m.*, e.libelle_eqp,
         (SELECT COUNT(*) FROM users u WHERE u.id_msn_usr = m.id_msn) AS nb_assigned
       FROM missions m
       LEFT JOIN equipes e ON m.id_eqp_msn = e.id_eqp
-      WHERE m.status_msn = 0
+      ORDER BY m.status_msn ASC, m.dateDebut_msn DESC, m.id_msn DESC
     `);
 
     res.json(rows);
@@ -66,7 +105,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/mes-missions:
+ *   get:
+ *     summary: Récupérer les missions de l'utilisateur connecté
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste de mes missions
+ */
 router.get('/mes-missions', async (req, res) => {
+
   try {
     const userId = req.user.id;
     const rows = await getAssignedMissionsForUser(userId);
@@ -77,7 +129,26 @@ router.get('/mes-missions', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/mes-missions/{id}:
+ *   get:
+ *     summary: Récupérer une de mes missions par son ID
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Détails de ma mission
+ */
 router.get('/mes-missions/:id', async (req, res) => {
+
   try {
     const userId = req.user.id;
     const mission = await getAssignedMissionByIdForUser(userId, req.params.id);
@@ -93,7 +164,26 @@ router.get('/mes-missions/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/valider/{id}:
+ *   post:
+ *     summary: Valider et terminer une mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Mission validée
+ */
 router.post('/valider/:id', async (req, res) => {
+
   try {
     const id_msn = req.params.id;
     const userId = req.user.id;
@@ -116,7 +206,26 @@ router.post('/valider/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/{id}:
+ *   get:
+ *     summary: Récupérer une mission par son ID
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Détails de la mission
+ */
 router.get('/:id', async (req, res) => {
+
   try {
     const [rows] = await db.query(
       `
@@ -144,7 +253,36 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/ajouter:
+ *   post:
+ *     summary: Ajouter une nouvelle mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               libelle_msn:
+ *                 type: string
+ *               type_msn:
+ *                 type: string
+ *               dateDebut_msn:
+ *                 type: string
+ *                 format: date
+ *               id_eqp_msn:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Mission ajoutée
+ */
 router.post('/ajouter', async (req, res) => {
+
   try {
     const { libelle_msn, type_msn, dateDebut_msn, id_eqp_msn } = req.body;
     const [result] = await db.query(
@@ -158,7 +296,38 @@ router.post('/ajouter', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/modifier:
+ *   post:
+ *     summary: Modifier une mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_msn:
+ *                 type: integer
+ *               libelle_msn:
+ *                 type: string
+ *               type_msn:
+ *                 type: string
+ *               dateDebut_msn:
+ *                 type: string
+ *                 format: date
+ *               id_eqp_msn:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Mission modifiée
+ */
 router.post('/modifier', async (req, res) => {
+
   try {
     const { id_msn, libelle_msn, type_msn, dateDebut_msn, id_eqp_msn } = req.body;
     const [assigned] = await db.query(
@@ -182,8 +351,37 @@ router.post('/modifier', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/supprimer/{id}:
+ *   post:
+ *     summary: Supprimer une mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Mission supprimée
+ */
 router.post('/supprimer/:id', async (req, res) => {
+
   try {
+    const [missions] = await db.query(
+      'SELECT id_msn, status_msn FROM missions WHERE id_msn = ?',
+      [req.params.id]
+    );
+
+    if (missions.length === 0) {
+      return res.status(404).json({ error: 'Mission non trouvee' });
+    }
+
+
     const [assigned] = await db.query(
       'SELECT COUNT(*) as nb FROM users WHERE id_msn_usr = ?',
       [req.params.id]
@@ -201,7 +399,26 @@ router.post('/supprimer/:id', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/utilisateurs-equipe/{id_equipe}:
+ *   get:
+ *     summary: Récupérer les utilisateurs d'une équipe pour affectation
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id_equipe
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Liste des utilisateurs de l'équipe
+ */
 router.get('/utilisateurs-equipe/:id_equipe', async (req, res) => {
+
   try {
     const id_equipe = req.params.id_equipe;
     const [rows] = await db.query(
@@ -215,7 +432,37 @@ router.get('/utilisateurs-equipe/:id_equipe', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /missions/affecter/{id}:
+ *   post:
+ *     summary: Affecter des utilisateurs à une mission
+ *     tags: [Missions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *     responses:
+ *       200:
+ *         description: Affectation réussie
+ */
 router.post('/affecter/:id', async (req, res) => {
+
   try {
     const id_msn = req.params.id;
     const { userIds } = req.body;

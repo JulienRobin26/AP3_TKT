@@ -14,6 +14,44 @@ const authRoutes = require("../API/routes/auth")
 const avertRoutes = require("../API/routes/avertissements")
 const groupeRoutes = require('./routes/groupe');
 const missionRoutes = require('./routes/missions');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API AP3_TKT',
+      version: '1.0.0',
+      description: 'Documentation de l\'API pour le projet AP3_TKT',
+      contact: {
+        name: 'Alexis Déjean'
+      },
+      servers: [
+        {
+          url: `http://localhost:${process.env.API_PORT || 3000}`
+        }
+      ]
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }]
+  },
+  apis: ['./routes/*.js', './server.js']
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())

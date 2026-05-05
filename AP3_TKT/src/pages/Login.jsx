@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FormulaireConnexion from '../components/auth/FormulaireConnexion'
 import { serviceAuthentification } from '../services/authentification.service'
@@ -10,13 +10,30 @@ function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  useEffect(() => {
+    let isMounted = true
+
+    serviceAuthentification
+      .recupererInfos()
+      .then(() => {
+        if (isMounted) {
+          navigate('/home', { replace: true })
+        }
+      })
+      .catch(() => {})
+
+    return () => {
+      isMounted = false
+    }
+  }, [navigate])
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
 
     try {
       await serviceAuthentification.connexion(identifiant, password)
-      navigate('/home')
+      navigate('/home', { replace: true })
     } catch (err) {
       setError(err?.message || 'Erreur de connexion')
       console.error(err)
